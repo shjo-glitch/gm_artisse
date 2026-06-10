@@ -27,7 +27,7 @@ create table if not exists orders (
   menu_name text not null,
   category text not null default 'others',
   requester text not null,
-  size text not null check (size in ('Tall', 'Venti')),
+  size text not null check (size in ('Tall', 'Grande')),
   temp text not null default 'ICE' check (temp in ('ICE', 'HOT')),
   options text[] not null default '{}',
   note text not null default '',
