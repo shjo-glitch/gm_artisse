@@ -45,6 +45,7 @@ const DEFAULT_DRINKS = [
 const authOverlay = document.querySelector("#auth-overlay");
 const authPassword = document.querySelector("#auth-password");
 const authSubmit = document.querySelector("#auth-submit");
+const authClose = document.querySelector("#auth-close");
 const authError = document.querySelector("#auth-error");
 const userEditor = document.querySelector("#user-editor");
 const optionEditor = document.querySelector("#option-editor");
@@ -287,6 +288,7 @@ function appendDrink() {
 // ── 이벤트 ────────────────────────────────────────────────
 
 if (authSubmit) authSubmit.addEventListener("click", handleAuth);
+if (authClose) authClose.addEventListener("click", hideAuthOverlay);
 if (authPassword) authPassword.addEventListener("keydown", (e) => { if (e.key === "Enter") handleAuth(); });
 userEditor.addEventListener("submit", (e) => { e.preventDefault(); saveUsers(); });
 optionEditor.addEventListener("submit", (e) => { e.preventDefault(); saveOptions(); });
