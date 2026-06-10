@@ -42,11 +42,6 @@ const DEFAULT_DRINKS = [
   { category: "others", name: "발로나 자바칩 프라페", prices: { Tall: 6400, Venti: 6900 }, iceOnly: false },
 ];
 
-const authOverlay = document.querySelector("#auth-overlay");
-const authPassword = document.querySelector("#auth-password");
-const authSubmit = document.querySelector("#auth-submit");
-const authClose = document.querySelector("#auth-close");
-const authError = document.querySelector("#auth-error");
 const userEditor = document.querySelector("#user-editor");
 const optionEditor = document.querySelector("#option-editor");
 const usersTextarea = document.querySelector("#users-textarea");
@@ -173,23 +168,6 @@ function checkAuth() {
   if (!ADMIN_PASSWORD) return true;
   return sessionStorage.getItem("admin_auth") === ADMIN_PASSWORD;
 }
-function showAuthOverlay() {
-  if (authOverlay) authOverlay.classList.remove("is-hidden");
-}
-function hideAuthOverlay() {
-  if (authOverlay) authOverlay.classList.add("is-hidden");
-}
-function handleAuth() {
-  const pw = authPassword ? authPassword.value : "";
-  if (pw === ADMIN_PASSWORD) {
-    sessionStorage.setItem("admin_auth", ADMIN_PASSWORD);
-    hideAuthOverlay();
-    loadAdminData();
-  } else {
-    if (authError) authError.classList.remove("is-hidden");
-    if (authPassword) authPassword.value = "";
-  }
-}
 
 // ── Supabase 로드 ─────────────────────────────────────────
 
@@ -287,9 +265,6 @@ function appendDrink() {
 
 // ── 이벤트 ────────────────────────────────────────────────
 
-if (authSubmit) authSubmit.addEventListener("click", handleAuth);
-if (authClose) authClose.addEventListener("click", hideAuthOverlay);
-if (authPassword) authPassword.addEventListener("keydown", (e) => { if (e.key === "Enter") handleAuth(); });
 userEditor.addEventListener("submit", (e) => { e.preventDefault(); saveUsers(); });
 optionEditor.addEventListener("submit", (e) => { e.preventDefault(); saveOptions(); });
 drinkEditor.addEventListener("submit", (e) => { e.preventDefault(); saveDrinks(); });
@@ -303,5 +278,5 @@ reloadDrinksBtn.addEventListener("click", loadAdminData);
 if (checkAuth()) {
   loadAdminData();
 } else {
-  showAuthOverlay();
+  window.location.replace("index.html");
 }

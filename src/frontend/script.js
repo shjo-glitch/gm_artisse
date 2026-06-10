@@ -86,6 +86,11 @@ const orderStatus = document.querySelector("#order-status");
 const seasonMenuList = document.querySelector("#season-menu-list");
 const seasonMenuEmpty = document.querySelector("#season-menu-empty");
 const adminLink = document.querySelector("#admin-link");
+const authOverlay = document.querySelector("#auth-overlay");
+const authPassword = document.querySelector("#auth-password");
+const authSubmit = document.querySelector("#auth-submit");
+const authClose = document.querySelector("#auth-close");
+const authError = document.querySelector("#auth-error");
 const newOptionName = document.querySelector("#new-option-name");
 const addOptionButton = document.querySelector("#add-option");
 const ordersToggle = document.querySelector("#orders-toggle");
@@ -542,6 +547,23 @@ async function loadSeasonalMenus() {
 }
 
 // ── 이벤트 ────────────────────────────────────────────────
+
+if (adminLink) adminLink.addEventListener("click", (e) => {
+  if (!ADMIN_PASSWORD) return;
+  e.preventDefault();
+  if (sessionStorage.getItem("admin_auth") === ADMIN_PASSWORD) { window.location.href = "admin.html"; return; }
+  if (authOverlay) authOverlay.classList.remove("is-hidden");
+  if (authPassword) authPassword.value = "";
+  if (authError) authError.classList.add("is-hidden");
+  if (authPassword) authPassword.focus();
+});
+if (authSubmit) authSubmit.addEventListener("click", () => {
+  const pw = authPassword ? authPassword.value : "";
+  if (pw === ADMIN_PASSWORD) { sessionStorage.setItem("admin_auth", ADMIN_PASSWORD); window.location.href = "admin.html"; }
+  else { if (authError) authError.classList.remove("is-hidden"); if (authPassword) authPassword.value = ""; authPassword.focus(); }
+});
+if (authClose) authClose.addEventListener("click", () => { if (authOverlay) authOverlay.classList.add("is-hidden"); });
+if (authPassword) authPassword.addEventListener("keydown", (e) => { if (e.key === "Enter") authSubmit.click(); });
 
 menuSelect.addEventListener("change", () => { updateCustomFields(); updateDrinkConstraints(); });
 sizeSelect.addEventListener("change", () => { if (!isCustomMenu()) setStatus("사이즈를 변경했습니다."); });

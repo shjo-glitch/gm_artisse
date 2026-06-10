@@ -149,6 +149,16 @@
     <p>회사 내부 사용을 위한 아띠제 음료 주문표입니다.</p>
   </footer>
 
+  <div id="auth-overlay" class="auth-overlay is-hidden">
+    <div class="auth-box">
+      <button id="auth-close" class="auth-close" type="button" aria-label="닫기">&times;</button>
+      <h2>관리자 인증</h2>
+      <p>관리자 비밀번호를 입력하세요.</p>
+      <input id="auth-password" type="password" placeholder="비밀번호" autocomplete="current-password">
+      <button id="auth-submit" class="button" type="button">확인</button>
+      <p id="auth-error" class="status-message is-hidden">비밀번호가 올바르지 않습니다.</p>
+    </div>
+  </div>
   <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="false"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="supabase-config.js"></script>
