@@ -1,7 +1,7 @@
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const DEFAULT_SIZES = ["Tall", "Venti"];
+const DEFAULT_SIZES = ["Tall", "Grande"];
 const DEFAULT_OPTIONS = ["연하게", "덜달게", "디카페인", "더달게", "두유", "오트밀크"];
 const DEFAULT_CATEGORIES = [
   { key: "coffee", label: "커피", sourceLabel: "Coffee" },
@@ -11,36 +11,36 @@ const DEFAULT_CATEGORIES = [
 ];
 const DEFAULT_DRINKS = [
   // 커피
-  { category: "coffee", name: "카페 아메리카노", prices: { Tall: 4900, Venti: 5400 }, iceOnly: false },
-  { category: "coffee", name: "카페라떼", prices: { Tall: 5600, Venti: 6100 }, iceOnly: false },
-  { category: "coffee", name: "카푸치노", prices: { Tall: 5600, Venti: 6100 }, iceOnly: false },
-  { category: "coffee", name: "캐러멜 마끼아또", prices: { Tall: 6500, Venti: 7000 }, iceOnly: false },
-  { category: "coffee", name: "바닐라라떼", prices: { Tall: 6300, Venti: 6800 }, iceOnly: false },
-  { category: "coffee", name: "스패니쉬라떼", prices: { Tall: 6300, Venti: 6800 }, iceOnly: false },
-  { category: "coffee", name: "플랫화이트", prices: { Tall: 5600, Venti: 6100 }, iceOnly: false },
+  { category: "coffee", name: "카페 아메리카노", prices: { Tall: 4900, Grande:5400 }, iceOnly: false },
+  { category: "coffee", name: "카페라떼", prices: { Tall: 5600, Grande:6100 }, iceOnly: false },
+  { category: "coffee", name: "카푸치노", prices: { Tall: 5600, Grande:6100 }, iceOnly: false },
+  { category: "coffee", name: "캐러멜 마끼아또", prices: { Tall: 6500, Grande:7000 }, iceOnly: false },
+  { category: "coffee", name: "바닐라라떼", prices: { Tall: 6300, Grande:6800 }, iceOnly: false },
+  { category: "coffee", name: "스패니쉬라떼", prices: { Tall: 6300, Grande:6800 }, iceOnly: false },
+  { category: "coffee", name: "플랫화이트", prices: { Tall: 5600, Grande:6100 }, iceOnly: false },
   // 과일음료
-  { category: "real-fruit-beverage", name: "리얼후르츠 오렌지주스", prices: { Tall: 8300, Venti: 8800 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "리얼후르츠 자몽주스", prices: { Tall: 8300, Venti: 8800 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "리얼후르츠 토마토주스", prices: { Tall: 8300, Venti: 8800 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "로열자몽티", prices: { Tall: 6700, Venti: 7200 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "클래식 레몬 허니 티", prices: { Tall: 6700, Venti: 7200 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "시그니처 오렌지 에이드", prices: { Tall: 6700, Venti: 7200 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "시그니처 레몬 에이드", prices: { Tall: 6700, Venti: 7200 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "시그니처 자몽 에이드", prices: { Tall: 6700, Venti: 7200 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "리얼후르츠 오렌지주스", prices: { Tall: 8300, Grande:8800 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "리얼후르츠 자몽주스", prices: { Tall: 8300, Grande:8800 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "리얼후르츠 토마토주스", prices: { Tall: 8300, Grande:8800 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "로열자몽티", prices: { Tall: 6700, Grande:7200 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "클래식 레몬 허니 티", prices: { Tall: 6700, Grande:7200 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "시그니처 오렌지 에이드", prices: { Tall: 6700, Grande:7200 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "시그니처 레몬 에이드", prices: { Tall: 6700, Grande:7200 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "시그니처 자몽 에이드", prices: { Tall: 6700, Grande:7200 }, iceOnly: false },
   // 차
-  { category: "tea", name: "캐모마일", prices: { Tall: 5800, Venti: 6300 }, iceOnly: false },
-  { category: "tea", name: "페퍼민트", prices: { Tall: 5800, Venti: 6300 }, iceOnly: false },
-  { category: "tea", name: "잉글리쉬 블랙퍼스트", prices: { Tall: 5800, Venti: 6300 }, iceOnly: false },
-  { category: "tea", name: "루이보스", prices: { Tall: 5800, Venti: 6300 }, iceOnly: false },
+  { category: "tea", name: "캐모마일", prices: { Tall: 5800, Grande:6300 }, iceOnly: false },
+  { category: "tea", name: "페퍼민트", prices: { Tall: 5800, Grande:6300 }, iceOnly: false },
+  { category: "tea", name: "잉글리쉬 블랙퍼스트", prices: { Tall: 5800, Grande:6300 }, iceOnly: false },
+  { category: "tea", name: "루이보스", prices: { Tall: 5800, Grande:6300 }, iceOnly: false },
   // 기타
-  { category: "others", name: "데일리 요거트 스무디", prices: { Tall: 6600, Venti: 7100 }, iceOnly: false },
-  { category: "others", name: "레몬 요거트 스무디", prices: { Tall: 6900, Venti: 7400 }, iceOnly: false },
-  { category: "others", name: "발로나 초코 프라페", prices: { Tall: 6900, Venti: 7400 }, iceOnly: false },
-  { category: "others", name: "발로나 더블 초콜릿", prices: { Tall: 6900, Venti: 7400 }, iceOnly: false },
-  { category: "others", name: "애플밀크티", prices: { Tall: 6300, Venti: 6800 }, iceOnly: false },
-  { category: "others", name: "잉글리쉬 티 라떼", prices: { Tall: 6300, Venti: 6800 }, iceOnly: false },
-  { category: "others", name: "제주 말차 라떼", prices: { Tall: 6200, Venti: 6700 }, iceOnly: false },
-  { category: "others", name: "발로나 자바칩 프라페", prices: { Tall: 6400, Venti: 6900 }, iceOnly: false },
+  { category: "others", name: "데일리 요거트 스무디", prices: { Tall: 6600, Grande:7100 }, iceOnly: false },
+  { category: "others", name: "레몬 요거트 스무디", prices: { Tall: 6900, Grande:7400 }, iceOnly: false },
+  { category: "others", name: "발로나 초코 프라페", prices: { Tall: 6900, Grande:7400 }, iceOnly: false },
+  { category: "others", name: "발로나 더블 초콜릿", prices: { Tall: 6900, Grande:7400 }, iceOnly: false },
+  { category: "others", name: "애플밀크티", prices: { Tall: 6300, Grande:6800 }, iceOnly: false },
+  { category: "others", name: "잉글리쉬 티 라떼", prices: { Tall: 6300, Grande:6800 }, iceOnly: false },
+  { category: "others", name: "제주 말차 라떼", prices: { Tall: 6200, Grande:6700 }, iceOnly: false },
+  { category: "others", name: "발로나 자바칩 프라페", prices: { Tall: 6400, Grande:6900 }, iceOnly: false },
 ];
 const CUSTOM_MENU_VALUE = "__custom__";
 const formatter = new Intl.NumberFormat("ko-KR");
@@ -146,7 +146,7 @@ function showToast(message, type = "info", duration = 4000) {
 // ── 행 변환 ───────────────────────────────────────────────
 
 function rowToDrink(row) {
-  return { category: row.category, name: row.name, prices: { Tall: row.tall_price, Venti: row.venti_price }, iceOnly: Boolean(row.ice_only) };
+  return { category: row.category, name: row.name, prices: { Tall: row.tall_price, Grande:row.venti_price }, iceOnly: Boolean(row.ice_only) };
 }
 function rowToOrder(row) {
   return {
@@ -174,8 +174,8 @@ function getStatementGroups() {
   const groups = new Map();
   state.orders.forEach((o) => {
     const optKey = [...o.options].sort().join(", ");
-    const key = `${o.menuName}|${o.size}|${optKey}`;
-    const cur = groups.get(key) || { menuName: o.menuName, size: o.size, options: [...o.options].sort(), quantity: 0, total: 0 };
+    const key = `${o.menuName}|${o.size}|${o.temp || "ICE"}|${optKey}`;
+    const cur = groups.get(key) || { menuName: o.menuName, size: o.size, temp: o.temp || "ICE", options: [...o.options].sort(), quantity: 0, total: 0 };
     cur.quantity += 1;
     cur.total += normalizePrice(o.unitPrice);
     groups.set(key, cur);
@@ -234,7 +234,7 @@ function renderStatement() {
   const groups = getStatementGroups();
   statementList.innerHTML = groups.map((g) => {
     const optText = g.options.length ? ` (${g.options.map(escapeHtml).join(", ")})` : "";
-    return `<li class="statement-item"><span>${escapeHtml(g.menuName)} ${escapeHtml(g.size)}${optText} x${g.quantity}</span><span class="statement-item__divider" aria-hidden="true"></span><strong>${formatPrice(g.total)}</strong></li>`;
+    return `<li class="statement-item"><span>${escapeHtml(g.menuName)} ${escapeHtml(g.temp)} ${escapeHtml(g.size)}${optText} x${g.quantity}</span><span class="statement-item__divider" aria-hidden="true"></span><strong>${formatPrice(g.total)}</strong></li>`;
   }).join("");
   emptyStatement.classList.toggle("is-hidden", groups.length > 0);
   totalPrice.textContent = formatter.format(getTotalPrice());
@@ -278,10 +278,10 @@ function isCustomMenu() { return menuSelect.value === CUSTOM_MENU_VALUE; }
 function updateDrinkConstraints() {
   const drink = (!isCustomMenu() && menuSelect.value) ? findDrink(menuSelect.value) : null;
   Array.from(sizeSelect.options).forEach((opt) => {
-    if (opt.value === "Venti") {
-      const noVenti = Boolean(drink && drink.prices.Venti === 0);
+    if (opt.value === "Grande") {
+      const noVenti = Boolean(drink && drink.prices.Grande === 0);
       opt.disabled = noVenti; opt.hidden = noVenti;
-      if (noVenti && sizeSelect.value === "Venti") sizeSelect.value = "Tall";
+      if (noVenti && sizeSelect.value === "Grande") sizeSelect.value = "Tall";
     }
   });
   if (drinkTemp) {

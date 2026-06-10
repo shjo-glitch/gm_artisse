@@ -10,36 +10,36 @@ const DEFAULT_CATEGORIES = [
 ];
 const DEFAULT_DRINKS = [
   // 커피
-  { category: "coffee", name: "카페 아메리카노", prices: { Tall: 4900, Venti: 5400 }, iceOnly: false },
-  { category: "coffee", name: "카페라떼", prices: { Tall: 5600, Venti: 6100 }, iceOnly: false },
-  { category: "coffee", name: "카푸치노", prices: { Tall: 5600, Venti: 6100 }, iceOnly: false },
-  { category: "coffee", name: "캐러멜 마끼아또", prices: { Tall: 6500, Venti: 7000 }, iceOnly: false },
-  { category: "coffee", name: "바닐라라떼", prices: { Tall: 6300, Venti: 6800 }, iceOnly: false },
-  { category: "coffee", name: "스패니쉬라떼", prices: { Tall: 6300, Venti: 6800 }, iceOnly: false },
-  { category: "coffee", name: "플랫화이트", prices: { Tall: 5600, Venti: 6100 }, iceOnly: false },
+  { category: "coffee", name: "카페 아메리카노", prices: { Tall: 4900, Grande:5400 }, iceOnly: false },
+  { category: "coffee", name: "카페라떼", prices: { Tall: 5600, Grande:6100 }, iceOnly: false },
+  { category: "coffee", name: "카푸치노", prices: { Tall: 5600, Grande:6100 }, iceOnly: false },
+  { category: "coffee", name: "캐러멜 마끼아또", prices: { Tall: 6500, Grande:7000 }, iceOnly: false },
+  { category: "coffee", name: "바닐라라떼", prices: { Tall: 6300, Grande:6800 }, iceOnly: false },
+  { category: "coffee", name: "스패니쉬라떼", prices: { Tall: 6300, Grande:6800 }, iceOnly: false },
+  { category: "coffee", name: "플랫화이트", prices: { Tall: 5600, Grande:6100 }, iceOnly: false },
   // 과일음료
-  { category: "real-fruit-beverage", name: "리얼후르츠 오렌지주스", prices: { Tall: 8300, Venti: 8800 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "리얼후르츠 자몽주스", prices: { Tall: 8300, Venti: 8800 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "리얼후르츠 토마토주스", prices: { Tall: 8300, Venti: 8800 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "로열자몽티", prices: { Tall: 6700, Venti: 7200 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "클래식 레몬 허니 티", prices: { Tall: 6700, Venti: 7200 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "시그니처 오렌지 에이드", prices: { Tall: 6700, Venti: 7200 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "시그니처 레몬 에이드", prices: { Tall: 6700, Venti: 7200 }, iceOnly: false },
-  { category: "real-fruit-beverage", name: "시그니처 자몽 에이드", prices: { Tall: 6700, Venti: 7200 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "리얼후르츠 오렌지주스", prices: { Tall: 8300, Grande:8800 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "리얼후르츠 자몽주스", prices: { Tall: 8300, Grande:8800 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "리얼후르츠 토마토주스", prices: { Tall: 8300, Grande:8800 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "로열자몽티", prices: { Tall: 6700, Grande:7200 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "클래식 레몬 허니 티", prices: { Tall: 6700, Grande:7200 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "시그니처 오렌지 에이드", prices: { Tall: 6700, Grande:7200 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "시그니처 레몬 에이드", prices: { Tall: 6700, Grande:7200 }, iceOnly: false },
+  { category: "real-fruit-beverage", name: "시그니처 자몽 에이드", prices: { Tall: 6700, Grande:7200 }, iceOnly: false },
   // 차
-  { category: "tea", name: "캐모마일", prices: { Tall: 5800, Venti: 6300 }, iceOnly: false },
-  { category: "tea", name: "페퍼민트", prices: { Tall: 5800, Venti: 6300 }, iceOnly: false },
-  { category: "tea", name: "잉글리쉬 블랙퍼스트", prices: { Tall: 5800, Venti: 6300 }, iceOnly: false },
-  { category: "tea", name: "루이보스", prices: { Tall: 5800, Venti: 6300 }, iceOnly: false },
+  { category: "tea", name: "캐모마일", prices: { Tall: 5800, Grande:6300 }, iceOnly: false },
+  { category: "tea", name: "페퍼민트", prices: { Tall: 5800, Grande:6300 }, iceOnly: false },
+  { category: "tea", name: "잉글리쉬 블랙퍼스트", prices: { Tall: 5800, Grande:6300 }, iceOnly: false },
+  { category: "tea", name: "루이보스", prices: { Tall: 5800, Grande:6300 }, iceOnly: false },
   // 기타
-  { category: "others", name: "데일리 요거트 스무디", prices: { Tall: 6600, Venti: 7100 }, iceOnly: false },
-  { category: "others", name: "레몬 요거트 스무디", prices: { Tall: 6900, Venti: 7400 }, iceOnly: false },
-  { category: "others", name: "발로나 초코 프라페", prices: { Tall: 6900, Venti: 7400 }, iceOnly: false },
-  { category: "others", name: "발로나 더블 초콜릿", prices: { Tall: 6900, Venti: 7400 }, iceOnly: false },
-  { category: "others", name: "애플밀크티", prices: { Tall: 6300, Venti: 6800 }, iceOnly: false },
-  { category: "others", name: "잉글리쉬 티 라떼", prices: { Tall: 6300, Venti: 6800 }, iceOnly: false },
-  { category: "others", name: "제주 말차 라떼", prices: { Tall: 6200, Venti: 6700 }, iceOnly: false },
-  { category: "others", name: "발로나 자바칩 프라페", prices: { Tall: 6400, Venti: 6900 }, iceOnly: false },
+  { category: "others", name: "데일리 요거트 스무디", prices: { Tall: 6600, Grande:7100 }, iceOnly: false },
+  { category: "others", name: "레몬 요거트 스무디", prices: { Tall: 6900, Grande:7400 }, iceOnly: false },
+  { category: "others", name: "발로나 초코 프라페", prices: { Tall: 6900, Grande:7400 }, iceOnly: false },
+  { category: "others", name: "발로나 더블 초콜릿", prices: { Tall: 6900, Grande:7400 }, iceOnly: false },
+  { category: "others", name: "애플밀크티", prices: { Tall: 6300, Grande:6800 }, iceOnly: false },
+  { category: "others", name: "잉글리쉬 티 라떼", prices: { Tall: 6300, Grande:6800 }, iceOnly: false },
+  { category: "others", name: "제주 말차 라떼", prices: { Tall: 6200, Grande:6700 }, iceOnly: false },
+  { category: "others", name: "발로나 자바칩 프라페", prices: { Tall: 6400, Grande:6900 }, iceOnly: false },
 ];
 
 const userEditor = document.querySelector("#user-editor");
@@ -91,11 +91,11 @@ function normalizeOptions(values) {
   return out.length ? out : [...DEFAULT_OPTIONS];
 }
 function normalizeDrink(drink) {
-  if (typeof drink === "string") return { category: "others", name: drink.trim(), prices: { Tall: 0, Venti: 0 }, iceOnly: false };
+  if (typeof drink === "string") return { category: "others", name: drink.trim(), prices: { Tall: 0, Grande:0 }, iceOnly: false };
   return {
     category: String(drink?.category || "others"),
     name: String(drink?.name || "").trim(),
-    prices: { Tall: normalizePrice(drink?.prices?.Tall ?? drink?.tallPrice), Venti: normalizePrice(drink?.prices?.Venti ?? drink?.ventiPrice) },
+    prices: { Tall: normalizePrice(drink?.prices?.Tall ?? drink?.tallPrice), Grande:normalizePrice(drink?.prices?.Grande ?? drink?.ventiPrice) },
     iceOnly: Boolean(drink?.iceOnly),
   };
 }
@@ -114,14 +114,14 @@ function uniqueDrinks(values) {
 function serializeUsers() { return users.join("|"); }
 function serializeOptions() { return options.join("|"); }
 function serializeDrinks() {
-  return drinks.map((d) => `${d.category}|${d.name}|${d.prices.Tall}|${d.prices.Venti}${d.iceOnly ? "|Y" : ""}`).join("\n");
+  return drinks.map((d) => `${d.category}|${d.name}|${d.prices.Tall}|${d.prices.Grande}${d.iceOnly ? "|Y" : ""}`).join("\n");
 }
 function parseUsersTextarea() { return normalizeUsers(usersTextarea.value); }
 function parseOptionsTextarea() { return normalizeOptions(optionsTextarea.value); }
 function parseTextarea() {
   return uniqueDrinks(drinksTextarea.value.split("\n").map((line) => {
     const [category = "others", name = "", tall = "0", venti = "0", iceOnlyFlag = ""] = line.split("|").map((p) => p.trim());
-    return { category, name, prices: { Tall: normalizePrice(tall), Venti: normalizePrice(venti) }, iceOnly: iceOnlyFlag.toUpperCase() === "Y" };
+    return { category, name, prices: { Tall: normalizePrice(tall), Grande:normalizePrice(venti) }, iceOnly: iceOnlyFlag.toUpperCase() === "Y" };
   }));
 }
 
@@ -145,7 +145,7 @@ function renderDrinksPreview() {
     const catDrinks = drinks.filter((d) => d.category === cat.key);
     if (!catDrinks.length) return "";
     return `<section class="drink-category"><h3>${escapeHtml(cat.label)}</h3><ul>${catDrinks.map((d) => {
-      const ventiLabel = d.prices.Venti === 0 ? "Venti 없음" : `Venti ${formatPrice(d.prices.Venti)}`;
+      const ventiLabel = d.prices.Grande === 0 ? "Grande 없음" : `Grande ${formatPrice(d.prices.Grande)}`;
       const iceLabel = d.iceOnly ? " · ICE only" : "";
       return `<li><strong>${escapeHtml(d.name)}</strong><span>Tall ${formatPrice(d.prices.Tall)} · ${ventiLabel}${iceLabel}</span></li>`;
     }).join("")}</ul></section>`;
@@ -185,7 +185,7 @@ async function loadAdminData() {
     }
     if (drinksRes.data) {
       drinks = drinksRes.data.length
-        ? drinksRes.data.map((r) => normalizeDrink({ category: r.category, name: r.name, prices: { Tall: r.tall_price, Venti: r.venti_price }, iceOnly: r.ice_only }))
+        ? drinksRes.data.map((r) => normalizeDrink({ category: r.category, name: r.name, prices: { Tall: r.tall_price, Grande:r.venti_price }, iceOnly: r.ice_only }))
         : DEFAULT_DRINKS.map(normalizeDrink);
     }
     updatedAt = new Date().toISOString();
@@ -234,7 +234,7 @@ async function saveDrinks() {
       category: d.category,
       name: d.name,
       tall_price: d.prices.Tall,
-      venti_price: d.prices.Venti,
+      venti_price: d.prices.Grande,
       ice_only: d.iceOnly,
       sort_order: i,
     }));
@@ -252,7 +252,7 @@ function appendDrink() {
   const next = {
     category: categorySelect.value,
     name: newDrinkName.value.trim(),
-    prices: { Tall: normalizePrice(newDrinkTall.value), Venti: normalizePrice(newDrinkVenti.value) },
+    prices: { Tall: normalizePrice(newDrinkTall.value), Grande:normalizePrice(newDrinkVenti.value) },
     iceOnly: iceOnlyCheckbox ? iceOnlyCheckbox.checked : false,
   };
   if (!next.name) return setStatus("추가할 음료 이름을 입력하세요.");

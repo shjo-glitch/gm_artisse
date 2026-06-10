@@ -12,7 +12,7 @@
     <div class="hero__content">
       <p class="eyebrow">Admin</p>
       <h1 id="page-title">관리자 페이지</h1>
-      <p class="hero__description">주문 폼에서 사용할 팀원 명단, 카테고리별 음료 배열과 Tall/Venti 가격을 편집합니다.</p>
+      <p class="hero__description">주문 폼에서 사용할 팀원 명단, 카테고리별 음료 배열과 Tall/Grande 가격을 편집합니다.</p>
       <nav class="page-nav" aria-label="페이지 이동"><a href="index.html">주문표로 돌아가기</a></nav>
     </div>
     <aside class="hero__note" aria-label="관리 안내">
@@ -90,7 +90,7 @@
           <input id="new-drink-tall" type="number" min="0" step="100" inputmode="numeric" placeholder="예: 6500">
         </div>
         <div class="field">
-          <label for="new-drink-venti">Venti 가격</label>
+          <label for="new-drink-venti">Grande 가격</label>
           <input id="new-drink-venti" type="number" min="0" step="100" inputmode="numeric" placeholder="없으면 0">
         </div>
         <div class="field field--full">
@@ -103,7 +103,7 @@
         <div class="field field--full">
           <label for="drinks-textarea">음료 리스트</label>
           <textarea id="drinks-textarea" rows="14" spellcheck="false" aria-describedby="drinks-help"></textarea>
-          <p id="drinks-help" class="help-text">한 줄에 `카테고리|음료명|Tall가격|Venti가격|iceOnly` 형식으로 입력하세요. Venti 없는 메뉴는 Venti가격을 0으로, ICE only는 마지막에 Y를 입력하세요. 예: `coffee|아메리카노|4900|5400` 또는 `coffee|콜드브루|5500|0|Y`</p>
+          <p id="drinks-help" class="help-text">한 줄에 `카테고리|음료명|Tall가격|Grande가격|iceOnly` 형식으로 입력하세요. Grande 없는 메뉴는 Grande가격을 0으로, ICE only는 마지막에 Y를 입력하세요. 예: `coffee|아메리카노|4900|5400` 또는 `coffee|콜드브루|5500|0|Y`</p>
         </div>
 
         <div class="form-actions field--full">
