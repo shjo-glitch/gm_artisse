@@ -6,3 +6,4 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // 관리자 페이지 비밀번호 (빈 문자열이면 비밀번호 없이 접근 가능)
 const ADMIN_PASSWORD = ''; //tKhnzReSCGHYcElV
+
