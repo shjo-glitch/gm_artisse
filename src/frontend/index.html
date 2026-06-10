@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>아띠제 음료 주문표</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#order-form">주문 입력으로 건너뛰기</a>
+  <header class="hero" aria-labelledby="page-title">
+    <div class="hero__content">
+      <p class="eyebrow">Café Drink Order Sheet</p>
+      <h1 id="page-title">아띠제 음료 주문표</h1>
+      <p class="hero__description">사내 구성원의 음료 주문을 메뉴·주문자·사이즈·옵션과 함께 등록하고 총액을 확인하는 주문표입니다.</p>
+      <nav class="page-nav" aria-label="페이지 이동">
+        <a id="admin-link" href="admin.html">관리자 페이지</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="layout layout--orders">
+    <section class="card order-form-card" aria-labelledby="form-heading">
+      <div class="section-heading">
+        <div class="section-heading__title">
+          <p class="eyebrow">New Order</p>
+          <h2 id="form-heading">메뉴 주문 추가</h2>
+          <p class="section-heading__hint">메뉴는 카테고리별 목록에서 선택하거나 직접 입력할 수 있으며, 자주 찾는 옵션을 여러 개 선택할 수 있습니다. 가격은 하단 주문 명세서에서만 확인합니다.</p>
+        </div>
+      </div>
+
+      <aside class="season-menu" aria-labelledby="season-menu-heading">
+        <h3 id="season-menu-heading">진행중인 시즌메뉴</h3>
+        <p>직접 입력으로 신메뉴를 추가해서 주문할 수 있습니다. 공식 새메뉴 페이지에서 제목에 음료 키워드가 포함된 항목만 자동 표기합니다.</p>
+        <p><a href="https://www.cafeartisee.com/news/new/" target="_blank" rel="noopener noreferrer">아티제 새 메뉴 페이지</a></p>
+        <ul id="season-menu-list"></ul>
+        <p id="season-menu-empty" class="season-menu__empty">진행중인 음료 시즌메뉴를 불러오는 중입니다. <a href="https://www.cafeartisee.com/news/new/" target="_blank" rel="noopener noreferrer">공식 새메뉴 페이지</a></p>
+      </aside>
+
+      <form id="order-form" class="order-form">
+        <input type="hidden" id="editing-order-id" value="">
+
+        <div class="field order-form__menu-field">
+          <label for="menu-select">메뉴 이름</label>
+          <select id="menu-select" name="menuSelect"></select>
+        </div>
+
+        <div class="field order-form__temp-field">
+          <label for="drink-temp">온도</label>
+          <select id="drink-temp" name="drinkTemp">
+            <option value="ICE">ICE</option>
+            <option value="HOT">HOT</option>
+          </select>
+        </div>
+
+        <div id="custom-menu-field" class="field is-hidden">
+          <label for="custom-menu-name">직접 입력 메뉴</label>
+          <input id="custom-menu-name" name="customMenuName" type="text" autocomplete="off" placeholder="예: 시즌 한정 라떼">
+        </div>
+
+        <div id="custom-price-field" class="field is-hidden">
+          <label for="custom-unit-price">직접 입력 메뉴 가격</label>
+          <input id="custom-unit-price" name="customUnitPrice" type="number" min="0" step="100" inputmode="numeric" placeholder="예: 6500">
+        </div>
+
+        <div class="field order-form__requester-field">
+          <label for="requester-select">주문자</label>
+          <select id="requester-select" name="requester" required></select>
+        </div>
+
+        <div class="field order-form__size-field">
+          <label for="size-select">사이즈</label>
+          <select id="size-select" name="size" required></select>
+        </div>
+
+        <fieldset class="field field--full option-group">
+          <legend>옵션 선택</legend>
+          <div id="option-list" class="option-list"></div>
+          <div class="option-add" aria-label="옵션 추가">
+            <input id="new-option-name" type="text" autocomplete="off" placeholder="옵션 추가">
+            <button id="add-option" class="button button--ghost" type="button">+ 추가</button>
+          </div>
+        </fieldset>
+
+        <div class="field field--full">
+          <label for="order-note">비고</label>
+          <textarea id="order-note" name="note" rows="3" maxlength="300" placeholder="추가 요청사항을 입력하세요."></textarea>
+        </div>
+
+        <div class="form-actions field--full">
+          <button id="submit-order" class="button" type="submit">주문 추가</button>
+          <button id="cancel-edit" class="button button--ghost is-hidden" type="button">수정 취소</button>
+        </div>
+      </form>
+    </section>
+
+    <div class="order-side">
+    <section class="card order-statement" aria-labelledby="statement-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Statement</p>
+          <h2 id="statement-heading">주문 명세서</h2>
+        </div>
+      </div>
+      <div id="empty-statement" class="empty-state">아직 정리할 주문이 없습니다.</div>
+      <ul id="statement-list" class="statement-list" aria-label="종합 주문 명세"></ul>
+      <dl class="totals" aria-label="주문 명세 총액">
+        <div class="totals__amount">
+          <dt>총액</dt>
+          <dd><span id="total-price">0</span>원</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="card summary" aria-labelledby="summary-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Orders</p>
+          <h2 id="summary-heading">주문 목록</h2>
+        </div>
+        <div class="section-heading__actions">
+          <button id="reset-order" class="button button--ghost admin-only is-hidden" type="button">전체 초기화</button>
+          <button id="orders-toggle" class="button button--ghost" type="button">펼치기</button>
+        </div>
+      </div>
+
+      <div id="orders-body" hidden>
+        <div id="empty-order" class="empty-state">아직 등록된 주문이 없습니다. 주문 폼에서 음료 주문을 추가하세요.</div>
+        <ul id="order-list" class="order-list" aria-label="등록된 주문 목록"></ul>
+
+        <dl class="totals" aria-label="주문 목록 정보">
+          <div>
+            <dt>총 주문</dt>
+            <dd><span id="total-count">0</span>건</dd>
+          </div>
+          <div>
+            <dt>마지막 동기화</dt>
+            <dd id="last-updated">-</dd>
+          </div>
+        </dl>
+
+        <p id="order-status" class="status-message" role="status" aria-live="polite">주문을 불러오는 중입니다.</p>
+      </div>
+    </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>회사 내부 사용을 위한 아띠제 음료 주문표입니다.</p>
+  </footer>
+
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="false"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "attije-order-sheet",
+  "version": "0.1.0",
+  "private": true,
+  "description": "회사 내부 음료 주문표 HTTP 서버",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/backend/server.js",
+    "verify": "node --check src/backend/server.js && node --check src/frontend/script.js && node --check src/frontend/admin.js && node src/.test/structure.test.js && node src/.test/frontend-sync.test.js && node src/.test/server.test.js"
+  },
+  "keywords": [
+    "http-server",
+    "order-sheet",
+    "sse",
+    "cafe",
+    "drink"
+  ],
+  "license": "UNLICENSED"
+}

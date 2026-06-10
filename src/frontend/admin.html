@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>아띠제 관리자 페이지</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="auth-overlay" class="auth-overlay is-hidden">
+    <div class="auth-box">
+      <h2>관리자 인증</h2>
+      <p>관리자 비밀번호를 입력하세요.</p>
+      <input id="auth-password" type="password" placeholder="비밀번호" autocomplete="current-password">
+      <button id="auth-submit" class="button" type="button">확인</button>
+      <p id="auth-error" class="status-message is-hidden">비밀번호가 올바르지 않습니다.</p>
+    </div>
+  </div>
+  <a class="skip-link" href="#drink-editor">관리 편집으로 건너뛰기</a>
+  <header class="hero" aria-labelledby="page-title">
+    <div class="hero__content">
+      <p class="eyebrow">Admin</p>
+      <h1 id="page-title">관리자 페이지</h1>
+      <p class="hero__description">주문 폼에서 사용할 팀원 명단, 카테고리별 음료 배열과 Tall/Venti 가격을 편집합니다.</p>
+      <nav class="page-nav" aria-label="페이지 이동"><a href="index.html">주문표로 돌아가기</a></nav>
+    </div>
+    <aside class="hero__note" aria-label="관리 안내">
+      <strong>관리 안내</strong>
+      <span>관리자 페이지는 서버 장비의 로컬 접속에서만 사용할 수 있습니다.</span>
+    </aside>
+  </header>
+
+  <main class="layout layout--admin">
+    <section class="card" aria-labelledby="user-admin-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Team</p>
+          <h2 id="user-admin-heading">팀원 명단</h2>
+        </div>
+        <button id="reload-users" class="button button--ghost" type="button">다시 불러오기</button>
+      </div>
+
+      <form id="user-editor" class="admin-form admin-form--single">
+        <div class="field field--full">
+          <label for="users-textarea">팀원 입력</label>
+          <textarea id="users-textarea" rows="5" spellcheck="false" aria-describedby="users-help" placeholder="예: 홍길동|김철수|이영희"></textarea>
+          <p id="users-help" class="help-text">이름을 `|` 구분자로 입력하세요. 저장 시 중복과 공백을 정리하고 가나다 순으로 오름차순 정렬합니다.</p>
+        </div>
+        <div class="form-actions field--full">
+          <button id="save-users" class="button" type="submit">팀원 명단 저장</button>
+        </div>
+      </form>
+      <div id="user-preview" class="user-preview" aria-label="현재 팀원 명단"></div>
+    </section>
+
+
+    <section class="card" aria-labelledby="option-admin-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Options</p>
+          <h2 id="option-admin-heading">옵션 목록</h2>
+        </div>
+        <button id="reload-options" class="button button--ghost" type="button">다시 불러오기</button>
+      </div>
+
+      <form id="option-editor" class="admin-form admin-form--single">
+        <div class="field field--full">
+          <label for="options-textarea">옵션 입력</label>
+          <textarea id="options-textarea" rows="5" spellcheck="false" aria-describedby="options-help" placeholder="예: 연하게|덜달게|디카페인"></textarea>
+          <p id="options-help" class="help-text">옵션명을 `|` 구분자로 입력하세요. 주문 화면의 옵션 선택 항목으로 즉시 동기화됩니다.</p>
+        </div>
+        <div class="form-actions field--full">
+          <button id="save-options" class="button" type="submit">옵션 목록 저장</button>
+        </div>
+      </form>
+      <div id="option-preview" class="user-preview" aria-label="현재 옵션 목록"></div>
+    </section>
+
+    <section class="card" aria-labelledby="admin-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Season Menu</p>
+          <h2 id="admin-heading">음료 배열 편집</h2>
+        </div>
+        <button id="reload-drinks" class="button button--ghost" type="button">다시 불러오기</button>
+      </div>
+
+      <form id="drink-editor" class="admin-form">
+        <div class="field">
+          <label for="new-drink-category">카테고리</label>
+          <select id="new-drink-category"></select>
+        </div>
+        <div class="field">
+          <label for="new-drink-name">음료 이름</label>
+          <input id="new-drink-name" type="text" autocomplete="off" placeholder="예: 시즌 콜드브루">
+        </div>
+        <div class="field">
+          <label for="new-drink-tall">Tall 가격</label>
+          <input id="new-drink-tall" type="number" min="0" step="100" inputmode="numeric" placeholder="예: 6500">
+        </div>
+        <div class="field">
+          <label for="new-drink-venti">Venti 가격</label>
+          <input id="new-drink-venti" type="number" min="0" step="100" inputmode="numeric" placeholder="없으면 0">
+        </div>
+        <div class="field field--full">
+          <label class="option-toggle"><input id="new-drink-ice-only" type="checkbox" name="iceOnly"><span>ICE only (HOT 주문 불가)</span></label>
+        </div>
+        <div class="form-actions field--full">
+          <button class="button" type="button" id="add-drink">음료 추가</button>
+        </div>
+
+        <div class="field field--full">
+          <label for="drinks-textarea">음료 리스트</label>
+          <textarea id="drinks-textarea" rows="14" spellcheck="false" aria-describedby="drinks-help"></textarea>
+          <p id="drinks-help" class="help-text">한 줄에 `카테고리|음료명|Tall가격|Venti가격|iceOnly` 형식으로 입력하세요. Venti 없는 메뉴는 Venti가격을 0으로, ICE only는 마지막에 Y를 입력하세요. 예: `coffee|아메리카노|4900|5400` 또는 `coffee|콜드브루|5500|0|Y`</p>
+        </div>
+
+        <div class="form-actions field--full">
+          <button id="save-drinks" class="button" type="submit">음료 리스트 저장</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card summary" aria-labelledby="preview-heading">
+      <div class="section-heading"><div><p class="eyebrow">Preview</p><h2 id="preview-heading">현재 음료</h2></div></div>
+      <div id="drink-preview" class="drink-preview" aria-label="현재 음료 리스트"></div>
+      <p id="admin-status" class="status-message" role="status" aria-live="polite">관리 데이터를 불러오는 중입니다.</p>
+    </section>
+  </main>
+
+  <footer class="footer"><p>서버 관리자를 위한 관리자 페이지입니다.</p></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
