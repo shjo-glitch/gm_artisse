@@ -234,7 +234,8 @@ function renderStatement() {
   const groups = getStatementGroups();
   statementList.innerHTML = groups.map((g) => {
     const optText = g.options.length ? ` (${g.options.map(escapeHtml).join(", ")})` : "";
-    return `<li class="statement-item"><span>${escapeHtml(g.menuName)} ${escapeHtml(g.temp)} ${escapeHtml(g.size)}${optText} x${g.quantity}</span><span class="statement-item__divider" aria-hidden="true"></span><strong>${formatPrice(g.total)}</strong></li>`;
+    const sizeAbbr = g.size === "Grande" ? "G" : "T";
+    return `<li class="statement-item"><span>${escapeHtml(g.menuName)} ${escapeHtml(g.temp)} ${sizeAbbr}${optText} x${g.quantity}</span><span class="statement-item__divider" aria-hidden="true"></span><strong>${formatPrice(g.total)}</strong></li>`;
   }).join("");
   emptyStatement.classList.toggle("is-hidden", groups.length > 0);
   totalPrice.textContent = formatter.format(getTotalPrice());
