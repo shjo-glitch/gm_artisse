@@ -24,6 +24,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Generate Supabase config
+        run: |
+          cat > src/frontend/supabase-config.js << 'EOF'
+          const SUPABASE_URL = '${{ secrets.SUPABASE_URL }}';
+          const SUPABASE_ANON_KEY = '${{ secrets.SUPABASE_ANON_KEY }}';
+          const ADMIN_PASSWORD = '${{ secrets.ADMIN_PASSWORD }}';
+          EOF
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
