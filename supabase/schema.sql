@@ -1,21 +1,22 @@
 -- 아띠제 주문표 Supabase 스키마
 -- Supabase SQL Editor에서 실행하세요.
 
--- config 테이블 (팀원/옵션 목록을 단일 행으로 관리)
+-- config 테이블 (팀원/옵션 목록 + 주문 마감 상태를 단일 행으로 관리)
 create table if not exists config (
   id integer primary key default 1,
   users text[] not null default '{}',
   options text[] not null default '{"연하게","덜달게","디카페인","더달게","두유","오트밀크"}',
+  orders_closed boolean not null default false,
   constraint config_singleton check (id = 1)
 );
 insert into config (id) values (1) on conflict do nothing;
 
--- drinks 테이블
+-- drinks 테이블 (가격은 Tall / Grande 2종)
 create table if not exists drinks (
   category text not null,
   name text not null,
   tall_price integer not null default 0,
-  venti_price integer not null default 0,
+  grande_price integer not null default 0,
   ice_only boolean not null default false,
   sort_order integer not null default 0,
   primary key (category, name)

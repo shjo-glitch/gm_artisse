@@ -54,6 +54,7 @@ const state = {
   categories: [...DEFAULT_CATEGORIES],
   drinks: [...DEFAULT_DRINKS],
   orders: [],
+  ordersClosed: false,
   updatedAt: "",
   seasonalMenus: [],
   seasonalMenusLoading: false,
@@ -96,6 +97,8 @@ const addOptionButton = document.querySelector("#add-option");
 const ordersToggle = document.querySelector("#orders-toggle");
 const ordersBody = document.querySelector("#orders-body");
 const toastContainer = document.getElementById("toast-container");
+const orderClosedBanner = document.querySelector("#order-closed-banner");
+const toggleCloseBtn = document.querySelector("#toggle-close");
 
 // ── 유틸리티 ─────────────────────────────────────────────
 
@@ -143,10 +146,39 @@ function showToast(message, type = "info", duration = 4000) {
   el.addEventListener("click", () => { clearTimeout(timer); hide(); });
 }
 
+// ── 관리자 / 주문 마감 ────────────────────────────────────
+
+function isAdmin() {
+  if (!ADMIN_PASSWORD) return true; // 비밀번호 미설정 시 관리자 기능 잠금 해제 (admin.js checkAuth 와 동일)
+  return sessionStorage.getItem("admin_auth") === ADMIN_PASSWORD;
+}
+// 관리자 인증 시에만 노출되는 컨트롤(.admin-only)을 표시한다.
+function revealAdminControls() {
+  if (!isAdmin()) return;
+  document.querySelectorAll(".admin-only").forEach((el) => el.classList.remove("is-hidden"));
+}
+// 마감 상태를 화면 전체에 반영한다. (배너, 주문 폼, 옵션 추가, 토글 버튼 라벨, 주문 목록)
+function applyClosedState() {
+  const closed = state.ordersClosed;
+  if (orderClosedBanner) orderClosedBanner.classList.toggle("is-hidden", !closed);
+  if (submitOrder) submitOrder.disabled = closed;
+  if (addOptionButton) addOptionButton.disabled = closed;
+  if (newOptionName) newOptionName.disabled = closed;
+  // 마감 시 주문 폼 입력 자체를 잠가 혼란을 줄인다. (취소 버튼은 편집 이탈용으로 활성 유지)
+  [menuSelect, requesterSelect, sizeSelect, drinkTemp, orderNote, customMenuName, customUnitPrice]
+    .forEach((el) => { if (el) el.disabled = closed; });
+  optionList.querySelectorAll('input[name="orderOptions"]').forEach((i) => { i.disabled = closed; });
+  if (toggleCloseBtn) {
+    toggleCloseBtn.textContent = closed ? "주문 재개" : "주문 마감";
+    toggleCloseBtn.classList.toggle("button--danger", !closed);
+  }
+  renderOrders();
+}
+
 // ── 행 변환 ───────────────────────────────────────────────
 
 function rowToDrink(row) {
-  return { category: row.category, name: row.name, prices: { Tall: row.tall_price, Grande:row.venti_price }, iceOnly: Boolean(row.ice_only) };
+  return { category: row.category, name: row.name, prices: { Tall: row.tall_price, Grande:row.grande_price }, iceOnly: Boolean(row.ice_only) };
 }
 function rowToOrder(row) {
   return {
@@ -250,13 +282,13 @@ function renderOrders() {
         ${o.note ? `<p>${escapeHtml(o.note)}</p>` : ""}
       </div>
       <div class="order-item__actions">
-        <button class="button button--ghost" type="button" data-action="edit" data-id="${escapeHtml(o.id)}">수정</button>
-        <button class="button button--danger" type="button" data-action="delete" data-id="${escapeHtml(o.id)}">삭제</button>
+        <button class="button button--ghost" type="button" data-action="edit" data-id="${escapeHtml(o.id)}" ${state.ordersClosed ? "disabled" : ""}>수정</button>
+        <button class="button button--danger" type="button" data-action="delete" data-id="${escapeHtml(o.id)}" ${state.ordersClosed ? "disabled" : ""}>삭제</button>
       </div>
     </li>`).join("");
   emptyOrder.classList.toggle("is-hidden", state.orders.length > 0);
   totalCount.textContent = formatter.format(state.orders.length);
-  if (resetButton) resetButton.disabled = state.orders.length === 0;
+  if (resetButton) resetButton.disabled = state.orders.length === 0 || state.ordersClosed;
   renderStatement();
 }
 function renderSeasonalMenus() {
@@ -280,9 +312,9 @@ function updateDrinkConstraints() {
   const drink = (!isCustomMenu() && menuSelect.value) ? findDrink(menuSelect.value) : null;
   Array.from(sizeSelect.options).forEach((opt) => {
     if (opt.value === "Grande") {
-      const noVenti = Boolean(drink && drink.prices.Grande === 0);
-      opt.disabled = noVenti; opt.hidden = noVenti;
-      if (noVenti && sizeSelect.value === "Grande") sizeSelect.value = "Tall";
+      const noGrande = Boolean(drink && drink.prices.Grande === 0);
+      opt.disabled = noGrande; opt.hidden = noGrande;
+      if (noGrande && sizeSelect.value === "Grande") sizeSelect.value = "Tall";
     }
   });
   if (drinkTemp) {
@@ -374,13 +406,14 @@ async function loadState() {
     if (configRes.data) {
       state.users = sortUsers(configRes.data.users || []);
       state.options = configRes.data.options?.length ? configRes.data.options : [...DEFAULT_OPTIONS];
+      state.ordersClosed = Boolean(configRes.data.orders_closed);
     }
     if (drinksRes.data?.length) state.drinks = drinksRes.data.map(rowToDrink);
     if (ordersRes.data) state.orders = ordersRes.data.map(rowToOrder);
     renderConfig();
-    renderOrders();
+    applyClosedState();
     setUpdatedAt(new Date().toISOString());
-    setStatus("데이터를 불러왔습니다.");
+    setStatus(state.ordersClosed ? "현재 주문이 마감된 상태입니다." : "데이터를 불러왔습니다.");
   } catch (e) {
     console.error("[loadState]", e);
     setStatus("데이터를 불러오지 못했습니다. supabase-config.js 설정을 확인하세요.");
@@ -403,13 +436,18 @@ async function reloadConfig(notify = true) {
   ]);
   if (configRes.data) {
     const prevUsers = [...state.users];
+    const prevClosed = state.ordersClosed;
     state.users = sortUsers(configRes.data.users || []);
     state.options = configRes.data.options?.length ? configRes.data.options : [...DEFAULT_OPTIONS];
+    state.ordersClosed = Boolean(configRes.data.orders_closed);
     if (notify) {
       const added = state.users.filter((u) => !prevUsers.includes(u));
       const removed = prevUsers.filter((u) => !state.users.includes(u));
       if (added.length) showToast(`팀원 추가: ${added.join(", ")}`, "success");
       if (removed.length) showToast(`팀원 제외: ${removed.join(", ")}`, "warning");
+      if (prevClosed !== state.ordersClosed) {
+        showToast(state.ordersClosed ? "주문이 마감되었습니다." : "주문이 재개되었습니다.", state.ordersClosed ? "warning" : "success");
+      }
     }
   }
   if (drinksRes.data) {
@@ -423,13 +461,14 @@ async function reloadConfig(notify = true) {
     }
   }
   renderConfig();
-  renderOrders();
+  applyClosedState();
   setUpdatedAt(new Date().toISOString());
 }
 
 // ── Supabase CRUD ─────────────────────────────────────────
 
 async function createOrder(payload) {
+  if (state.ordersClosed) { setStatus("주문이 마감되어 추가할 수 없습니다."); return; }
   const drink = findDrink(payload.menuName);
   const { data, error } = await db.from("orders").insert({
     menu_name: payload.menuName,
@@ -450,6 +489,7 @@ async function createOrder(payload) {
 }
 
 async function updateOrder(id, payload) {
+  if (state.ordersClosed) { setStatus("주문이 마감되어 수정할 수 없습니다."); return; }
   const drink = findDrink(payload.menuName);
   const { data, error } = await db.from("orders").update({
     menu_name: payload.menuName,
@@ -470,6 +510,7 @@ async function updateOrder(id, payload) {
 }
 
 async function deleteOrder(id) {
+  if (state.ordersClosed) { setStatus("주문이 마감되어 삭제할 수 없습니다."); return; }
   state.orders = state.orders.filter((o) => o.id !== id);
   renderOrders();
   const { error } = await db.from("orders").delete().eq("id", id);
@@ -479,6 +520,7 @@ async function deleteOrder(id) {
 }
 
 async function addOption() {
+  if (state.ordersClosed) { setStatus("주문이 마감되어 옵션을 추가할 수 없습니다."); return; }
   const option = newOptionName.value.trim();
   if (!option) return setStatus("추가할 옵션명을 입력하세요.");
   const nextOptions = [...new Set([...state.options, option])];
@@ -491,12 +533,27 @@ async function addOption() {
 }
 
 async function resetOrders() {
+  if (state.ordersClosed) { setStatus("주문이 마감되어 초기화할 수 없습니다. 먼저 주문을 재개하세요."); return; }
   state.orders = [];
   renderOrders();
   const { error } = await db.from("orders").delete().not("id", "is", null);
   if (error) { await reloadOrders(); setStatus("초기화에 실패했습니다."); return; }
   setUpdatedAt(new Date().toISOString());
   setStatus("전체 주문을 초기화했습니다.");
+}
+
+// 주문 마감/재개 토글 (관리자 전용). config.orders_closed 를 갱신하면 Realtime 으로 전원에게 전파된다.
+async function toggleOrdersClosed() {
+  if (!isAdmin()) { setStatus("관리자만 주문을 마감/재개할 수 있습니다."); return; }
+  const next = !state.ordersClosed;
+  if (toggleCloseBtn) toggleCloseBtn.disabled = true;
+  const { error } = await db.from("config").update({ orders_closed: next }).eq("id", 1);
+  if (toggleCloseBtn) toggleCloseBtn.disabled = false;
+  if (error) { setStatus(`상태 변경 실패: ${error.message}`); return; }
+  state.ordersClosed = next;
+  applyClosedState();
+  setStatus(next ? "주문을 마감했습니다." : "주문을 재개했습니다.");
+  showToast(next ? "주문을 마감했습니다." : "주문을 재개했습니다.", next ? "warning" : "success");
 }
 
 // ── Realtime ──────────────────────────────────────────────
@@ -570,6 +627,7 @@ menuSelect.addEventListener("change", () => { updateCustomFields(); updateDrinkC
 sizeSelect.addEventListener("change", () => { if (!isCustomMenu()) setStatus("사이즈를 변경했습니다."); });
 orderForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+  if (state.ordersClosed) return setStatus("주문이 마감되었습니다. 관리자가 재개해야 주문할 수 있습니다.");
   const payload = getFormPayload();
   const err = validatePayload(payload);
   if (err) return setStatus(err);
@@ -585,6 +643,7 @@ orderForm.addEventListener("submit", async (e) => {
 });
 cancelEdit.addEventListener("click", resetForm);
 if (resetButton) resetButton.addEventListener("click", () => { resetOrders(); });
+if (toggleCloseBtn) toggleCloseBtn.addEventListener("click", () => { toggleOrdersClosed(); });
 if (ordersToggle) ordersToggle.addEventListener("click", () => { setOrdersExpanded(ordersBody.hasAttribute("hidden")); });
 addOptionButton.addEventListener("click", addOption);
 newOptionName.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addOption(); } });
@@ -598,8 +657,9 @@ orderList.addEventListener("click", (e) => {
 
 // ── 초기화 ────────────────────────────────────────────────
 
+revealAdminControls();
 renderConfig();
-renderOrders();
+applyClosedState();
 setUpdatedAt();
 loadState();
 connectRealtime();

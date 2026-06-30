@@ -55,7 +55,7 @@ const categorySelect = document.querySelector("#new-drink-category");
 const drinksTextarea = document.querySelector("#drinks-textarea");
 const newDrinkName = document.querySelector("#new-drink-name");
 const newDrinkTall = document.querySelector("#new-drink-tall");
-const newDrinkVenti = document.querySelector("#new-drink-venti");
+const newDrinkGrande = document.querySelector("#new-drink-grande");
 const addDrinkBtn = document.querySelector("#add-drink");
 const reloadDrinksBtn = document.querySelector("#reload-drinks");
 const drinkPreview = document.querySelector("#drink-preview");
@@ -95,7 +95,7 @@ function normalizeDrink(drink) {
   return {
     category: String(drink?.category || "others"),
     name: String(drink?.name || "").trim(),
-    prices: { Tall: normalizePrice(drink?.prices?.Tall ?? drink?.tallPrice), Grande:normalizePrice(drink?.prices?.Grande ?? drink?.ventiPrice) },
+    prices: { Tall: normalizePrice(drink?.prices?.Tall ?? drink?.tallPrice), Grande:normalizePrice(drink?.prices?.Grande ?? drink?.grandePrice) },
     iceOnly: Boolean(drink?.iceOnly),
   };
 }
@@ -120,8 +120,8 @@ function parseUsersTextarea() { return normalizeUsers(usersTextarea.value); }
 function parseOptionsTextarea() { return normalizeOptions(optionsTextarea.value); }
 function parseTextarea() {
   return uniqueDrinks(drinksTextarea.value.split("\n").map((line) => {
-    const [category = "others", name = "", tall = "0", venti = "0", iceOnlyFlag = ""] = line.split("|").map((p) => p.trim());
-    return { category, name, prices: { Tall: normalizePrice(tall), Grande:normalizePrice(venti) }, iceOnly: iceOnlyFlag.toUpperCase() === "Y" };
+    const [category = "others", name = "", tall = "0", grande = "0", iceOnlyFlag = ""] = line.split("|").map((p) => p.trim());
+    return { category, name, prices: { Tall: normalizePrice(tall), Grande:normalizePrice(grande) }, iceOnly: iceOnlyFlag.toUpperCase() === "Y" };
   }));
 }
 
@@ -145,9 +145,9 @@ function renderDrinksPreview() {
     const catDrinks = drinks.filter((d) => d.category === cat.key);
     if (!catDrinks.length) return "";
     return `<section class="drink-category"><h3>${escapeHtml(cat.label)}</h3><ul>${catDrinks.map((d) => {
-      const ventiLabel = d.prices.Grande === 0 ? "Grande 없음" : `Grande ${formatPrice(d.prices.Grande)}`;
+      const grandeLabel = d.prices.Grande === 0 ? "Grande 없음" : `Grande ${formatPrice(d.prices.Grande)}`;
       const iceLabel = d.iceOnly ? " · ICE only" : "";
-      return `<li><strong>${escapeHtml(d.name)}</strong><span>Tall ${formatPrice(d.prices.Tall)} · ${ventiLabel}${iceLabel}</span></li>`;
+      return `<li><strong>${escapeHtml(d.name)}</strong><span>Tall ${formatPrice(d.prices.Tall)} · ${grandeLabel}${iceLabel}</span></li>`;
     }).join("")}</ul></section>`;
   }).join("");
 }
@@ -185,7 +185,7 @@ async function loadAdminData() {
     }
     if (drinksRes.data) {
       drinks = drinksRes.data.length
-        ? drinksRes.data.map((r) => normalizeDrink({ category: r.category, name: r.name, prices: { Tall: r.tall_price, Grande:r.venti_price }, iceOnly: r.ice_only }))
+        ? drinksRes.data.map((r) => normalizeDrink({ category: r.category, name: r.name, prices: { Tall: r.tall_price, Grande:r.grande_price }, iceOnly: r.ice_only }))
         : DEFAULT_DRINKS.map(normalizeDrink);
     }
     updatedAt = new Date().toISOString();
@@ -234,7 +234,7 @@ async function saveDrinks() {
       category: d.category,
       name: d.name,
       tall_price: d.prices.Tall,
-      venti_price: d.prices.Grande,
+      grande_price: d.prices.Grande,
       ice_only: d.iceOnly,
       sort_order: i,
     }));
@@ -252,12 +252,12 @@ function appendDrink() {
   const next = {
     category: categorySelect.value,
     name: newDrinkName.value.trim(),
-    prices: { Tall: normalizePrice(newDrinkTall.value), Grande:normalizePrice(newDrinkVenti.value) },
+    prices: { Tall: normalizePrice(newDrinkTall.value), Grande:normalizePrice(newDrinkGrande.value) },
     iceOnly: iceOnlyCheckbox ? iceOnlyCheckbox.checked : false,
   };
   if (!next.name) return setStatus("추가할 음료 이름을 입력하세요.");
   drinks = uniqueDrinks([...parseTextarea(), next]);
-  newDrinkName.value = ""; newDrinkTall.value = ""; newDrinkVenti.value = "";
+  newDrinkName.value = ""; newDrinkTall.value = ""; newDrinkGrande.value = "";
   if (iceOnlyCheckbox) iceOnlyCheckbox.checked = false;
   render();
   setStatus("음료를 목록에 추가했습니다. 서버 반영은 저장 버튼을 누르세요.");

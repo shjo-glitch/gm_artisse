@@ -85,6 +85,7 @@ h2 { margin-bottom: 0; font-size: clamp(1.45rem, 3vw, 2rem); letter-spacing: -.0
 .footer { padding: 2rem 0 3rem; text-align: center; }
 .footer p { margin-bottom: 0; }
 .is-hidden { display: none !important; }
+.closed-banner { display: flex; align-items: center; gap: .5rem; border: 1px solid #f4b8b0; border-radius: 16px; background: #fff2f0; color: var(--danger); margin-bottom: 1.25rem; padding: .9rem 1.1rem; font-weight: 800; line-height: 1.5; }
 .option-group { border: 1px solid var(--border); border-radius: 18px; padding: 1rem; }
 .option-group legend { color: var(--brand-dark); font-weight: 800; padding: 0 .35rem; }
 .option-list { display: flex; flex-wrap: wrap; gap: .6rem; }
