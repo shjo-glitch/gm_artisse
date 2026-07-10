@@ -1,7 +1,7 @@
 # 아띠제 음료 주문표
 
 사내 구성원의 음료 주문을 한 화면에서 수집하고, Supabase로 실시간 동기화하는 웹 앱입니다.
-별도의 애플리케이션 서버 없이 **정적 프론트엔드(HTML/CSS/JS) + Supabase(Postgres·Realtime)** 로 동작하며, GitHub Pages로 배포합니다.
+별도의 애플리케이션 서버 없이 **정적 프론트엔드(HTML/CSS/JS) + Supabase(Postgres·Realtime)** 로 동작하며, GitHub Pages 또는 OpenAI Sites로 배포합니다.
 
 ## 아키텍처 개요
 
@@ -54,6 +54,16 @@ const ADMIN_PASSWORD = '<관리자 비밀번호>';   // 비우면 관리자 기�
   - `SUPABASE_URL`
   - `SUPABASE_ANON_KEY`
   - `ADMIN_PASSWORD`
+
+## 배포 (OpenAI Sites)
+
+Sites 배포본은 기존 정적 프론트엔드를 그대로 제공하고, 실행 환경의
+`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ADMIN_PASSWORD` 값을
+`supabase-config.js` 응답으로 주입합니다. 배포용 산출물은 다음 명령으로 생성합니다.
+
+```bash
+npm run build
+```
 
 ## 관리자
 

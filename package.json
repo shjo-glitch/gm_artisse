@@ -3,15 +3,17 @@
   "version": "0.2.0",
   "private": true,
   "description": "회사 내부 음료 주문표 (Supabase + 정적 프론트엔드)",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "verify": "node --check src/frontend/script.js && node --check src/frontend/admin.js",
-    "dev": "npx --yes serve src/frontend"
+    "dev": "npx --yes serve src/frontend",
+    "build": "node build.mjs"
   },
   "keywords": [
     "order-sheet",
     "supabase",
     "github-pages",
+    "openai-sites",
     "cafe",
     "drink"
   ],
