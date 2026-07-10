@@ -228,6 +228,7 @@ function diffDrinks(prev, next) {
 
 function setOrdersExpanded(open) {
   if (!ordersToggle || !ordersBody) return;
+  ordersToggle.setAttribute("aria-expanded", String(open));
   if (open) { ordersBody.removeAttribute("hidden"); ordersToggle.textContent = "접기"; }
   else { ordersBody.setAttribute("hidden", ""); ordersToggle.textContent = "펼치기"; }
 }

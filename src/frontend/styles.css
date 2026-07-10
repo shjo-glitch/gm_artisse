@@ -116,6 +116,9 @@ h2 { margin-bottom: 0; font-size: clamp(1.45rem, 3vw, 2rem); letter-spacing: -.0
 .statement-item__divider::before { content: "------------------------------------------------------------"; letter-spacing: .08em; }
 .statement-item strong { color: var(--brand-dark); white-space: nowrap; }
 .section-heading__actions { display: flex; align-items: center; gap: .5rem; }
+.order-count-summary { margin: .55rem 0 0; color: var(--muted); font-size: .95rem; font-weight: 700; }
+.order-count-summary span { color: var(--brand-dark); font-weight: 900; }
+.order-list-divider { height: 1px; background: var(--border); margin: -.15rem 0 1.15rem; }
 .toast-container { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 999; display: flex; flex-direction: column; gap: .5rem; pointer-events: none; }
 .toast { display: flex; align-items: flex-start; gap: .6rem; background: #1e293b; color: #f8fafc; padding: .7rem 1rem; border-radius: 10px; font-size: .82rem; line-height: 1.45; max-width: 280px; opacity: 0; transform: translateY(.5rem); transition: opacity .2s ease, transform .2s ease; pointer-events: auto; box-shadow: 0 4px 16px rgba(0,0,0,.18); }
 .toast.toast--visible { opacity: 1; transform: translateY(0); }

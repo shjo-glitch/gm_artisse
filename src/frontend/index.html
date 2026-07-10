@@ -119,23 +119,22 @@
         <div>
           <p class="eyebrow">Orders</p>
           <h2 id="summary-heading">주문 목록</h2>
+          <p class="order-count-summary">총 주문 : <span id="total-count">0</span>개</p>
         </div>
         <div class="section-heading__actions">
           <button id="toggle-close" class="button button--danger admin-only is-hidden" type="button">주문 마감</button>
           <button id="reset-order" class="button button--ghost admin-only is-hidden" type="button">전체 초기화</button>
-          <button id="orders-toggle" class="button button--ghost" type="button">펼치기</button>
+          <button id="orders-toggle" class="button button--ghost" type="button" aria-expanded="false" aria-controls="orders-body">펼치기</button>
         </div>
       </div>
+
+      <div class="order-list-divider" aria-hidden="true"></div>
 
       <div id="orders-body" hidden>
         <div id="empty-order" class="empty-state">아직 등록된 주문이 없습니다. 주문 폼에서 음료 주문을 추가하세요.</div>
         <ul id="order-list" class="order-list" aria-label="등록된 주문 목록"></ul>
 
         <dl class="totals" aria-label="주문 목록 정보">
-          <div>
-            <dt>총 주문</dt>
-            <dd><span id="total-count">0</span>건</dd>
-          </div>
           <div>
             <dt>마지막 동기화</dt>
             <dd id="last-updated">-</dd>
