@@ -31,7 +31,9 @@ h1 { margin-bottom: .55rem; font-size: clamp(1.9rem, 4.5vw, 3.1rem); line-height
 h2 { margin-bottom: 0; font-size: clamp(1.45rem, 3vw, 2rem); letter-spacing: -.035em; }
 .hero__description, .section-heading__hint, .empty-state, .footer, .help-text, .status-message { color: var(--muted); }
 .hero__description { max-width: 56rem; margin-bottom: .8rem; font-size: clamp(.95rem, 1.5vw, 1.05rem); line-height: 1.55; }
-.page-nav a { display: inline-flex; min-height: 40px; align-items: center; border-radius: 999px; background: var(--surface-strong); color: var(--brand-dark); padding: 0 1rem; font-weight: 800; text-decoration: none; }
+.page-nav { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.page-nav a, .page-nav .button { display: inline-flex; min-height: 40px; width: auto; align-items: center; border-radius: 999px; padding: 0 1rem; font-weight: 800; }
+.page-nav a { background: var(--surface-strong); color: var(--brand-dark); text-decoration: none; }
 .page-nav a:focus-visible, .field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible, .button:focus-visible, .option-add input:focus-visible { outline: none; box-shadow: var(--focus); }
 .layout { display: grid; gap: 1.5rem; align-items: start; }
 .layout--orders { grid-template-columns: 1fr; }
