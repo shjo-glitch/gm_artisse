@@ -12,12 +12,7 @@ await mkdir(client, { recursive: true });
 await mkdir(server, { recursive: true });
 await mkdir(metadata, { recursive: true });
 
-await cp(resolve(root, "src/frontend"), client, {
-  recursive: true,
-  filter(source) {
-    return !source.endsWith("supabase-config.js");
-  },
-});
+await cp(resolve(root, "src/frontend"), client, { recursive: true });
 
 await cp(resolve(root, "worker/index.js"), resolve(server, "index.js"));
 await cp(

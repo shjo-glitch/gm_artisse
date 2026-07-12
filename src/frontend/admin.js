@@ -1,6 +1,3 @@
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 const DEFAULT_OPTIONS = ["연하게", "덜달게", "디카페인", "더달게", "두유", "오트밀크"];
 const DEFAULT_CATEGORIES = [
   { key: "coffee", label: "커피", sourceLabel: "Coffee" },
@@ -161,31 +158,39 @@ function render() {
 function setStatus(msg) {
   adminStatus.textContent = updatedAt ? `${msg} 마지막 변경: ${new Date(updatedAt).toLocaleString("ko-KR")}` : msg;
 }
+async function apiRequest(path, { method = "GET", body } = {}) {
+  const headers = { "x-admin-password": sessionStorage.getItem("admin_password") || "" };
+  if (body !== undefined) headers["content-type"] = "application/json";
+  const response = await fetch(path, {
+    method,
+    headers,
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || `요청 실패 (${response.status})`);
+  return data;
+}
 
 // ── 인증 ──────────────────────────────────────────────────
 
 function checkAuth() {
-  if (!ADMIN_PASSWORD) return true;
-  return sessionStorage.getItem("admin_auth") === ADMIN_PASSWORD;
+  return sessionStorage.getItem("admin_authenticated") === "true";
 }
 
-// ── Supabase 로드 ─────────────────────────────────────────
+// ── Sites D1 로드 ─────────────────────────────────────────
 
 async function loadAdminData() {
   render();
   setStatus("서버에서 데이터를 불러오는 중입니다...");
   try {
-    const [configRes, drinksRes] = await Promise.all([
-      db.from("config").select("*").single(),
-      db.from("drinks").select("*").order("sort_order", { ascending: true }),
-    ]);
-    if (configRes.data) {
-      users = normalizeUsers(configRes.data.users || []);
-      options = normalizeOptions(configRes.data.options || []);
+    const { config, drinks: serverDrinks } = await apiRequest("/api/config");
+    if (config) {
+      users = normalizeUsers(config.users || []);
+      options = normalizeOptions(config.options || []);
     }
-    if (drinksRes.data) {
-      drinks = drinksRes.data.length
-        ? drinksRes.data.map((r) => normalizeDrink({ category: r.category, name: r.name, prices: { Tall: r.tall_price, Grande:r.grande_price }, iceOnly: r.ice_only }))
+    if (serverDrinks) {
+      drinks = serverDrinks.length
+        ? serverDrinks.map((r) => normalizeDrink({ category: r.category, name: r.name, prices: { Tall: r.tall_price, Grande:r.grande_price }, iceOnly: r.ice_only }))
         : DEFAULT_DRINKS.map(normalizeDrink);
     }
     updatedAt = new Date().toISOString();
@@ -193,18 +198,17 @@ async function loadAdminData() {
     setStatus("서버 관리 데이터를 불러왔습니다.");
   } catch (e) {
     console.error("[loadAdminData]", e);
-    setStatus("데이터 로드 실패. supabase-config.js 설정을 확인하세요.");
+    setStatus("Sites 데이터베이스에서 관리 데이터를 불러오지 못했습니다.");
   }
 }
 
-// ── Supabase 저장 ─────────────────────────────────────────
+// ── Sites D1 저장 ─────────────────────────────────────────
 
 async function saveUsers() {
   users = parseUsersTextarea();
   renderUsers();
   try {
-    const { error } = await db.from("config").update({ users }).eq("id", 1);
-    if (error) throw error;
+    await apiRequest("/api/config", { method: "PATCH", body: { users } });
     updatedAt = new Date().toISOString();
     setStatus("팀원 명단을 서버에 저장했습니다.");
   } catch (e) {
@@ -216,8 +220,7 @@ async function saveOptions() {
   options = parseOptionsTextarea();
   renderOptions();
   try {
-    const { error } = await db.from("config").update({ options }).eq("id", 1);
-    if (error) throw error;
+    await apiRequest("/api/config", { method: "PATCH", body: { options } });
     updatedAt = new Date().toISOString();
     setStatus("옵션 목록을 서버에 저장했습니다.");
   } catch (e) {
@@ -229,7 +232,6 @@ async function saveDrinks() {
   drinks = parseTextarea();
   render();
   try {
-    await db.from("drinks").delete().not("name", "is", null);
     const rows = drinks.map((d, i) => ({
       category: d.category,
       name: d.name,
@@ -238,8 +240,7 @@ async function saveDrinks() {
       ice_only: d.iceOnly,
       sort_order: i,
     }));
-    const { error } = await db.from("drinks").insert(rows);
-    if (error) throw error;
+    await apiRequest("/api/drinks", { method: "PUT", body: { drinks: rows } });
     updatedAt = new Date().toISOString();
     setStatus("음료 리스트를 서버에 저장했습니다.");
   } catch (e) {

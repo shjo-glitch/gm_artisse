@@ -1,6 +1,3 @@
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 const DEFAULT_SIZES = ["Tall", "Grande"];
 const DEFAULT_OPTIONS = ["연하게", "덜달게", "디카페인", "더달게", "두유", "오트밀크"];
 const DEFAULT_CATEGORIES = [
@@ -127,6 +124,19 @@ function formatUpdatedAt(value) {
   return new Intl.DateTimeFormat("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(d);
 }
 function setStatus(msg) { orderStatus.textContent = msg; }
+async function apiRequest(path, { method = "GET", body, admin = false, password = "" } = {}) {
+  const headers = {};
+  if (body !== undefined) headers["content-type"] = "application/json";
+  if (admin) headers["x-admin-password"] = password || sessionStorage.getItem("admin_password") || "";
+  const response = await fetch(path, {
+    method,
+    headers,
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || `요청 실패 (${response.status})`);
+  return data;
+}
 function setUpdatedAt(v = new Date().toISOString()) {
   state.updatedAt = v;
   lastUpdated.textContent = formatUpdatedAt(v);
@@ -149,8 +159,7 @@ function showToast(message, type = "info", duration = 4000) {
 // ── 관리자 / 주문 마감 ────────────────────────────────────
 
 function isAdmin() {
-  if (!ADMIN_PASSWORD) return true; // 비밀번호 미설정 시 관리자 기능 잠금 해제 (admin.js checkAuth 와 동일)
-  return sessionStorage.getItem("admin_auth") === ADMIN_PASSWORD;
+  return sessionStorage.getItem("admin_authenticated") === "true";
 }
 // 관리자 인증 시에만 노출되는 컨트롤(.admin-only)을 표시한다.
 function revealAdminControls() {
@@ -394,53 +403,46 @@ function startEdit(id) {
   orderForm.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-// ── Supabase 데이터 로드 ──────────────────────────────────
+// ── Sites D1 데이터 로드 ─────────────────────────────────
 
 async function loadState() {
   setStatus("데이터를 불러오는 중입니다...");
   try {
-    const [configRes, drinksRes, ordersRes] = await Promise.all([
-      db.from("config").select("*").single(),
-      db.from("drinks").select("*").order("sort_order", { ascending: true }),
-      db.from("orders").select("*").order("created_at", { ascending: true }),
-    ]);
-    if (configRes.data) {
-      state.users = sortUsers(configRes.data.users || []);
-      state.options = configRes.data.options?.length ? configRes.data.options : [...DEFAULT_OPTIONS];
-      state.ordersClosed = Boolean(configRes.data.orders_closed);
+    const { config, drinks, orders } = await apiRequest("/api/state");
+    if (config) {
+      state.users = sortUsers(config.users || []);
+      state.options = config.options?.length ? config.options : [...DEFAULT_OPTIONS];
+      state.ordersClosed = Boolean(config.orders_closed);
     }
-    if (drinksRes.data?.length) state.drinks = drinksRes.data.map(rowToDrink);
-    if (ordersRes.data) state.orders = ordersRes.data.map(rowToOrder);
+    if (drinks?.length) state.drinks = drinks.map(rowToDrink);
+    if (orders) state.orders = orders.map(rowToOrder);
     renderConfig();
     applyClosedState();
     setUpdatedAt(new Date().toISOString());
     setStatus(state.ordersClosed ? "현재 주문이 마감된 상태입니다." : "데이터를 불러왔습니다.");
   } catch (e) {
     console.error("[loadState]", e);
-    setStatus("데이터를 불러오지 못했습니다. supabase-config.js 설정을 확인하세요.");
+    setStatus("Sites 데이터베이스에서 주문 정보를 불러오지 못했습니다.");
   }
 }
 
 async function reloadOrders() {
-  const { data } = await db.from("orders").select("*").order("created_at", { ascending: true });
-  if (data) {
-    state.orders = data.map(rowToOrder);
+  const { orders } = await apiRequest("/api/orders");
+  if (orders) {
+    state.orders = orders.map(rowToOrder);
     setUpdatedAt(new Date().toISOString());
     renderOrders();
   }
 }
 
 async function reloadConfig(notify = true) {
-  const [configRes, drinksRes] = await Promise.all([
-    db.from("config").select("*").single(),
-    db.from("drinks").select("*").order("sort_order", { ascending: true }),
-  ]);
-  if (configRes.data) {
+  const { config, drinks } = await apiRequest("/api/config");
+  if (config) {
     const prevUsers = [...state.users];
     const prevClosed = state.ordersClosed;
-    state.users = sortUsers(configRes.data.users || []);
-    state.options = configRes.data.options?.length ? configRes.data.options : [...DEFAULT_OPTIONS];
-    state.ordersClosed = Boolean(configRes.data.orders_closed);
+    state.users = sortUsers(config.users || []);
+    state.options = config.options?.length ? config.options : [...DEFAULT_OPTIONS];
+    state.ordersClosed = Boolean(config.orders_closed);
     if (notify) {
       const added = state.users.filter((u) => !prevUsers.includes(u));
       const removed = prevUsers.filter((u) => !state.users.includes(u));
@@ -451,9 +453,9 @@ async function reloadConfig(notify = true) {
       }
     }
   }
-  if (drinksRes.data) {
+  if (drinks) {
     const prevDrinks = [...state.drinks];
-    state.drinks = drinksRes.data.length ? drinksRes.data.map(rowToDrink) : [...DEFAULT_DRINKS];
+    state.drinks = drinks.length ? drinks.map(rowToDrink) : [...DEFAULT_DRINKS];
     if (notify) {
       const { added, removed, changed } = diffDrinks(prevDrinks, state.drinks);
       if (added.length) showToast(`신규 메뉴 ${added.length}개 추가: ${added.join(", ")}`, "success");
@@ -466,12 +468,12 @@ async function reloadConfig(notify = true) {
   setUpdatedAt(new Date().toISOString());
 }
 
-// ── Supabase CRUD ─────────────────────────────────────────
+// ── Sites D1 CRUD ─────────────────────────────────────────
 
 async function createOrder(payload) {
   if (state.ordersClosed) { setStatus("주문이 마감되어 추가할 수 없습니다."); return; }
   const drink = findDrink(payload.menuName);
-  const { data, error } = await db.from("orders").insert({
+  const { order } = await apiRequest("/api/orders", { method: "POST", body: {
     menu_name: payload.menuName,
     category: drink ? drink.category : (payload.category || "others"),
     requester: payload.requester,
@@ -480,9 +482,8 @@ async function createOrder(payload) {
     options: payload.options,
     note: payload.note,
     unit_price: payload.unitPrice,
-  }).select().single();
-  if (error) throw new Error(error.message);
-  state.orders = [...state.orders, rowToOrder(data)];
+  } });
+  state.orders = [...state.orders, rowToOrder(order)];
   renderOrders();
   setOrdersExpanded(true);
   setUpdatedAt(new Date().toISOString());
@@ -492,7 +493,7 @@ async function createOrder(payload) {
 async function updateOrder(id, payload) {
   if (state.ordersClosed) { setStatus("주문이 마감되어 수정할 수 없습니다."); return; }
   const drink = findDrink(payload.menuName);
-  const { data, error } = await db.from("orders").update({
+  const { order } = await apiRequest(`/api/orders/${encodeURIComponent(id)}`, { method: "PUT", body: {
     menu_name: payload.menuName,
     category: drink ? drink.category : (payload.category || "others"),
     requester: payload.requester,
@@ -501,10 +502,8 @@ async function updateOrder(id, payload) {
     options: payload.options,
     note: payload.note,
     unit_price: payload.unitPrice,
-    updated_at: new Date().toISOString(),
-  }).eq("id", id).select().single();
-  if (error) throw new Error(error.message);
-  state.orders = state.orders.map((o) => o.id === id ? rowToOrder(data) : o);
+  } });
+  state.orders = state.orders.map((o) => o.id === id ? rowToOrder(order) : o);
   renderOrders();
   setUpdatedAt(new Date().toISOString());
   setStatus("주문을 수정했습니다.");
@@ -512,10 +511,14 @@ async function updateOrder(id, payload) {
 
 async function deleteOrder(id) {
   if (state.ordersClosed) { setStatus("주문이 마감되어 삭제할 수 없습니다."); return; }
+  try {
+    await apiRequest(`/api/orders/${encodeURIComponent(id)}`, { method: "DELETE" });
+  } catch {
+    setStatus("주문 삭제에 실패했습니다.");
+    return;
+  }
   state.orders = state.orders.filter((o) => o.id !== id);
   renderOrders();
-  const { error } = await db.from("orders").delete().eq("id", id);
-  if (error) { await reloadOrders(); setStatus("주문 삭제에 실패했습니다."); return; }
   setUpdatedAt(new Date().toISOString());
   setStatus("주문을 삭제했습니다.");
 }
@@ -525,8 +528,12 @@ async function addOption() {
   const option = newOptionName.value.trim();
   if (!option) return setStatus("추가할 옵션명을 입력하세요.");
   const nextOptions = [...new Set([...state.options, option])];
-  const { error } = await db.from("config").update({ options: nextOptions }).eq("id", 1);
-  if (error) { setStatus("옵션 추가에 실패했습니다."); return; }
+  try {
+    await apiRequest("/api/config", { method: "PATCH", body: { options: nextOptions } });
+  } catch {
+    setStatus("옵션 추가에 실패했습니다.");
+    return;
+  }
   state.options = nextOptions;
   renderOptions();
   newOptionName.value = "";
@@ -535,20 +542,29 @@ async function addOption() {
 
 async function resetOrders() {
   if (state.ordersClosed) { setStatus("주문이 마감되어 초기화할 수 없습니다. 먼저 주문을 재개하세요."); return; }
+  try {
+    await apiRequest("/api/orders", { method: "DELETE", admin: true });
+  } catch {
+    setStatus("초기화에 실패했습니다.");
+    return;
+  }
   state.orders = [];
   renderOrders();
-  const { error } = await db.from("orders").delete().not("id", "is", null);
-  if (error) { await reloadOrders(); setStatus("초기화에 실패했습니다."); return; }
   setUpdatedAt(new Date().toISOString());
   setStatus("전체 주문을 초기화했습니다.");
 }
 
-// 주문 마감/재개 토글 (관리자 전용). config.orders_closed 를 갱신하면 Realtime 으로 전원에게 전파된다.
+// 주문 마감/재개 토글 (관리자 전용). 다른 화면은 짧은 주기 동기화로 변경을 반영한다.
 async function toggleOrdersClosed() {
   if (!isAdmin()) { setStatus("관리자만 주문을 마감/재개할 수 있습니다."); return; }
   const next = !state.ordersClosed;
   if (toggleCloseBtn) toggleCloseBtn.disabled = true;
-  const { error } = await db.from("config").update({ orders_closed: next }).eq("id", 1);
+  let error = null;
+  try {
+    await apiRequest("/api/config", { method: "PATCH", body: { orders_closed: next }, admin: true });
+  } catch (requestError) {
+    error = requestError;
+  }
   if (toggleCloseBtn) toggleCloseBtn.disabled = false;
   if (error) { setStatus(`상태 변경 실패: ${error.message}`); return; }
   state.ordersClosed = next;
@@ -557,20 +573,16 @@ async function toggleOrdersClosed() {
   showToast(next ? "주문을 마감했습니다." : "주문을 재개했습니다.", next ? "warning" : "success");
 }
 
-// ── Realtime ──────────────────────────────────────────────
+// ── Sites 동기화 ──────────────────────────────────────────
 
-function connectRealtime() {
-  db.channel("app-changes")
-    .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => {
-      reloadOrders();
-      showToast("실시간 변경을 반영했습니다.", "info");
-    })
-    .on("postgres_changes", { event: "*", schema: "public", table: "drinks" }, () => { reloadConfig(); })
-    .on("postgres_changes", { event: "*", schema: "public", table: "config" }, () => { reloadConfig(); })
-    .subscribe((status) => {
-      if (status === "SUBSCRIBED") setStatus("실시간 동기화 연결됨.");
-      if (status === "CHANNEL_ERROR") setStatus("실시간 동기화 연결에 실패했습니다.");
-    });
+function connectSync() {
+  setInterval(async () => {
+    try {
+      await Promise.all([reloadOrders(), reloadConfig(false)]);
+    } catch (error) {
+      console.error("[sync]", error);
+    }
+  }, 5000);
 }
 
 // ── 시즌 메뉴 ─────────────────────────────────────────────
@@ -608,18 +620,25 @@ async function loadSeasonalMenus() {
 // ── 이벤트 ────────────────────────────────────────────────
 
 if (adminLink) adminLink.addEventListener("click", (e) => {
-  if (!ADMIN_PASSWORD) return;
   e.preventDefault();
-  if (sessionStorage.getItem("admin_auth") === ADMIN_PASSWORD) { window.location.href = "admin.html"; return; }
+  if (isAdmin()) { window.location.href = "admin.html"; return; }
   if (authOverlay) authOverlay.classList.remove("is-hidden");
   if (authPassword) authPassword.value = "";
   if (authError) authError.classList.add("is-hidden");
   if (authPassword) authPassword.focus();
 });
-if (authSubmit) authSubmit.addEventListener("click", () => {
+if (authSubmit) authSubmit.addEventListener("click", async () => {
   const pw = authPassword ? authPassword.value : "";
-  if (pw === ADMIN_PASSWORD) { sessionStorage.setItem("admin_auth", ADMIN_PASSWORD); window.location.href = "admin.html"; }
-  else { if (authError) authError.classList.remove("is-hidden"); if (authPassword) authPassword.value = ""; authPassword.focus(); }
+  try {
+    await apiRequest("/api/admin/auth", { method: "POST", admin: true, password: pw });
+    sessionStorage.setItem("admin_password", pw);
+    sessionStorage.setItem("admin_authenticated", "true");
+    window.location.href = "admin.html";
+  } catch {
+    if (authError) authError.classList.remove("is-hidden");
+    if (authPassword) authPassword.value = "";
+    authPassword.focus();
+  }
 });
 if (authClose) authClose.addEventListener("click", () => { if (authOverlay) authOverlay.classList.add("is-hidden"); });
 if (authPassword) authPassword.addEventListener("keydown", (e) => { if (e.key === "Enter") authSubmit.click(); });
@@ -663,5 +682,5 @@ renderConfig();
 applyClosedState();
 setUpdatedAt();
 loadState();
-connectRealtime();
+connectSync();
 loadSeasonalMenus();

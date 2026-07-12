@@ -2,17 +2,16 @@
   "name": "attije-order-sheet",
   "version": "0.2.0",
   "private": true,
-  "description": "회사 내부 음료 주문표 (Supabase + 정적 프론트엔드)",
+  "description": "회사 내부 음료 주문표 (ChatGPT Sites D1)",
   "type": "module",
   "scripts": {
-    "verify": "node --check src/frontend/script.js && node --check src/frontend/admin.js",
+    "verify": "node --check src/frontend/script.js && node --check src/frontend/admin.js && node --check worker/index.js",
     "dev": "npx --yes serve src/frontend",
     "build": "node build.mjs"
   },
   "keywords": [
     "order-sheet",
-    "supabase",
-    "github-pages",
+    "d1",
     "openai-sites",
     "cafe",
     "drink"
