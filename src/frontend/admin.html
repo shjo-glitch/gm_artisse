@@ -3,123 +3,161 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>아띠제 관리자 페이지</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="robots" content="noindex, nofollow">
+  <title>아띠제 관리자</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/admin.css">
 </head>
-<body>
-  <a class="skip-link" href="#drink-editor">관리 편집으로 건너뛰기</a>
-  <header class="hero" aria-labelledby="page-title">
-    <div class="hero__content">
-      <p class="eyebrow">Admin</p>
-      <h1 id="page-title">관리자 페이지</h1>
-      <p class="hero__description">Sites 데이터베이스에 저장된 팀원 명단, 카테고리별 음료 배열과 Tall/Grande 가격을 편집합니다.</p>
-      <nav class="page-nav" aria-label="페이지 이동"><a href="index.html">주문표로 돌아가기</a></nav>
+<body class="admin is-locked">
+  <header class="admin-bar">
+    <div class="admin-bar__title">
+      <img src="/favicon.svg" alt="" width="40" height="40">
+      <div>
+        <p class="eyebrow">Admin</p>
+        <h1>아띠제 관리자</h1>
+      </div>
     </div>
-    <aside class="hero__note" aria-label="관리 안내">
-      <strong>관리 안내</strong>
-      <span>관리자 인증 후 Sites 데이터베이스의 주문 설정을 안전하게 관리할 수 있습니다.</span>
-    </aside>
+    <div class="admin-status admin-unlocked-only" role="group" aria-label="주문 상태">
+      <div class="admin-status__info">
+        <span id="status-badge" class="admin-status__badge">확인 중</span>
+        <span>주문 <strong id="status-count">0</strong>건 · <strong id="status-total">0</strong>원</span>
+      </div>
+      <div class="admin-status__actions">
+        <button id="toggle-close" class="admin-btn admin-btn--danger" type="button">주문 마감</button>
+        <button id="reset-orders" class="admin-btn admin-btn--ghost" type="button">전체 초기화</button>
+      </div>
+    </div>
+    <nav class="admin-bar__actions" aria-label="페이지 이동">
+      <a class="admin-link" href="/">주문 화면으로</a>
+      <button id="logout" class="admin-btn admin-btn--ghost admin-unlocked-only" type="button">로그아웃</button>
+    </nav>
   </header>
 
-  <main class="layout layout--admin">
-    <section class="card" aria-labelledby="user-admin-heading">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Team</p>
-          <h2 id="user-admin-heading">팀원 명단</h2>
-        </div>
-        <button id="reload-users" class="button button--ghost" type="button">다시 불러오기</button>
-      </div>
+  <section id="auth-cover" class="admin-cover" aria-labelledby="auth-title">
+    <form id="auth-form" class="admin-cover__box">
+      <img src="/favicon.svg" alt="" width="56" height="56">
+      <h2 id="auth-title">관리자 로그인</h2>
+      <p>관리자 아이디와 비밀번호를 입력하세요.</p>
+      <label>아이디<input id="auth-id" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+      <label>비밀번호<input id="auth-password" type="password" autocomplete="current-password" required></label>
+      <button id="auth-submit" class="admin-btn" type="submit">로그인</button>
+      <p id="auth-error" class="admin-cover__error is-hidden" role="alert">아이디 또는 비밀번호가 올바르지 않습니다.</p>
+    </form>
+  </section>
 
-      <form id="user-editor" class="admin-form admin-form--single">
-        <div class="field field--full">
-          <label for="users-textarea">팀원 입력</label>
-          <textarea id="users-textarea" rows="5" spellcheck="false" aria-describedby="users-help" placeholder="예: 홍길동|김철수|이영희"></textarea>
-          <p id="users-help" class="help-text">이름을 `|` 구분자로 입력하세요. 저장 시 중복과 공백을 정리하고 가나다 순으로 오름차순 정렬합니다.</p>
+  <nav class="admin-tabs" role="tablist" aria-label="관리 메뉴">
+    <a href="#team" class="admin-tab" role="tab" data-tab="team">👥 팀원</a>
+    <a href="#requests" class="admin-tab" role="tab" data-tab="requests">💬 요청사항</a>
+    <a href="#menu" class="admin-tab" role="tab" data-tab="menu">☕ 메뉴</a>
+    <a href="#extras" class="admin-tab" role="tab" data-tab="extras">➕ 유료 옵션</a>
+    <a href="#season" class="admin-tab" role="tab" data-tab="season">✨ 새메뉴 반영</a>
+  </nav>
+
+  <main class="admin-main">
+    <section id="panel-team" class="admin-panel" role="tabpanel" aria-labelledby="team-title" data-panel="team">
+      <header class="admin-panel__head">
+        <div>
+          <h2 id="team-title">팀원 명단 <span id="team-count" class="admin-count"></span></h2>
+          <p class="admin-hint">주문 화면의 주문자 목록입니다. 쉼표(,)나 줄바꿈으로 여러 명을 한 번에 넣을 수 있고(Enter = 추가, Shift+Enter = 줄바꿈), 추가·삭제하면 바로 저장되고 가나다순으로 정렬됩니다.</p>
         </div>
-        <div class="form-actions field--full">
-          <button id="save-users" class="button" type="submit">팀원 명단 저장</button>
-        </div>
+      </header>
+      <form id="team-add" class="admin-add">
+        <textarea id="team-input" rows="1" spellcheck="false" placeholder="이름 입력 (쉼표·줄바꿈으로 여러 명)" aria-label="추가할 팀원 이름"></textarea>
+        <button class="admin-btn" type="submit">추가</button>
       </form>
-      <div id="user-preview" class="user-preview" aria-label="현재 팀원 명단"></div>
+      <input id="team-filter" class="admin-search" type="search" placeholder="이름 검색" aria-label="팀원 검색">
+      <ul id="team-list" class="admin-chips" aria-label="팀원 목록"></ul>
     </section>
 
-
-    <section class="card" aria-labelledby="option-admin-heading">
-      <div class="section-heading">
+    <section id="panel-requests" class="admin-panel" role="tabpanel" aria-labelledby="requests-title" data-panel="requests">
+      <header class="admin-panel__head">
         <div>
-          <p class="eyebrow">Options</p>
-          <h2 id="option-admin-heading">옵션 목록</h2>
+          <h2 id="requests-title">요청사항 <span id="requests-count" class="admin-count"></span></h2>
+          <p class="admin-hint">주문할 때 무료로 고르는 요청사항입니다. 디카페인·우유 변경처럼 돈이 드는 옵션은 "유료 옵션"에서 메뉴별로 관리합니다.</p>
         </div>
-        <button id="reload-options" class="button button--ghost" type="button">다시 불러오기</button>
-      </div>
-
-      <form id="option-editor" class="admin-form admin-form--single">
-        <div class="field field--full">
-          <label for="options-textarea">옵션 입력</label>
-          <textarea id="options-textarea" rows="5" spellcheck="false" aria-describedby="options-help" placeholder="예: 연하게|덜달게|디카페인"></textarea>
-          <p id="options-help" class="help-text">옵션명을 `|` 구분자로 입력하세요. 주문 화면의 옵션 선택 항목으로 즉시 동기화됩니다.</p>
-        </div>
-        <div class="form-actions field--full">
-          <button id="save-options" class="button" type="submit">옵션 목록 저장</button>
-        </div>
+      </header>
+      <form id="requests-add" class="admin-add">
+        <textarea id="requests-input" rows="1" spellcheck="false" placeholder="요청사항 입력 (쉼표·줄바꿈으로 여러 개)" aria-label="추가할 요청사항"></textarea>
+        <button class="admin-btn" type="submit">추가</button>
       </form>
-      <div id="option-preview" class="user-preview" aria-label="현재 옵션 목록"></div>
+      <ul id="requests-list" class="admin-chips" aria-label="요청사항 목록"></ul>
     </section>
 
-    <section class="card" aria-labelledby="admin-heading">
-      <div class="section-heading">
+    <section id="panel-menu" class="admin-panel" role="tabpanel" aria-labelledby="menu-title" data-panel="menu">
+      <header class="admin-panel__head">
         <div>
-          <p class="eyebrow">Season Menu</p>
-          <h2 id="admin-heading">음료 배열 편집</h2>
+          <h2 id="menu-title">음료 메뉴 <span id="menu-count" class="admin-count"></span></h2>
+          <p class="admin-hint">표에서 바로 고친 뒤 아래 저장 바의 "저장"을 누르세요. 가격이 0인 사이즈는 주문할 수 없습니다.</p>
         </div>
-        <button id="reload-drinks" class="button button--ghost" type="button">다시 불러오기</button>
-      </div>
-
-      <form id="drink-editor" class="admin-form">
-        <div class="field">
-          <label for="new-drink-category">카테고리</label>
-          <select id="new-drink-category"></select>
-        </div>
-        <div class="field">
-          <label for="new-drink-name">음료 이름</label>
-          <input id="new-drink-name" type="text" autocomplete="off" placeholder="예: 시즌 콜드브루">
-        </div>
-        <div class="field">
-          <label for="new-drink-tall">Tall 가격</label>
-          <input id="new-drink-tall" type="number" min="0" step="100" inputmode="numeric" placeholder="예: 6500">
-        </div>
-        <div class="field">
-          <label for="new-drink-grande">Grande 가격</label>
-          <input id="new-drink-grande" type="number" min="0" step="100" inputmode="numeric" placeholder="없으면 0">
-        </div>
-        <div class="field field--full">
-          <label class="option-toggle"><input id="new-drink-ice-only" type="checkbox" name="iceOnly"><span>ICE only (HOT 주문 불가)</span></label>
-        </div>
-        <div class="form-actions field--full">
-          <button class="button" type="button" id="add-drink">음료 추가</button>
-        </div>
-
-        <div class="field field--full">
-          <label for="drinks-textarea">음료 리스트</label>
-          <textarea id="drinks-textarea" rows="14" spellcheck="false" aria-describedby="drinks-help"></textarea>
-          <p id="drinks-help" class="help-text">한 줄에 `카테고리|음료명|Tall가격|Grande가격|iceOnly` 형식으로 입력하세요. Grande 없는 메뉴는 Grande가격을 0으로, ICE only는 마지막에 Y를 입력하세요. 예: `coffee|아메리카노|4900|5400` 또는 `coffee|콜드브루|5500|0|Y`</p>
-        </div>
-
-        <div class="form-actions field--full">
-          <button id="save-drinks" class="button" type="submit">음료 리스트 저장</button>
-        </div>
+      </header>
+      <form id="drink-add" class="admin-add admin-add--grid">
+        <label>카테고리<select id="new-drink-category"></select></label>
+        <label>메뉴 이름<input id="new-drink-name" type="text" autocomplete="off" placeholder="예: 바닐라라떼" required></label>
+        <label>Petit 가격<input id="new-drink-tall" type="number" min="0" step="100" inputmode="numeric" placeholder="예: 6300"></label>
+        <label>Grande 가격<input id="new-drink-grande" type="number" min="0" step="100" inputmode="numeric" placeholder="없으면 0"></label>
+        <label>온도<select id="new-drink-temp">
+          <option value="">HOT/ICE</option>
+          <option value="ICE">ICE 전용</option>
+          <option value="HOT">HOT 전용</option>
+        </select></label>
+        <button class="admin-btn" type="submit">메뉴 추가</button>
       </form>
+      <div id="menu-tables"></div>
     </section>
 
-    <section class="card summary" aria-labelledby="preview-heading">
-      <div class="section-heading"><div><p class="eyebrow">Preview</p><h2 id="preview-heading">현재 음료</h2></div></div>
-      <div id="drink-preview" class="drink-preview" aria-label="현재 음료 리스트"></div>
-      <p id="admin-status" class="status-message" role="status" aria-live="polite">관리 데이터를 불러오는 중입니다.</p>
+    <section id="panel-extras" class="admin-panel" role="tabpanel" aria-labelledby="extras-title" data-panel="extras">
+      <header class="admin-panel__head">
+        <div>
+          <h2 id="extras-title">유료 옵션</h2>
+          <p class="admin-hint">메뉴별로 샷 추가·디카페인·우유 변경 같은 유료 옵션을 정합니다. "개수 선택"은 최대 개수까지 여러 개를, "하나만 선택"은 하나만 고를 수 있습니다. 바꾼 뒤 저장 바에서 저장하세요.</p>
+        </div>
+      </header>
+      <div class="admin-extras-pick">
+        <label>메뉴<select id="extras-drink"></select></label>
+        <label>다른 메뉴에서 가져오기<span class="admin-inline"><select id="extras-copy-from"></select><button id="extras-copy" class="admin-btn admin-btn--ghost" type="button">가져오기</button></span></label>
+        <button id="extras-apply-category" class="admin-btn admin-btn--ghost" type="button">같은 카테고리 전체에 적용</button>
+      </div>
+      <div id="extras-groups" class="admin-groups"></div>
+      <div class="admin-extras-add">
+        <span>옵션 그룹 추가:</span>
+        <button class="admin-btn admin-btn--ghost" type="button" data-preset="addon">옵션 추가 (샷·시럽·휘핑)</button>
+        <button class="admin-btn admin-btn--ghost" type="button" data-preset="decaf">디카페인 변경</button>
+        <button class="admin-btn admin-btn--ghost" type="button" data-preset="milk">우유 변경</button>
+        <button class="admin-btn admin-btn--ghost" type="button" data-preset="empty">빈 그룹</button>
+      </div>
+    </section>
+
+    <section id="panel-season" class="admin-panel" role="tabpanel" aria-labelledby="season-sync-heading" data-panel="season">
+      <header class="admin-panel__head">
+        <div>
+          <h2 id="season-sync-heading">새메뉴 자동 반영</h2>
+          <p class="admin-hint">매달 1일 오전 9시에 아띠제 새메뉴 페이지를 확인합니다. 새로 나온 음료는 포스터에서 메뉴명과 Petit/Grande 가격을 읽어 시즌에 추가하고, 판매 기간이 끝난 행사의 음료는 메뉴에서 뺍니다. 포스터는 AI가 읽으므로 추가된 메뉴명과 가격을 한 번 확인하고, 필요하면 "유료 옵션"에서 옵션을 붙여 주세요.</p>
+        </div>
+        <button id="run-season-sync" class="admin-btn" type="button">지금 확인</button>
+      </header>
+      <div id="season-sync-status" class="status-message" role="status" aria-live="polite">마지막 확인 결과를 불러오는 중입니다.</div>
     </section>
   </main>
 
-  <footer class="footer"><p>서버 관리자를 위한 관리자 페이지입니다.</p></footer>
-  <script src="admin.js"></script>
+  <div id="save-bar" class="admin-savebar is-hidden" role="region" aria-label="메뉴 저장">
+    <span>저장하지 않은 메뉴·유료 옵션 변경이 있습니다.</span>
+    <button id="discard-drinks" class="admin-btn admin-btn--ghost" type="button">되돌리기</button>
+    <button id="save-drinks" class="admin-btn" type="button">저장</button>
+  </div>
+
+  <dialog id="confirm-sheet" class="kiosk-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <h2 id="confirm-title"></h2>
+    <p id="confirm-message"></p>
+    <div class="kiosk-confirm__actions">
+      <button type="button" class="kiosk-confirm__cancel" data-close autofocus>취소</button>
+      <button id="confirm-ok" type="button" class="kiosk-confirm__ok" data-confirm-ok>확인</button>
+    </div>
+  </dialog>
+
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="false"></div>
+  <script src="/admin.js"></script>
 </body>
 </html>

@@ -1,0 +1,20 @@
+name = "attije-order-sheet"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "src/frontend"
+
+# 데이터 저장소: Cloudflare D1 (config·drinks·orders 테이블, 스키마와 초기 데이터는 migrations/)
+# `npx wrangler d1 create attije-order-sheet-db` 로 만든 뒤 출력된 database_id를 채운다.
+[[d1_databases]]
+binding = "DB"
+database_name = "attije-order-sheet-db"
+database_id = "4201a0b7-2b76-48d4-b987-9dca873848df"
+
+# 관리자 화면의 "지금 확인"(새메뉴 자동 반영)에서 포스터를 읽는 Workers AI
+[ai]
+binding = "AI"
+
+# 관리자 아이디·비밀번호는 시크릿으로 관리 (둘 다 있어야 관리자 기능이 열린다):
+#   npx wrangler pages secret put ADMIN_ID --project-name attije-order-sheet
+#   npx wrangler pages secret put ADMIN_PASSWORD --project-name attije-order-sheet
+# 로컬 개발 시에는 .dev.vars 파일에 ADMIN_ID=... 와 ADMIN_PASSWORD=... 를 적는다.

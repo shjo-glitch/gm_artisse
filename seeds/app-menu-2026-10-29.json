@@ -1,0 +1,5032 @@
+{
+ "아이스 몽블랑 보늬밤 카페라떼(P)": {
+  "name": "아이스 몽블랑 보늬밤 카페라떼(P)",
+  "price": 7800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "아이스 몽블랑 보늬밤 카페라떼(P)"
+   },
+   {
+    "name": "아이스 몽블랑 보늬밤 카페라떼(G)"
+   }
+  ],
+  "cat": "시즌",
+  "available": true
+ },
+ "아이스 몽블랑 보늬밤 카페라떼(G)": {
+  "name": "아이스 몽블랑 보늬밤 카페라떼(G)",
+  "price": 8500,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "아이스 몽블랑 보늬밤 카페라떼(P)"
+   },
+   {
+    "name": "아이스 몽블랑 보늬밤 카페라떼(G)"
+   }
+  ],
+  "cat": "시즌",
+  "available": true
+ },
+ "몽블랑 보늬밤 카페라떼(P)": {
+  "name": "몽블랑 보늬밤 카페라떼(P)",
+  "price": 7800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "몽블랑 보늬밤 카페라떼(P)"
+   },
+   {
+    "name": "몽블랑 보늬밤 카페라떼(G)"
+   }
+  ],
+  "cat": "시즌",
+  "available": true
+ },
+ "몽블랑 보늬밤 카페라떼(G)": {
+  "name": "몽블랑 보늬밤 카페라떼(G)",
+  "price": 8500,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "몽블랑 보늬밤 카페라떼(P)"
+   },
+   {
+    "name": "몽블랑 보늬밤 카페라떼(G)"
+   }
+  ],
+  "cat": "시즌",
+  "available": true
+ },
+ "아이스 영암 무화과 밀크티(P)": {
+  "name": "아이스 영암 무화과 밀크티(P)",
+  "price": 7800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "아이스 영암 무화과 밀크티(P)"
+   },
+   {
+    "name": "아이스 영암 무화과 밀크티(G)"
+   }
+  ],
+  "cat": "시즌",
+  "available": true
+ },
+ "아이스 영암 무화과 밀크티(G)": {
+  "name": "아이스 영암 무화과 밀크티(G)",
+  "price": 8500,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "아이스 영암 무화과 밀크티(P)"
+   },
+   {
+    "name": "아이스 영암 무화과 밀크티(G)"
+   }
+  ],
+  "cat": "시즌",
+  "available": true
+ },
+ "영암 무화과 밀크티(P)": {
+  "name": "영암 무화과 밀크티(P)",
+  "price": 7800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "영암 무화과 밀크티(P)"
+   },
+   {
+    "name": "영암 무화과 밀크티(G)"
+   }
+  ],
+  "cat": "시즌",
+  "available": true
+ },
+ "영암 무화과 밀크티(G)": {
+  "name": "영암 무화과 밀크티(G)",
+  "price": 8500,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "영암 무화과 밀크티(P)"
+   },
+   {
+    "name": "영암 무화과 밀크티(G)"
+   }
+  ],
+  "cat": "시즌",
+  "available": true
+ },
+ "아이스 아메리카노(매그넘)": {
+  "name": "아이스 아메리카노(매그넘)",
+  "price": 5900,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "시즌",
+  "available": true
+ },
+ "아메리카노(P)": {
+  "name": "아메리카노(P)",
+  "price": 4900,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "사이즈업 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "사이즈업",
+      "soldOut": false,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "아메리카노(P)"
+   },
+   {
+    "name": "아이스 아메리카노(P)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "아이스 아메리카노(P)": {
+  "name": "아이스 아메리카노(P)",
+  "price": 4900,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "사이즈업 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "사이즈업",
+      "soldOut": false,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "아메리카노(P)"
+   },
+   {
+    "name": "아이스 아메리카노(P)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "카페라떼": {
+  "name": "카페라떼",
+  "price": 5600,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "카페라떼"
+   },
+   {
+    "name": "아이스 카페라떼"
+   },
+   {
+    "name": "카페라떼(G)"
+   },
+   {
+    "name": "아이스 카페라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "아이스 카페라떼": {
+  "name": "아이스 카페라떼",
+  "price": 5600,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "카페라떼"
+   },
+   {
+    "name": "아이스 카페라떼"
+   },
+   {
+    "name": "카페라떼(G)"
+   },
+   {
+    "name": "아이스 카페라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "카페라떼(G)": {
+  "name": "카페라떼(G)",
+  "price": 6100,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "카페라떼"
+   },
+   {
+    "name": "아이스 카페라떼"
+   },
+   {
+    "name": "카페라떼(G)"
+   },
+   {
+    "name": "아이스 카페라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "아이스 카페라떼(G)": {
+  "name": "아이스 카페라떼(G)",
+  "price": 6100,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "카페라떼"
+   },
+   {
+    "name": "아이스 카페라떼"
+   },
+   {
+    "name": "카페라떼(G)"
+   },
+   {
+    "name": "아이스 카페라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "바닐라라떼": {
+  "name": "바닐라라떼",
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "바닐라라떼"
+   },
+   {
+    "name": "아이스 바닐라라떼"
+   },
+   {
+    "name": "바닐라라떼(G)"
+   },
+   {
+    "name": "아이스 바닐라라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "아이스 바닐라라떼": {
+  "name": "아이스 바닐라라떼",
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "바닐라라떼"
+   },
+   {
+    "name": "아이스 바닐라라떼"
+   },
+   {
+    "name": "바닐라라떼(G)"
+   },
+   {
+    "name": "아이스 바닐라라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "바닐라라떼(G)": {
+  "name": "바닐라라떼(G)",
+  "price": 6800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "바닐라라떼"
+   },
+   {
+    "name": "아이스 바닐라라떼"
+   },
+   {
+    "name": "바닐라라떼(G)"
+   },
+   {
+    "name": "아이스 바닐라라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "아이스 바닐라라떼(G)": {
+  "name": "아이스 바닐라라떼(G)",
+  "price": 6800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "바닐라라떼"
+   },
+   {
+    "name": "아이스 바닐라라떼"
+   },
+   {
+    "name": "바닐라라떼(G)"
+   },
+   {
+    "name": "아이스 바닐라라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "카푸치노": {
+  "name": "카푸치노",
+  "price": 5600,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "카푸치노"
+   },
+   {
+    "name": "카푸치노(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "카푸치노(G)": {
+  "name": "카푸치노(G)",
+  "price": 6100,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "카푸치노"
+   },
+   {
+    "name": "카푸치노(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "캐러멜마끼아또": {
+  "name": "캐러멜마끼아또",
+  "price": 6500,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "캐러멜마끼아또"
+   },
+   {
+    "name": "아이스 캐러멜마끼아또"
+   },
+   {
+    "name": "캐러멜마끼아또(G)"
+   },
+   {
+    "name": "아이스 캐러멜마끼아또(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "아이스 캐러멜마끼아또": {
+  "name": "아이스 캐러멜마끼아또",
+  "price": 6500,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "캐러멜마끼아또"
+   },
+   {
+    "name": "아이스 캐러멜마끼아또"
+   },
+   {
+    "name": "캐러멜마끼아또(G)"
+   },
+   {
+    "name": "아이스 캐러멜마끼아또(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "캐러멜마끼아또(G)": {
+  "name": "캐러멜마끼아또(G)",
+  "price": 7000,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "캐러멜마끼아또"
+   },
+   {
+    "name": "아이스 캐러멜마끼아또"
+   },
+   {
+    "name": "캐러멜마끼아또(G)"
+   },
+   {
+    "name": "아이스 캐러멜마끼아또(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "아이스 캐러멜마끼아또(G)": {
+  "name": "아이스 캐러멜마끼아또(G)",
+  "price": 7000,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "캐러멜마끼아또"
+   },
+   {
+    "name": "아이스 캐러멜마끼아또"
+   },
+   {
+    "name": "캐러멜마끼아또(G)"
+   },
+   {
+    "name": "아이스 캐러멜마끼아또(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "스패니쉬라떼": {
+  "name": "스패니쉬라떼",
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "스패니쉬라떼"
+   },
+   {
+    "name": "아이스 스패니쉬라떼"
+   },
+   {
+    "name": "스패니쉬라떼(G)"
+   },
+   {
+    "name": "아이스 스패니쉬라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "아이스 스패니쉬라떼": {
+  "name": "아이스 스패니쉬라떼",
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "스패니쉬라떼"
+   },
+   {
+    "name": "아이스 스패니쉬라떼"
+   },
+   {
+    "name": "스패니쉬라떼(G)"
+   },
+   {
+    "name": "아이스 스패니쉬라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "스패니쉬라떼(G)": {
+  "name": "스패니쉬라떼(G)",
+  "price": 6800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "스패니쉬라떼"
+   },
+   {
+    "name": "아이스 스패니쉬라떼"
+   },
+   {
+    "name": "스패니쉬라떼(G)"
+   },
+   {
+    "name": "아이스 스패니쉬라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "아이스 스패니쉬라떼(G)": {
+  "name": "아이스 스패니쉬라떼(G)",
+  "price": 6800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "스패니쉬라떼"
+   },
+   {
+    "name": "아이스 스패니쉬라떼"
+   },
+   {
+    "name": "스패니쉬라떼(G)"
+   },
+   {
+    "name": "아이스 스패니쉬라떼(G)"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "플랫화이트": {
+  "name": "플랫화이트",
+  "price": 5600,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "플랫화이트"
+   },
+   {
+    "name": "아이스 플랫화이트"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "아이스 플랫화이트": {
+  "name": "아이스 플랫화이트",
+  "price": 5600,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "플랫화이트"
+   },
+   {
+    "name": "아이스 플랫화이트"
+   }
+  ],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "에스프레소": {
+  "name": "에스프레소",
+  "price": 4400,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "에스프레소 마끼아또": {
+  "name": "에스프레소 마끼아또",
+  "price": 4800,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "디카페인변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "디카페인W",
+      "soldOut": false,
+      "price": 400
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "에스프레소",
+  "available": true
+ },
+ "콜드브루": {
+  "name": "콜드브루",
+  "price": 5400,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "콜드브루"
+   },
+   {
+    "name": "콜드브루(G)"
+   }
+  ],
+  "cat": "콜드브루",
+  "available": true
+ },
+ "콜드브루(G)": {
+  "name": "콜드브루(G)",
+  "price": 6100,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "콜드브루"
+   },
+   {
+    "name": "콜드브루(G)"
+   }
+  ],
+  "cat": "콜드브루",
+  "available": true
+ },
+ "콜드브루 라떼": {
+  "name": "콜드브루 라떼",
+  "price": 5800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "콜드브루 라떼"
+   },
+   {
+    "name": "콜드브루 라떼(G)"
+   }
+  ],
+  "cat": "콜드브루",
+  "available": true
+ },
+ "콜드브루 라떼(G)": {
+  "name": "콜드브루 라떼(G)",
+  "price": 6500,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     },
+     {
+      "name": "바닐라시럽추가",
+      "soldOut": false,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "콜드브루 라떼"
+   },
+   {
+    "name": "콜드브루 라떼(G)"
+   }
+  ],
+  "cat": "콜드브루",
+  "available": true
+ },
+ "청포도 요거트 스무디": {
+  "name": "청포도 요거트 스무디",
+  "price": 6900,
+  "groups": [
+   {
+    "title": "옵션변",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "청포도 요거트 스무디"
+   },
+   {
+    "name": "청포도 요거트 스무디(G)"
+   }
+  ],
+  "cat": "스무디&에이드",
+  "available": true
+ },
+ "청포도 요거트 스무디(G)": {
+  "name": "청포도 요거트 스무디(G)",
+  "cat": "스무디&에이드",
+  "available": false
+ },
+ "애플망고 요거트 스무디": {
+  "name": "애플망고 요거트 스무디",
+  "price": 6900,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "애플망고 요거트 스무디"
+   },
+   {
+    "name": "애플망고 요거트 스무디(G)"
+   }
+  ],
+  "cat": "스무디&에이드",
+  "available": true
+ },
+ "애플망고 요거트 스무디(G)": {
+  "name": "애플망고 요거트 스무디(G)",
+  "price": 7600,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "애플망고 요거트 스무디"
+   },
+   {
+    "name": "애플망고 요거트 스무디(G)"
+   }
+  ],
+  "cat": "스무디&에이드",
+  "available": true
+ },
+ "데일리 요거트 스무디": {
+  "name": "데일리 요거트 스무디",
+  "price": 6600,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "데일리 요거트 스무디"
+   },
+   {
+    "name": "데일리 요거트 스무디(G)"
+   }
+  ],
+  "cat": "스무디&에이드",
+  "available": true
+ },
+ "데일리 요거트 스무디(G)": {
+  "name": "데일리 요거트 스무디(G)",
+  "price": 7100,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "데일리 요거트 스무디"
+   },
+   {
+    "name": "데일리 요거트 스무디(G)"
+   }
+  ],
+  "cat": "스무디&에이드",
+  "available": true
+ },
+ "레몬 요거트 스무디": {
+  "name": "레몬 요거트 스무디",
+  "price": 6900,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "레몬 요거트 스무디"
+   },
+   {
+    "name": "레몬 요거트 스무디(G)"
+   }
+  ],
+  "cat": "스무디&에이드",
+  "available": true
+ },
+ "레몬 요거트 스무디(G)": {
+  "name": "레몬 요거트 스무디(G)",
+  "price": 7600,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "레몬 요거트 스무디"
+   },
+   {
+    "name": "레몬 요거트 스무디(G)"
+   }
+  ],
+  "cat": "스무디&에이드",
+  "available": true
+ },
+ "시그니처 오렌지 에이드(G)": {
+  "name": "시그니처 오렌지 에이드(G)",
+  "price": 6700,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "스무디&에이드",
+  "available": true
+ },
+ "시그니처 자몽 에이드(G)": {
+  "name": "시그니처 자몽 에이드(G)",
+  "price": 6700,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "스무디&에이드",
+  "available": true
+ },
+ "시그니처 레몬 에이드(G)": {
+  "name": "시그니처 레몬 에이드(G)",
+  "price": 6700,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "스무디&에이드",
+  "available": true
+ },
+ "잉글리쉬 블랙퍼스트(G)": {
+  "name": "잉글리쉬 블랙퍼스트(G)",
+  "price": 5800,
+  "groups": [
+   {
+    "title": "옵션 변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "잉글리쉬 블랙퍼스트(G)"
+   },
+   {
+    "name": "아이스 잉글리쉬 블랙퍼스트(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 잉글리쉬 블랙퍼스트(G)": {
+  "name": "아이스 잉글리쉬 블랙퍼스트(G)",
+  "price": 5800,
+  "groups": [
+   {
+    "title": "옵션 변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "잉글리쉬 블랙퍼스트(G)"
+   },
+   {
+    "name": "아이스 잉글리쉬 블랙퍼스트(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "루이보스(G)": {
+  "name": "루이보스(G)",
+  "price": 5800,
+  "groups": [
+   {
+    "title": "옵션 변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "루이보스(G)"
+   },
+   {
+    "name": "아이스 루이보스(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 루이보스(G)": {
+  "name": "아이스 루이보스(G)",
+  "cat": "티&기타",
+  "available": true,
+  "soldOut": true,
+  "price": 5800,
+  "groups": [
+   {
+    "title": "옵션 변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": []
+ },
+ "페퍼민트(G)": {
+  "name": "페퍼민트(G)",
+  "price": 5800,
+  "groups": [
+   {
+    "title": "옵션 변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "페퍼민트(G)"
+   },
+   {
+    "name": "아이스 페퍼민트(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 페퍼민트(G)": {
+  "name": "아이스 페퍼민트(G)",
+  "cat": "티&기타",
+  "available": true,
+  "soldOut": true,
+  "price": 5800,
+  "groups": [
+   {
+    "title": "옵션 변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": []
+ },
+ "캐모마일(G)": {
+  "name": "캐모마일(G)",
+  "price": 5800,
+  "groups": [
+   {
+    "title": "옵션 변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "캐모마일(G)"
+   },
+   {
+    "name": "아이스 캐모마일(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 캐모마일(G)": {
+  "name": "아이스 캐모마일(G)",
+  "cat": "티&기타",
+  "available": true,
+  "soldOut": true,
+  "price": 5800,
+  "groups": [
+   {
+    "title": "옵션 변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": []
+ },
+ "애플 밀크티": {
+  "name": "애플 밀크티",
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "애플 밀크티"
+   },
+   {
+    "name": "아이스 애플 밀크티"
+   },
+   {
+    "name": "애플 밀크티(G)"
+   },
+   {
+    "name": "아이스 애플 밀크티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 애플 밀크티": {
+  "name": "아이스 애플 밀크티",
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "애플 밀크티"
+   },
+   {
+    "name": "아이스 애플 밀크티"
+   },
+   {
+    "name": "애플 밀크티(G)"
+   },
+   {
+    "name": "아이스 애플 밀크티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "애플 밀크티(G)": {
+  "name": "애플 밀크티(G)",
+  "price": 6800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "애플 밀크티"
+   },
+   {
+    "name": "아이스 애플 밀크티"
+   },
+   {
+    "name": "애플 밀크티(G)"
+   },
+   {
+    "name": "아이스 애플 밀크티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 애플 밀크티(G)": {
+  "name": "아이스 애플 밀크티(G)",
+  "price": 6800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "애플 밀크티"
+   },
+   {
+    "name": "아이스 애플 밀크티"
+   },
+   {
+    "name": "애플 밀크티(G)"
+   },
+   {
+    "name": "아이스 애플 밀크티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "제주 말차 라떼": {
+  "name": "제주 말차 라떼",
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "제주 말차 라떼"
+   },
+   {
+    "name": "제주 말차 라떼(G)"
+   },
+   {
+    "name": "아이스 제주 말차 라떼"
+   },
+   {
+    "name": "아이스 제주 말차 라떼(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "제주 말차 라떼(G)": {
+  "name": "제주 말차 라떼(G)",
+  "price": 6800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "제주 말차 라떼"
+   },
+   {
+    "name": "제주 말차 라떼(G)"
+   },
+   {
+    "name": "아이스 제주 말차 라떼"
+   },
+   {
+    "name": "아이스 제주 말차 라떼(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 제주 말차 라떼": {
+  "name": "아이스 제주 말차 라떼",
+  "cat": "티&기타",
+  "available": true,
+  "soldOut": true,
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": []
+ },
+ "아이스 제주 말차 라떼(G)": {
+  "name": "아이스 제주 말차 라떼(G)",
+  "cat": "티&기타",
+  "available": true,
+  "soldOut": true,
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": []
+ },
+ "잉글리쉬티 라떼": {
+  "name": "잉글리쉬티 라떼",
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "잉글리쉬티 라떼"
+   },
+   {
+    "name": "아이스 잉글리쉬티 라떼"
+   },
+   {
+    "name": "잉글리쉬티 라떼(G)"
+   },
+   {
+    "name": "아이스 잉글리쉬티 라떼(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 잉글리쉬티 라떼": {
+  "name": "아이스 잉글리쉬티 라떼",
+  "price": 6300,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "잉글리쉬티 라떼"
+   },
+   {
+    "name": "아이스 잉글리쉬티 라떼"
+   },
+   {
+    "name": "잉글리쉬티 라떼(G)"
+   },
+   {
+    "name": "아이스 잉글리쉬티 라떼(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "잉글리쉬티 라떼(G)": {
+  "name": "잉글리쉬티 라떼(G)",
+  "price": 6800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "잉글리쉬티 라떼"
+   },
+   {
+    "name": "아이스 잉글리쉬티 라떼"
+   },
+   {
+    "name": "잉글리쉬티 라떼(G)"
+   },
+   {
+    "name": "아이스 잉글리쉬티 라떼(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 잉글리쉬티 라떼(G)": {
+  "name": "아이스 잉글리쉬티 라떼(G)",
+  "price": 6800,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "잉글리쉬티 라떼"
+   },
+   {
+    "name": "아이스 잉글리쉬티 라떼"
+   },
+   {
+    "name": "잉글리쉬티 라떼(G)"
+   },
+   {
+    "name": "아이스 잉글리쉬티 라떼(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "발로나 더블 초콜릿": {
+  "name": "발로나 더블 초콜릿",
+  "price": 6900,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "발로나 더블 초콜릿"
+   },
+   {
+    "name": "아이스 발로나 더블 초콜릿"
+   },
+   {
+    "name": "발로나 더블 초콜릿(G)"
+   },
+   {
+    "name": "아이스 발로나 더블 초콜릿(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 발로나 더블 초콜릿": {
+  "name": "아이스 발로나 더블 초콜릿",
+  "cat": "티&기타",
+  "available": true,
+  "soldOut": true,
+  "price": 6900,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   }
+  ],
+  "variants": []
+ },
+ "발로나 더블 초콜릿(G)": {
+  "name": "발로나 더블 초콜릿(G)",
+  "cat": "티&기타",
+  "available": true,
+  "soldOut": true,
+  "price": 6900,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   }
+  ],
+  "variants": []
+ },
+ "아이스 발로나 더블 초콜릿(G)": {
+  "name": "아이스 발로나 더블 초콜릿(G)",
+  "cat": "티&기타",
+  "available": true,
+  "soldOut": true,
+  "price": 6900,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   }
+  ],
+  "variants": []
+ },
+ "로열 자몽티": {
+  "name": "로열 자몽티",
+  "price": 6700,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "로열 자몽티"
+   },
+   {
+    "name": "(P)아이스 로열 자몽티"
+   },
+   {
+    "name": "로열 자몽티(G)"
+   },
+   {
+    "name": "아이스 로열 자몽티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "(P)아이스 로열 자몽티": {
+  "name": "(P)아이스 로열 자몽티",
+  "price": 6700,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "로열 자몽티"
+   },
+   {
+    "name": "(P)아이스 로열 자몽티"
+   },
+   {
+    "name": "로열 자몽티(G)"
+   },
+   {
+    "name": "아이스 로열 자몽티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "로열 자몽티(G)": {
+  "name": "로열 자몽티(G)",
+  "price": 7400,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "로열 자몽티"
+   },
+   {
+    "name": "(P)아이스 로열 자몽티"
+   },
+   {
+    "name": "로열 자몽티(G)"
+   },
+   {
+    "name": "아이스 로열 자몽티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 로열 자몽티(G)": {
+  "name": "아이스 로열 자몽티(G)",
+  "price": 7400,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "로열 자몽티"
+   },
+   {
+    "name": "(P)아이스 로열 자몽티"
+   },
+   {
+    "name": "로열 자몽티(G)"
+   },
+   {
+    "name": "아이스 로열 자몽티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "클래식 레몬 허니티": {
+  "name": "클래식 레몬 허니티",
+  "price": 6700,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "클래식 레몬 허니티"
+   },
+   {
+    "name": "아이스 클래식 레몬 허니티"
+   },
+   {
+    "name": "클래식 레몬 허니티(G)"
+   },
+   {
+    "name": "아이스 클래식 레몬 허니티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 클래식 레몬 허니티": {
+  "name": "아이스 클래식 레몬 허니티",
+  "price": 6700,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "클래식 레몬 허니티"
+   },
+   {
+    "name": "아이스 클래식 레몬 허니티"
+   },
+   {
+    "name": "클래식 레몬 허니티(G)"
+   },
+   {
+    "name": "아이스 클래식 레몬 허니티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "클래식 레몬 허니티(G)": {
+  "name": "클래식 레몬 허니티(G)",
+  "price": 7400,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "클래식 레몬 허니티"
+   },
+   {
+    "name": "아이스 클래식 레몬 허니티"
+   },
+   {
+    "name": "클래식 레몬 허니티(G)"
+   },
+   {
+    "name": "아이스 클래식 레몬 허니티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "아이스 클래식 레몬 허니티(G)": {
+  "name": "아이스 클래식 레몬 허니티(G)",
+  "price": 7400,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "클래식 레몬 허니티"
+   },
+   {
+    "name": "아이스 클래식 레몬 허니티"
+   },
+   {
+    "name": "클래식 레몬 허니티(G)"
+   },
+   {
+    "name": "아이스 클래식 레몬 허니티(G)"
+   }
+  ],
+  "cat": "티&기타",
+  "available": true
+ },
+ "발로나 초코 프라페": {
+  "name": "발로나 초코 프라페",
+  "price": 6900,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "발로나 초코 프라페"
+   },
+   {
+    "name": "발로나 초코 프라페(G)"
+   }
+  ],
+  "cat": "프라페",
+  "available": true
+ },
+ "발로나 초코 프라페(G)": {
+  "name": "발로나 초코 프라페(G)",
+  "price": 7400,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "발로나 초코 프라페"
+   },
+   {
+    "name": "발로나 초코 프라페(G)"
+   }
+  ],
+  "cat": "프라페",
+  "available": true
+ },
+ "에스프레소 프라페": {
+  "name": "에스프레소 프라페",
+  "price": 6200,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "에스프레소 프라페"
+   },
+   {
+    "name": "에스프레소 프라페(G)"
+   }
+  ],
+  "cat": "프라페",
+  "available": true
+ },
+ "에스프레소 프라페(G)": {
+  "name": "에스프레소 프라페(G)",
+  "price": 6700,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "에스프레소 프라페"
+   },
+   {
+    "name": "에스프레소 프라페(G)"
+   }
+  ],
+  "cat": "프라페",
+  "available": true
+ },
+ "발로나 자바칩 프라페": {
+  "name": "발로나 자바칩 프라페",
+  "price": 6400,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "발로나 자바칩 프라페"
+   },
+   {
+    "name": "발로나 자바칩 프라페(G)"
+   }
+  ],
+  "cat": "프라페",
+  "available": true
+ },
+ "발로나 자바칩 프라페(G)": {
+  "name": "발로나 자바칩 프라페(G)",
+  "price": 6900,
+  "groups": [
+   {
+    "title": "옵션변경",
+    "choices": []
+   },
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   },
+   {
+    "title": "옵션 추가 (0~5개 선택)",
+    "choices": [
+     {
+      "name": "샷추가",
+      "soldOut": false,
+      "price": 700
+     },
+     {
+      "name": "휘핑추가",
+      "soldOut": true,
+      "price": 700
+     }
+    ]
+   },
+   {
+    "title": "우유변경 (최대 1개 선택)",
+    "choices": [
+     {
+      "name": "저지방우유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "두유",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "오트밀크",
+      "soldOut": true,
+      "price": 500
+     }
+    ]
+   }
+  ],
+  "variants": [
+   {
+    "name": "발로나 자바칩 프라페"
+   },
+   {
+    "name": "발로나 자바칩 프라페(G)"
+   }
+  ],
+  "cat": "프라페",
+  "available": true
+ },
+ "초코 테디 프라페": {
+  "name": "초코 테디 프라페",
+  "price": 4300,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "프라페",
+  "available": true
+ },
+ "리얼 후르츠 청포도 주스": {
+  "name": "리얼 후르츠 청포도 주스",
+  "price": 8300,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "리얼후르츠음료",
+  "available": true
+ },
+ "리얼 후르츠 토마토 주스": {
+  "name": "리얼 후르츠 토마토 주스",
+  "price": 8300,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "리얼후르츠음료",
+  "available": true
+ },
+ "플로제 유기농 사과 주스": {
+  "name": "플로제 유기농 사과 주스",
+  "price": 6000,
+  "groups": [],
+  "variants": [],
+  "cat": "음료",
+  "available": true
+ },
+ "플로제 유기농 복숭아 주스": {
+  "name": "플로제 유기농 복숭아 주스",
+  "price": 6000,
+  "groups": [],
+  "variants": [],
+  "cat": "음료",
+  "available": true
+ },
+ "플로제 탄산수 500ml": {
+  "name": "플로제 탄산수 500ml",
+  "price": 5200,
+  "groups": [],
+  "variants": [],
+  "cat": "음료",
+  "available": true
+ },
+ "플로제 탄산수 250ml": {
+  "name": "플로제 탄산수 250ml",
+  "price": 4600,
+  "groups": [],
+  "variants": [],
+  "cat": "음료",
+  "available": true
+ },
+ "노아주스(애플피치키위)": {
+  "name": "노아주스(애플피치키위)",
+  "price": 5800,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "음료",
+  "available": true
+ },
+ "노아주스(크러쉬드 애플)": {
+  "name": "노아주스(크러쉬드 애플)",
+  "price": 5800,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "음료",
+  "available": true
+ },
+ "노아주스(발렌시아 오렌지)": {
+  "name": "노아주스(발렌시아 오렌지)",
+  "price": 5800,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "음료",
+  "available": true
+ },
+ "노아주스(바나나 리치망고)": {
+  "name": "노아주스(바나나 리치망고)",
+  "price": 5800,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "음료",
+  "available": true
+ },
+ "페리에(플레인)": {
+  "name": "페리에(플레인)",
+  "price": 4000,
+  "groups": [
+   {
+    "title": "컵선택",
+    "choices": [
+     {
+      "name": "일회용",
+      "soldOut": false,
+      "price": 0
+     },
+     {
+      "name": "매장용",
+      "soldOut": false,
+      "price": 0
+     }
+    ]
+   }
+  ],
+  "variants": [],
+  "cat": "음료",
+  "available": true
+ }
+}

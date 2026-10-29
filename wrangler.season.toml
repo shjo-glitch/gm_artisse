@@ -1,0 +1,18 @@
+name = "attije-season-sync"
+main = "workers/season-sync.js"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = false
+
+# 아띠제 새메뉴 자동 반영 (lib/season-sync.js). Cron Trigger는 UTC 기준: 매달 1일 00:00 UTC = 한국 시간 매달 1일 09:00
+[triggers]
+crons = ["0 0 1 * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "attije-order-sheet-db"
+database_id = "4201a0b7-2b76-48d4-b987-9dca873848df"
+
+# 포스터에서 메뉴명과 가격을 읽는 Workers AI
+[ai]
+binding = "AI"

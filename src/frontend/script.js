@@ -1,9 +1,17 @@
 const DEFAULT_SIZES = ["Tall", "Grande"];
-const DEFAULT_OPTIONS = ["연하게", "덜달게", "디카페인", "더달게", "두유", "오트밀크"];
+// 저장 값은 Tall/Grande 그대로 두고 화면에는 아띠제 표기(Petit/Grande)로 보여준다.
+const SIZE_LABELS = { Tall: "Petit", Grande: "Grande" };
+// 디카페인·우유 변경은 메뉴별 유료 옵션(drinks.extras)으로 고르므로, 기본 요청사항에는 맛 조절만 둔다.
+const DEFAULT_OPTIONS = ["연하게", "덜달게", "더달게"];
 const DEFAULT_CATEGORIES = [
-  { key: "coffee", label: "커피", sourceLabel: "Coffee" },
-  { key: "real-fruit-beverage", label: "과일음료", sourceLabel: "Real fruit beverage" },
-  { key: "tea", label: "차", sourceLabel: "Tea" },
+  { key: "season", label: "시즌", sourceLabel: "Season" },
+  { key: "coffee", label: "에스프레소", sourceLabel: "Espresso" },
+  { key: "cold-brew", label: "콜드브루", sourceLabel: "Cold brew" },
+  { key: "smoothie-ade", label: "스무디&에이드", sourceLabel: "Smoothie & ade" },
+  { key: "tea", label: "티&기타", sourceLabel: "Tea & others" },
+  { key: "frappe", label: "프라페", sourceLabel: "Frappe" },
+  { key: "real-fruit-beverage", label: "리얼후르츠", sourceLabel: "Real fruit beverage" },
+  { key: "bottled", label: "병음료", sourceLabel: "Bottled" },
   { key: "others", label: "기타", sourceLabel: "Others" },
 ];
 const DEFAULT_DRINKS = [
@@ -83,12 +91,6 @@ const resetButton = document.querySelector("#reset-order");
 const orderStatus = document.querySelector("#order-status");
 const seasonMenuList = document.querySelector("#season-menu-list");
 const seasonMenuEmpty = document.querySelector("#season-menu-empty");
-const adminLink = document.querySelector("#admin-link");
-const authOverlay = document.querySelector("#auth-overlay");
-const authPassword = document.querySelector("#auth-password");
-const authSubmit = document.querySelector("#auth-submit");
-const authClose = document.querySelector("#auth-close");
-const authError = document.querySelector("#auth-error");
 const newOptionName = document.querySelector("#new-option-name");
 const addOptionButton = document.querySelector("#add-option");
 const ordersToggle = document.querySelector("#orders-toggle");
@@ -127,7 +129,10 @@ function setStatus(msg) { orderStatus.textContent = msg; }
 async function apiRequest(path, { method = "GET", body, admin = false, password = "" } = {}) {
   const headers = {};
   if (body !== undefined) headers["content-type"] = "application/json";
-  if (admin) headers["x-admin-password"] = password || sessionStorage.getItem("admin_password") || "";
+  if (admin) {
+    headers["x-admin-id"] = encodeURIComponent(sessionStorage.getItem("admin_id") || "");
+    headers["x-admin-password"] = password || sessionStorage.getItem("admin_password") || "";
+  }
   const response = await fetch(path, {
     method,
     headers,
@@ -187,7 +192,7 @@ function applyClosedState() {
 // ── 행 변환 ───────────────────────────────────────────────
 
 function rowToDrink(row) {
-  return { category: row.category, name: row.name, prices: { Tall: row.tall_price, Grande:row.grande_price }, iceOnly: Boolean(row.ice_only) };
+  return { category: row.category, name: row.name, prices: { Tall: row.tall_price, Grande:row.grande_price }, iceOnly: Boolean(row.ice_only), hotOnly: Boolean(row.hot_only), extras: Array.isArray(row.extras) ? row.extras : [] };
 }
 function rowToOrder(row) {
   return {
@@ -207,6 +212,7 @@ function rowToOrder(row) {
 
 // ── 상태 헬퍼 ─────────────────────────────────────────────
 
+function sizeLabel(size) { return SIZE_LABELS[size] || size; }
 function findDrink(name) { return state.drinks.find((d) => d.name === name); }
 function findCategory(key) { return state.categories.find((c) => c.key === key) || DEFAULT_CATEGORIES.find((c) => c.key === key) || { key, label: key }; }
 function formatPrice(price) { return `${formatter.format(normalizePrice(price))}원`; }
@@ -241,8 +247,12 @@ function setOrdersExpanded(open) {
   if (open) { ordersBody.removeAttribute("hidden"); ordersToggle.textContent = "접기"; }
   else { ordersBody.setAttribute("hidden", ""); ordersToggle.textContent = "펼치기"; }
 }
-function renderSelectOptions(select, values, placeholder = "") {
-  select.innerHTML = [placeholder ? `<option value="">${placeholder}</option>` : "", ...values.map((v) => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`)].join("");
+function renderSelectOptions(select, values, placeholder = "", label = (v) => v) {
+  select.innerHTML = [placeholder ? `<option value="">${placeholder}</option>` : "", ...values.map((v) => `<option value="${escapeHtml(v)}">${escapeHtml(label(v))}</option>`)].join("");
+}
+// 다시 그린 select에 이전 선택값이 아직 있으면 되살린다. (동기화 중에도 입력 중인 선택 유지)
+function restoreSelectValue(select, value) {
+  if (value && Array.from(select.options).some((opt) => opt.value === value)) select.value = value;
 }
 function getAvailableRequesters(currentOrderId = "") {
   const taken = new Set(state.orders.filter((o) => o.id !== currentOrderId).map((o) => o.requester));
@@ -265,18 +275,22 @@ function renderOptions() {
   optionList.innerHTML = state.options.map((o) => `<label class="option-toggle"><input type="checkbox" name="orderOptions" value="${escapeHtml(o)}" ${sel.has(o) ? "checked" : ""}><span>${escapeHtml(o)}</span></label>`).join("");
 }
 function renderConfig() {
+  const prev = { menu: menuSelect.value, requester: requesterSelect.value, size: sizeSelect.value };
   renderMenuOptions();
   renderRequesterOptions(editingOrderId.value);
-  renderSelectOptions(sizeSelect, state.sizes);
+  renderSelectOptions(sizeSelect, state.sizes, "", sizeLabel);
   renderOptions();
   sizeSelect.value = state.sizes[0] || "Tall";
+  restoreSelectValue(menuSelect, prev.menu);
+  restoreSelectValue(requesterSelect, prev.requester);
+  restoreSelectValue(sizeSelect, prev.size);
   updateDrinkConstraints();
 }
 function renderStatement() {
   const groups = getStatementGroups();
   statementList.innerHTML = groups.map((g) => {
     const optText = g.options.length ? ` (${g.options.map(escapeHtml).join(", ")})` : "";
-    const sizeAbbr = g.size === "Grande" ? "G" : "T";
+    const sizeAbbr = g.size === "Grande" ? "G" : "P";
     return `<li class="statement-item"><span>${escapeHtml(g.menuName)} ${escapeHtml(g.temp)} ${sizeAbbr}${optText} x${g.quantity}</span><span class="statement-item__divider" aria-hidden="true"></span><strong>${formatPrice(g.total)}</strong></li>`;
   }).join("");
   emptyStatement.classList.toggle("is-hidden", groups.length > 0);
@@ -287,7 +301,7 @@ function renderOrders() {
     <li class="order-item" data-id="${escapeHtml(o.id)}">
       <div class="order-item__body">
         <strong>${escapeHtml(o.menuName)}</strong>
-        <span>${escapeHtml(o.requester)} · ${escapeHtml(o.temp || "ICE")} · ${escapeHtml(o.size)} · ${escapeHtml(findCategory(o.category).label)}</span>
+        <span>${escapeHtml(o.requester)} · ${escapeHtml(o.temp || "ICE")} · ${escapeHtml(sizeLabel(o.size))} · ${escapeHtml(findCategory(o.category).label)}</span>
         ${o.options.length ? `<p class="option-summary">옵션: ${o.options.map(escapeHtml).join(", ")}</p>` : ""}
         ${o.note ? `<p>${escapeHtml(o.note)}</p>` : ""}
       </div>
@@ -320,20 +334,18 @@ function renderSeasonalMenus() {
 function isCustomMenu() { return menuSelect.value === CUSTOM_MENU_VALUE; }
 function updateDrinkConstraints() {
   const drink = (!isCustomMenu() && menuSelect.value) ? findDrink(menuSelect.value) : null;
+  // 가격이 0인 사이즈는 팔지 않는 사이즈로 보고 숨긴다. (모든 사이즈가 0인 "주문 안함" 같은 메뉴는 그대로 둔다)
+  const sold = drink ? state.sizes.filter((size) => normalizePrice(drink.prices[size]) > 0) : [];
   Array.from(sizeSelect.options).forEach((opt) => {
-    if (opt.value === "Grande") {
-      const noGrande = Boolean(drink && drink.prices.Grande === 0);
-      opt.disabled = noGrande; opt.hidden = noGrande;
-      if (noGrande && sizeSelect.value === "Grande") sizeSelect.value = "Tall";
-    }
+    const unavailable = sold.length > 0 && !sold.includes(opt.value);
+    opt.disabled = unavailable; opt.hidden = unavailable;
   });
+  if (sold.length && !sold.includes(sizeSelect.value)) sizeSelect.value = sold[0];
   if (drinkTemp) {
     Array.from(drinkTemp.options).forEach((opt) => {
-      if (opt.value === "HOT") {
-        const iceOnly = Boolean(drink && drink.iceOnly);
-        opt.disabled = iceOnly; opt.hidden = iceOnly;
-        if (iceOnly && drinkTemp.value === "HOT") drinkTemp.value = "ICE";
-      }
+      const unavailable = Boolean(drink && ((opt.value === "HOT" && drink.iceOnly) || (opt.value === "ICE" && drink.hotOnly)));
+      opt.disabled = unavailable; opt.hidden = unavailable;
+      if (unavailable && drinkTemp.value === opt.value) drinkTemp.value = opt.value === "HOT" ? "ICE" : "HOT";
     });
   }
 }
@@ -358,8 +370,21 @@ function getSelectedUnitPrice() {
   const drink = findDrink(menuSelect.value);
   return normalizePrice(drink?.prices?.[sizeSelect.value]);
 }
+// v2(키오스크)에서 고른 유료 옵션("샷추가 x2" 등)은 이 화면에서 수정해도 유지하고 금액에 더한다.
+let editingExtras = [];
+function extraOptionPrice(drink, text) {
+  const m = String(text).match(/^(.*?)(?: x(\d+))?$/);
+  for (const group of drink?.extras || []) {
+    const choice = (group.choices || []).find((c) => c.name === m[1]);
+    if (choice) return normalizePrice(choice.price) * Number(m[2] || 1);
+  }
+  return null;
+}
 function getFormPayload() {
-  return { menuName: getSelectedMenuName(), requester: requesterSelect.value, size: sizeSelect.value, temp: drinkTemp ? drinkTemp.value : "ICE", options: getSelectedOptions(), note: orderNote.value.trim(), unitPrice: getSelectedUnitPrice() };
+  const drink = isCustomMenu() ? null : findDrink(menuSelect.value);
+  const extras = editingExtras.filter((t) => extraOptionPrice(drink, t) !== null);
+  const extrasTotal = extras.reduce((sum, t) => sum + extraOptionPrice(drink, t), 0);
+  return { menuName: getSelectedMenuName(), requester: requesterSelect.value, size: sizeSelect.value, temp: drinkTemp ? drinkTemp.value : "ICE", options: [...extras, ...getSelectedOptions()], note: orderNote.value.trim(), unitPrice: getSelectedUnitPrice() + extrasTotal };
 }
 function validatePayload(payload) {
   if (!payload.menuName) return "메뉴 이름을 선택하거나 입력하세요.";
@@ -371,6 +396,7 @@ function validatePayload(payload) {
 }
 function resetForm() {
   editingOrderId.value = "";
+  editingExtras = [];
   orderForm.reset();
   sizeSelect.value = state.sizes[0] || "Tall";
   if (drinkTemp) drinkTemp.value = "ICE";
@@ -396,14 +422,15 @@ function startEdit(id) {
   requesterSelect.value = o.requester;
   sizeSelect.value = o.size;
   if (drinkTemp) drinkTemp.value = o.temp || "ICE";
-  setSelectedOptions(o.options);
+  editingExtras = o.options.filter((t) => extraOptionPrice(findDrink(o.menuName), t) !== null);
+  setSelectedOptions(o.options.filter((t) => !editingExtras.includes(t)));
   orderNote.value = o.note;
   submitOrder.textContent = "주문 수정";
   cancelEdit.classList.remove("is-hidden");
   orderForm.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-// ── Sites D1 데이터 로드 ─────────────────────────────────
+// ── D1 데이터 로드 ─────────────────────────────────
 
 async function loadState() {
   setStatus("데이터를 불러오는 중입니다...");
@@ -416,27 +443,42 @@ async function loadState() {
     }
     if (drinks?.length) state.drinks = drinks.map(rowToDrink);
     if (orders) state.orders = orders.map(rowToOrder);
+    syncSignatures.config = JSON.stringify({ config, drinks });
+    syncSignatures.orders = JSON.stringify(orders);
     renderConfig();
     applyClosedState();
     setUpdatedAt(new Date().toISOString());
     setStatus(state.ordersClosed ? "현재 주문이 마감된 상태입니다." : "데이터를 불러왔습니다.");
   } catch (e) {
     console.error("[loadState]", e);
-    setStatus("Sites 데이터베이스에서 주문 정보를 불러오지 못했습니다.");
+    setStatus("데이터베이스에서 주문 정보를 불러오지 못했습니다.");
   }
 }
+
+// 마지막으로 반영한 서버 응답. 5초 동기화에서 내용이 그대로면 화면을 다시 그리지 않는다.
+const syncSignatures = { config: "", orders: "" };
 
 async function reloadOrders() {
   const { orders } = await apiRequest("/api/orders");
   if (orders) {
+    const signature = JSON.stringify(orders);
+    if (signature === syncSignatures.orders) return;
+    syncSignatures.orders = signature;
     state.orders = orders.map(rowToOrder);
     setUpdatedAt(new Date().toISOString());
     renderOrders();
+    // 다른 사람이 주문한 이름은 주문자 목록에서 빼되, 지금 고른 주문자는 유지한다.
+    const requester = requesterSelect.value;
+    renderRequesterOptions(editingOrderId.value);
+    restoreSelectValue(requesterSelect, requester);
   }
 }
 
 async function reloadConfig(notify = true) {
   const { config, drinks } = await apiRequest("/api/config");
+  const signature = JSON.stringify({ config, drinks });
+  if (signature === syncSignatures.config) return;
+  syncSignatures.config = signature;
   if (config) {
     const prevUsers = [...state.users];
     const prevClosed = state.ordersClosed;
@@ -468,7 +510,7 @@ async function reloadConfig(notify = true) {
   setUpdatedAt(new Date().toISOString());
 }
 
-// ── Sites D1 CRUD ─────────────────────────────────────────
+// ── D1 CRUD ─────────────────────────────────────────
 
 async function createOrder(payload) {
   if (state.ordersClosed) { setStatus("주문이 마감되어 추가할 수 없습니다."); return; }
@@ -573,7 +615,7 @@ async function toggleOrdersClosed() {
   showToast(next ? "주문을 마감했습니다." : "주문을 재개했습니다.", next ? "warning" : "success");
 }
 
-// ── Sites 동기화 ──────────────────────────────────────────
+// ── 동기화 ──────────────────────────────────────────
 
 function connectSync() {
   setInterval(async () => {
@@ -619,29 +661,6 @@ async function loadSeasonalMenus() {
 
 // ── 이벤트 ────────────────────────────────────────────────
 
-if (adminLink) adminLink.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (isAdmin()) { window.location.href = "admin.html"; return; }
-  if (authOverlay) authOverlay.classList.remove("is-hidden");
-  if (authPassword) authPassword.value = "";
-  if (authError) authError.classList.add("is-hidden");
-  if (authPassword) authPassword.focus();
-});
-if (authSubmit) authSubmit.addEventListener("click", async () => {
-  const pw = authPassword ? authPassword.value : "";
-  try {
-    await apiRequest("/api/admin/auth", { method: "POST", admin: true, password: pw });
-    sessionStorage.setItem("admin_password", pw);
-    sessionStorage.setItem("admin_authenticated", "true");
-    window.location.href = "admin.html";
-  } catch {
-    if (authError) authError.classList.remove("is-hidden");
-    if (authPassword) authPassword.value = "";
-    authPassword.focus();
-  }
-});
-if (authClose) authClose.addEventListener("click", () => { if (authOverlay) authOverlay.classList.add("is-hidden"); });
-if (authPassword) authPassword.addEventListener("keydown", (e) => { if (e.key === "Enter") authSubmit.click(); });
 
 menuSelect.addEventListener("change", () => { updateCustomFields(); updateDrinkConstraints(); });
 sizeSelect.addEventListener("change", () => { if (!isCustomMenu()) setStatus("사이즈를 변경했습니다."); });

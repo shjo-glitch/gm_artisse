@@ -58,6 +58,18 @@ h2 { margin-bottom: 0; font-size: clamp(1.45rem, 3vw, 2rem); letter-spacing: -.0
 .field label { font-weight: 800; }
 .field input, .field select, .field textarea, .option-add input { width: 100%; border: 1px solid var(--border); border-radius: 16px; background: #fffaf4; color: var(--text); padding: .85rem 1rem; line-height: 1.5; }
 .field textarea { resize: vertical; }
+/* 드롭다운 목록이 길면 macOS 크롬 기본 메뉴에서는 화면 끝에 걸려 잘린다. 지원 브라우저에서는 페이지 안 목록으로 그려 높이를 제한하고 스크롤한다. */
+@supports (appearance: base-select) {
+  .field select, .field select::picker(select) { appearance: base-select; }
+  .field select { display: flex; align-items: center; gap: .5rem; cursor: pointer; }
+  .field select:disabled { cursor: not-allowed; opacity: .6; }
+  .field select::picker-icon { content: ""; flex: none; align-self: center; margin-inline-start: auto; inline-size: .7rem; block-size: .7rem; background: currentColor; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .field select::picker(select) { max-block-size: min(26rem, calc(100% - .7rem)); overflow-y: auto; margin-block: .35rem; border: 1px solid var(--border); border-radius: 16px; background: #fffaf4; box-shadow: var(--shadow); padding: .35rem; }
+  .field select optgroup { color: var(--brand-dark); font-weight: 800; padding-block: .35rem; }
+  .field select option { color: var(--text); font-weight: 400; border-radius: 10px; padding: .45rem .75rem; }
+  .field select option:hover, .field select option:focus-visible { background: var(--surface-strong); outline: none; }
+  .field select option:checked { color: var(--brand-dark); font-weight: 800; }
+}
 .form-actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
 .button { min-height: 44px; border: 0; border-radius: 14px; background: var(--brand); color: #fff; cursor: pointer; font-weight: 800; padding: 0 1rem; transition: transform .16s ease, background .16s ease, box-shadow .16s ease; }
 .button--ghost { border: 1px solid var(--border); background: #fffaf4; color: var(--brand-dark); }
@@ -79,6 +91,7 @@ h2 { margin-bottom: 0; font-size: clamp(1.45rem, 3vw, 2rem); letter-spacing: -.0
 .empty-state, .status-message, .help-text { line-height: 1.6; }
 .empty-state { border: 1px dashed var(--border); border-radius: 18px; background: #fffaf4; padding: 1rem; }
 .status-message { margin: 1.2rem 0 0; border-radius: 14px; background: var(--surface-strong); padding: .85rem 1rem; }
+.status-message ul { margin: .4rem 0 0; padding-left: 1.1rem; }
 .help-text { margin: 0; font-size: .92rem; }
 .totals { display: grid; gap: .8rem; margin: 1.4rem 0 0; }
 .totals div { display: flex; justify-content: space-between; gap: 1rem; }
@@ -128,12 +141,17 @@ h2 { margin-bottom: 0; font-size: clamp(1.45rem, 3vw, 2rem); letter-spacing: -.0
 .toast.toast--success { background: #15803d; }
 .toast.toast--warning { background: #b45309; }
 .toast__icon { flex-shrink: 0; font-size: 1em; margin-top: .05em; }
-.auth-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-.auth-box { position: relative; background: #fff; border-radius: 16px; padding: 2rem; display: flex; flex-direction: column; gap: 1rem; min-width: 280px; max-width: 360px; width: 100%; box-shadow: 0 8px 32px rgba(0,0,0,.2); }
-.auth-close { position: absolute; top: .75rem; right: .75rem; border: none; background: none; cursor: pointer; font-size: 1.25rem; line-height: 1; color: var(--muted); padding: .25rem .4rem; border-radius: 6px; }
-.auth-close:hover { color: var(--text); background: var(--surface-strong); }
-.auth-box h2 { margin: 0; font-size: 1.2rem; }
-.auth-box p { margin: 0; color: var(--muted); font-size: .9rem; }
-.auth-box input[type="password"] { padding: .6rem .8rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem; width: 100%; box-sizing: border-box; }
 @media (max-width: 900px) { .hero, .layout--orders, .layout--admin, .order-side { grid-template-columns: 1fr; } .hero { padding-top: 2rem; } .summary, .order-statement { position: static; } }
 @media (max-width: 620px) { .hero, .layout, .footer { width: min(100% - 1rem, 1120px); } .hero__content, .card { border-radius: 20px; } .section-heading, .order-item { grid-template-columns: 1fr; } .section-heading { flex-direction: column; } .order-form, .admin-form, .option-add { grid-template-columns: 1fr; width: 100%; } .order-form__menu-field, .order-form__temp-field, #custom-menu-field, #custom-price-field, .order-form__requester-field, .order-form__size-field { grid-column: 1; grid-row: auto; } .button, .button--ghost, .button--danger { width: 100%; } .order-item__actions { justify-content: stretch; } }
+
+/* 확인 창 (주문 화면·관리자 화면 공용) */
+.kiosk-confirm { width: min(380px, calc(100% - 2rem)); border: 0; border-radius: 22px; color: var(--text); padding: 1.4rem 1.4rem 1.2rem; box-shadow: var(--shadow); }
+.kiosk-confirm::backdrop { background: rgba(47,36,31,.45); }
+.kiosk-confirm h2 { margin: 0 0 .5rem; font-size: 1.2rem; }
+.kiosk-confirm p { margin: 0 0 1.2rem; color: var(--muted); line-height: 1.5; word-break: keep-all; }
+.kiosk-confirm__actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.kiosk-confirm__actions button { min-height: 50px; border: 0; border-radius: 14px; cursor: pointer; font-size: 1rem; font-weight: 800; }
+.kiosk-confirm__cancel { background: var(--surface-strong); color: var(--brand-dark); }
+.kiosk-confirm__ok { background: var(--danger); color: #fff; }
+.kiosk-confirm__actions button:focus-visible { outline: none; box-shadow: var(--focus); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

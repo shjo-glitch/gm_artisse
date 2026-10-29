@@ -2,166 +2,121 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>아띠제 음료 주문표</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>아띠제 음료 주문 · 키오스크</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/kiosk.css">
 </head>
-<body>
-  <a class="skip-link" href="#order-form">주문 입력으로 건너뛰기</a>
-  <header class="hero" aria-labelledby="page-title">
-    <div class="hero__content">
-      <p class="eyebrow">Café Drink Order Sheet</p>
-      <h1 id="page-title">아띠제 음료 주문표</h1>
-      <p class="hero__description">사내 구성원의 음료 주문을 메뉴·주문자·사이즈·옵션과 함께 등록하고 총액을 확인하는 주문표입니다.</p>
-      <nav class="page-nav" aria-label="페이지 이동">
-        <a id="admin-link" href="admin.html">관리자 페이지</a>
-        <button id="toggle-close" class="button button--danger admin-only is-hidden" type="button">주문 마감</button>
-      </nav>
+<body class="kiosk">
+  <header class="kiosk-bar">
+    <div class="kiosk-bar__title">
+      <img src="/favicon.svg" alt="" width="40" height="40">
+      <div>
+        <p class="eyebrow">Café Drink Order</p>
+        <h1>아띠제 음료 주문</h1>
+      </div>
+    </div>
+    <div class="kiosk-bar__actions">
+      <button id="open-orders" class="kiosk-cart" type="button" aria-haspopup="dialog">
+        <span class="kiosk-cart__label">주문 현황</span>
+        <strong class="kiosk-cart__sum"><span id="order-count" class="kiosk-cart__num">0</span><small>잔</small><i aria-hidden="true">·</i><span id="order-total" class="kiosk-cart__num">0</span><small>원</small></strong>
+      </button>
     </div>
   </header>
 
-  <main class="layout layout--orders">
-    <section class="card order-form-card" aria-labelledby="form-heading">
-      <div class="section-heading">
-        <div class="section-heading__title">
-          <p class="eyebrow">New Order</p>
-          <h2 id="form-heading">메뉴 주문 추가</h2>
-          <p class="section-heading__hint">메뉴는 카테고리별 목록에서 선택하거나 직접 입력할 수 있으며, 자주 찾는 옵션을 여러 개 선택할 수 있습니다. 가격은 하단 주문 명세서에서만 확인합니다.</p>
-        </div>
-      </div>
+  <div id="closed-banner" class="kiosk-closed is-hidden" role="status" aria-live="polite">🔒 주문이 마감되었습니다. 관리자가 재개하면 다시 주문할 수 있습니다.</div>
 
-      <div id="order-closed-banner" class="closed-banner is-hidden" role="status" aria-live="polite">🔒 현재 주문이 마감되었습니다. 관리자가 재개하면 다시 주문할 수 있습니다.</div>
+  <nav id="category-tabs" class="kiosk-tabs" aria-label="음료 카테고리"></nav>
 
-      <aside class="season-menu" aria-labelledby="season-menu-heading">
-        <h3 id="season-menu-heading">진행중인 시즌메뉴</h3>
-        <p>직접 입력으로 신메뉴를 추가해서 주문할 수 있습니다. 공식 새메뉴 페이지에서 제목에 음료 키워드가 포함된 항목만 자동 표기합니다.</p>
-        <p><a href="https://www.cafeartisee.com/news/new/" target="_blank" rel="noopener noreferrer">아티제 새 메뉴 페이지</a></p>
-        <ul id="season-menu-list"></ul>
-        <p id="season-menu-empty" class="season-menu__empty">진행중인 음료 시즌메뉴를 불러오는 중입니다. <a href="https://www.cafeartisee.com/news/new/" target="_blank" rel="noopener noreferrer">공식 새메뉴 페이지</a></p>
-      </aside>
-
-      <form id="order-form" class="order-form">
-        <input type="hidden" id="editing-order-id" value="">
-
-        <div class="field order-form__menu-field">
-          <label for="menu-select">메뉴 이름</label>
-          <select id="menu-select" name="menuSelect"></select>
-        </div>
-
-        <div class="field order-form__temp-field">
-          <label for="drink-temp">온도</label>
-          <select id="drink-temp" name="drinkTemp">
-            <option value="ICE">ICE</option>
-            <option value="HOT">HOT</option>
-          </select>
-        </div>
-
-        <div id="custom-menu-field" class="field is-hidden">
-          <label for="custom-menu-name">직접 입력 메뉴</label>
-          <input id="custom-menu-name" name="customMenuName" type="text" autocomplete="off" placeholder="예: 시즌 한정 라떼">
-        </div>
-
-        <div id="custom-price-field" class="field is-hidden">
-          <label for="custom-unit-price">직접 입력 메뉴 가격</label>
-          <input id="custom-unit-price" name="customUnitPrice" type="number" min="0" step="100" inputmode="numeric" placeholder="예: 6500">
-        </div>
-
-        <div class="field order-form__requester-field">
-          <label for="requester-select">주문자</label>
-          <select id="requester-select" name="requester" required></select>
-        </div>
-
-        <div class="field order-form__size-field">
-          <label for="size-select">사이즈</label>
-          <select id="size-select" name="size" required></select>
-        </div>
-
-        <fieldset class="field field--full option-group">
-          <legend>옵션 선택</legend>
-          <div id="option-list" class="option-list"></div>
-          <div class="option-add" aria-label="옵션 추가">
-            <input id="new-option-name" type="text" autocomplete="off" placeholder="옵션 추가">
-            <button id="add-option" class="button button--ghost" type="button">+ 추가</button>
-          </div>
-        </fieldset>
-
-        <div class="field field--full">
-          <label for="order-note">비고</label>
-          <textarea id="order-note" name="note" rows="3" maxlength="300" placeholder="추가 요청사항을 입력하세요."></textarea>
-        </div>
-
-        <div class="form-actions field--full">
-          <button id="submit-order" class="button" type="submit">주문 추가</button>
-          <button id="cancel-edit" class="button button--ghost is-hidden" type="button">수정 취소</button>
-        </div>
-      </form>
-    </section>
-
-    <div class="order-side">
-    <section class="card order-statement" aria-labelledby="statement-heading">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Statement</p>
-          <h2 id="statement-heading">주문 명세서</h2>
-        </div>
-      </div>
-      <div id="empty-statement" class="empty-state">아직 정리할 주문이 없습니다.</div>
-      <ul id="statement-list" class="statement-list" aria-label="종합 주문 명세"></ul>
-      <dl class="totals" aria-label="주문 명세 총액">
-        <div class="totals__amount">
-          <dt>총액</dt>
-          <dd><span id="total-price">0</span>원</dd>
-        </div>
-      </dl>
-    </section>
-
-    <section class="card summary" aria-labelledby="summary-heading">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Orders</p>
-          <h2 id="summary-heading">주문 목록</h2>
-          <p class="order-count-summary">총 주문 : <span id="total-count">0</span>개</p>
-        </div>
-        <div class="section-heading__actions">
-          <button id="reset-order" class="button button--ghost admin-only is-hidden" type="button">전체 초기화</button>
-          <button id="orders-toggle" class="button button--ghost" type="button" aria-expanded="false" aria-controls="orders-body">펼치기</button>
-        </div>
-      </div>
-
-      <div class="order-list-divider" aria-hidden="true"></div>
-
-      <div id="orders-body" hidden>
-        <div id="empty-order" class="empty-state">아직 등록된 주문이 없습니다. 주문 폼에서 음료 주문을 추가하세요.</div>
-        <ul id="order-list" class="order-list" aria-label="등록된 주문 목록"></ul>
-
-        <dl class="totals" aria-label="주문 목록 정보">
-          <div>
-            <dt>마지막 동기화</dt>
-            <dd id="last-updated">-</dd>
-          </div>
-        </dl>
-
-        <p id="order-status" class="status-message" role="status" aria-live="polite">주문을 불러오는 중입니다.</p>
-      </div>
-    </section>
-    </div>
+  <main class="kiosk-main">
+    <section id="drink-grid" class="kiosk-grid" aria-live="polite" aria-busy="true"></section>
+    <p id="kiosk-status" class="kiosk-status">메뉴를 불러오는 중입니다.</p>
   </main>
 
-  <footer class="footer">
-    <p>회사 내부 사용을 위한 아띠제 음료 주문표입니다.</p>
-  </footer>
+  <dialog id="drink-sheet" class="kiosk-sheet" aria-labelledby="sheet-title">
+    <form id="sheet-form" method="dialog">
+      <header class="kiosk-sheet__head">
+        <div>
+          <p id="sheet-category" class="eyebrow"></p>
+          <h2 id="sheet-title" tabindex="-1" autofocus></h2>
+          <p id="sheet-base" class="kiosk-sheet__base"></p>
+        </div>
+        <button class="kiosk-icon-button" type="button" data-close aria-label="닫기">&times;</button>
+      </header>
 
-  <div id="auth-overlay" class="auth-overlay is-hidden">
-    <div class="auth-box">
-      <button id="auth-close" class="auth-close" type="button" aria-label="닫기">&times;</button>
-      <h2>관리자 인증</h2>
-      <p>관리자 비밀번호를 입력하세요.</p>
-      <input id="auth-password" type="password" placeholder="비밀번호" autocomplete="current-password">
-      <button id="auth-submit" class="button" type="button">확인</button>
-      <p id="auth-error" class="status-message is-hidden">비밀번호가 올바르지 않습니다.</p>
+      <div class="kiosk-sheet__body">
+        <div id="custom-fields" class="kiosk-section is-hidden">
+          <label class="kiosk-label" for="custom-name">메뉴 이름</label>
+          <input id="custom-name" class="kiosk-input" type="text" autocomplete="off" placeholder="예: 시즌 한정 라떼">
+          <label class="kiosk-label" for="custom-price">가격</label>
+          <input id="custom-price" class="kiosk-input" type="number" min="0" step="100" inputmode="numeric" placeholder="예: 6500">
+        </div>
+
+        <fieldset id="temp-field" class="kiosk-section">
+          <legend class="kiosk-label">온도</legend>
+          <div id="temp-choices" class="kiosk-segment"></div>
+        </fieldset>
+
+        <fieldset id="size-field" class="kiosk-section">
+          <legend class="kiosk-label">사이즈</legend>
+          <div id="size-choices" class="kiosk-segment"></div>
+        </fieldset>
+
+        <div id="extra-groups"></div>
+
+        <fieldset class="kiosk-section">
+          <legend class="kiosk-label">요청사항 <span class="kiosk-hint">무료 · 여러 개 선택</span></legend>
+          <div id="request-choices" class="kiosk-chips"></div>
+          <input id="order-note" class="kiosk-input" type="text" maxlength="80" placeholder="그 밖의 요청 (선택)">
+        </fieldset>
+
+        <fieldset class="kiosk-section">
+          <legend class="kiosk-label">주문자</legend>
+          <div id="requester-choices" class="kiosk-chips kiosk-chips--names"></div>
+        </fieldset>
+      </div>
+
+      <footer class="kiosk-sheet__foot">
+        <p id="sheet-error" class="kiosk-error" role="alert"></p>
+        <button id="sheet-submit" class="kiosk-submit" type="submit">
+          <span id="sheet-submit-label">주문 담기</span>
+          <strong><span id="sheet-total">0</span>원</strong>
+        </button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog id="orders-sheet" class="kiosk-sheet kiosk-sheet--side" aria-labelledby="orders-title">
+    <header class="kiosk-sheet__head">
+      <div>
+        <p class="eyebrow">Orders</p>
+        <h2 id="orders-title" tabindex="-1" autofocus>주문 현황</h2>
+        <p class="kiosk-sheet__base">총 <strong id="orders-count">0</strong>잔 · <strong id="orders-total">0</strong>원</p>
+      </div>
+      <button class="kiosk-icon-button" type="button" data-close aria-label="닫기">&times;</button>
+    </header>
+    <div class="kiosk-sheet__body">
+      <h3 class="kiosk-label">주문 목록</h3>
+      <ul id="order-list" class="kiosk-orders"></ul>
+      <p id="orders-empty" class="kiosk-status">아직 주문이 없습니다.</p>
+      <h3 class="kiosk-label">주문 명세서</h3>
+      <ul id="statement-list" class="kiosk-statement"></ul>
     </div>
-  </div>
+  </dialog>
+
+  <dialog id="confirm-sheet" class="kiosk-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <h2 id="confirm-title">주문 삭제</h2>
+    <p id="confirm-message"></p>
+    <div class="kiosk-confirm__actions">
+      <button type="button" class="kiosk-confirm__cancel" data-close autofocus>취소</button>
+      <button id="confirm-ok" type="button" class="kiosk-confirm__ok" data-confirm-ok>삭제</button>
+    </div>
+  </dialog>
+
   <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="false"></div>
-  <script src="script.js"></script>
+  <script src="/kiosk.js"></script>
 </body>
 </html>
