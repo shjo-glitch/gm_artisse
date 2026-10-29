@@ -1,3 +1,5 @@
+import { getLastSeasonSync, syncSeasonMenus } from "../../lib/season-sync.js";
+
 function json(data, status = 200) {
   return Response.json(data, {
     status,
@@ -27,8 +29,24 @@ function configFromRow(row) {
   };
 }
 
+// 관리자 화면에서 받은 유료 옵션을 저장할 수 있는 모양으로 정리한다.
+// [{ title, mode: "count" | "pick", max, choices: [{ name, price }] }]
+function cleanExtras(groups) {
+  return (Array.isArray(groups) ? groups : []).map((g) => {
+    const mode = g?.mode === "pick" ? "pick" : "count";
+    return {
+      title: String(g?.title || "").trim().slice(0, 30),
+      mode,
+      max: mode === "pick" ? 1 : Math.min(10, Math.max(1, Math.round(Number(g?.max) || 1))),
+      choices: (Array.isArray(g?.choices) ? g.choices : [])
+        .map((c) => ({ name: String(c?.name || "").trim().slice(0, 30), price: Math.max(0, Math.round(Number(c?.price) || 0)) }))
+        .filter((c) => c.name),
+    };
+  }).filter((g) => g.title && g.choices.length);
+}
+
 function drinkFromRow(row) {
-  return { ...row, ice_only: Boolean(row.ice_only) };
+  return { ...row, ice_only: Boolean(row.ice_only), hot_only: Boolean(row.hot_only), extras: parseJsonArray(row.extras) };
 }
 
 function orderFromRow(row) {
@@ -68,13 +86,22 @@ async function ensureDatabase(db) {
     )`),
     db.prepare("CREATE INDEX IF NOT EXISTS orders_created_at_idx ON orders (created_at)"),
     db.prepare(`INSERT OR IGNORE INTO config (id, users, options, orders_closed)
-      VALUES (1, '[]', '["연하게","덜달게","디카페인","더달게","두유","오트밀크"]', 0)`),
+      VALUES (1, '[]', '["연하게","덜달게","더달게"]', 0)`),
   ]);
 }
 
+// 관리자 아이디(ADMIN_ID)와 비밀번호(ADMIN_PASSWORD)는 Pages 시크릿이다. 둘 중 하나라도 없으면 관리자 요청을 모두 거부한다.
+// 아이디는 한글도 쓸 수 있게 브라우저가 encodeURIComponent 로 보낸다.
+function safeEqual(a, b) {
+  let diff = a.length ^ b.length;
+  for (let i = 0; i < Math.max(a.length, b.length); i++) diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  return diff === 0;
+}
 function isAdmin(request, env) {
-  if (!env.ADMIN_PASSWORD) return true;
-  return request.headers.get("x-admin-password") === env.ADMIN_PASSWORD;
+  if (!env.ADMIN_ID || !env.ADMIN_PASSWORD) return false;
+  let id = "";
+  try { id = decodeURIComponent(request.headers.get("x-admin-id") || ""); } catch { return false; }
+  return safeEqual(id, env.ADMIN_ID) && safeEqual(request.headers.get("x-admin-password") || "", env.ADMIN_PASSWORD);
 }
 
 async function getConfig(db) {
@@ -101,13 +128,13 @@ async function assertOrdersOpen(db) {
 }
 
 async function handleApi(request, env, url) {
-  if (!env.DB) return json({ error: "Sites D1 데이터베이스가 연결되지 않았습니다." }, 503);
+  if (!env.DB) return json({ error: "D1 데이터베이스(DB 바인딩)가 연결되지 않았습니다." }, 503);
   await ensureDatabase(env.DB);
   const db = env.DB;
   const path = url.pathname;
 
   if (path === "/api/admin/auth" && request.method === "POST") {
-    return isAdmin(request, env) ? json({ ok: true }) : json({ error: "비밀번호가 올바르지 않습니다." }, 401);
+    return isAdmin(request, env) ? json({ ok: true }) : json({ error: "아이디 또는 비밀번호가 올바르지 않습니다." }, 401);
   }
 
   if (path === "/api/state" && request.method === "GET") {
@@ -206,39 +233,45 @@ async function handleApi(request, env, url) {
     if (!isAdmin(request, env)) return json({ error: "관리자 인증이 필요합니다." }, 401);
     const body = await request.json();
     const drinks = Array.isArray(body.drinks) ? body.drinks : [];
+    // 행사 연결 정보는 관리자 화면이 다루지 않으므로 같은 이름의 음료에서 이어 받는다.
+    // 유료 옵션은 보내 온 값이 있으면 그것을, 없으면(예전 화면) 같은 이름의 기존 값을 쓴다.
+    const { results: kept = [] } = await db.prepare("SELECT name, source_event_id, extras FROM drinks").all();
+    const keptByName = new Map(kept.map((row) => [row.name, row]));
     const statements = [db.prepare("DELETE FROM drinks")];
     drinks.forEach((drink, index) => {
       statements.push(db.prepare(`INSERT INTO drinks
-        (category, name, tall_price, grande_price, ice_only, sort_order)
-        VALUES (?, ?, ?, ?, ?, ?)`).bind(
+        (category, name, tall_price, grande_price, ice_only, hot_only, sort_order, source_event_id, extras)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
           String(drink.category || "others"),
           String(drink.name || ""),
           Number(drink.tall_price) || 0,
           Number(drink.grande_price) || 0,
           drink.ice_only ? 1 : 0,
+          drink.hot_only && !drink.ice_only ? 1 : 0,
           index,
+          keptByName.get(String(drink.name || ""))?.source_event_id ?? null,
+          Array.isArray(drink.extras) ? JSON.stringify(cleanExtras(drink.extras)) : keptByName.get(String(drink.name || ""))?.extras ?? "[]",
         ));
     });
     await db.batch(statements);
     return json({ drinks: await getDrinks(db) });
   }
 
+  if (path === "/api/admin/season-sync" && (request.method === "GET" || request.method === "POST")) {
+    if (!isAdmin(request, env)) return json({ error: "관리자 인증이 필요합니다." }, 401);
+    if (request.method === "GET") return json({ last: await getLastSeasonSync(db) });
+    if (!env.AI) return json({ error: "Workers AI 바인딩(AI)이 연결되지 않았습니다." }, 503);
+    return json({ last: await syncSeasonMenus(env, "manual") });
+  }
+
   return json({ error: "요청한 API를 찾을 수 없습니다." }, 404);
 }
 
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-    try {
-      if (url.pathname.startsWith("/api/")) return await handleApi(request, env, url);
-      if (url.pathname === "/") {
-        url.pathname = "/index.html";
-        return env.ASSETS.fetch(new Request(url, request));
-      }
-      return env.ASSETS.fetch(request);
-    } catch (error) {
-      console.error("[worker]", error);
-      return json({ error: error.message || "서버 오류가 발생했습니다." }, error.status || 500);
-    }
-  },
-};
+export async function onRequest({ request, env }) {
+  try {
+    return await handleApi(request, env, new URL(request.url));
+  } catch (error) {
+    console.error("[api]", error);
+    return json({ error: error.message || "서버 오류가 발생했습니다." }, error.status || 500);
+  }
+}

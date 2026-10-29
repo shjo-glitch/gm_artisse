@@ -12,7 +12,10 @@ export const schemaSql = {
     tall_price INTEGER NOT NULL DEFAULT 0,
     grande_price INTEGER NOT NULL DEFAULT 0,
     ice_only INTEGER NOT NULL DEFAULT 0,
+    hot_only INTEGER NOT NULL DEFAULT 0,
     sort_order INTEGER NOT NULL DEFAULT 0,
+    source_event_id TEXT,
+    extras TEXT NOT NULL DEFAULT '[]',
     PRIMARY KEY (category, name)
   )`,
   orders: `CREATE TABLE IF NOT EXISTS orders (
@@ -29,6 +32,23 @@ export const schemaSql = {
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   )`,
   ordersCreatedAtIndex: "CREATE INDEX IF NOT EXISTS orders_created_at_idx ON orders (created_at)",
+  menuEvents: `CREATE TABLE IF NOT EXISTS menu_events (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    release_date TEXT NOT NULL,
+    expire_date TEXT,
+    status TEXT NOT NULL CHECK (status IN ('added', 'failed', 'expired')),
+    items TEXT NOT NULL DEFAULT '[]',
+    attempts INTEGER NOT NULL DEFAULT 0,
+    error TEXT NOT NULL DEFAULT '',
+    checked_at TEXT NOT NULL
+  )`,
+  seasonSync: `CREATE TABLE IF NOT EXISTS season_sync (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    ran_at TEXT NOT NULL,
+    trigger TEXT NOT NULL,
+    report TEXT NOT NULL DEFAULT '{}'
+  )`,
 } as const;
 
 export type ConfigRow = {
@@ -45,7 +65,23 @@ export type DrinkRow = {
   tall_price: number;
   grande_price: number;
   ice_only: 0 | 1;
+  hot_only: 0 | 1;
   sort_order: number;
+  source_event_id: string | null;
+  // [{ title, mode: "count" | "pick", max, choices: [{ name, price }] }]
+  extras: string;
+};
+
+export type MenuEventRow = {
+  id: string;
+  title: string;
+  release_date: string;
+  expire_date: string | null;
+  status: "added" | "failed" | "expired";
+  items: string;
+  attempts: number;
+  error: string;
+  checked_at: string;
 };
 
 export type OrderRow = {

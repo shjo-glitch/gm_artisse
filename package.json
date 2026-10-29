@@ -1,20 +1,27 @@
 {
   "name": "attije-order-sheet",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "회사 내부 음료 주문표 (ChatGPT Sites D1)",
+  "description": "회사 내부 음료 주문표 (Cloudflare Pages + D1)",
   "type": "module",
   "scripts": {
-    "verify": "node --check src/frontend/script.js && node --check src/frontend/admin.js && node --check worker/index.js",
-    "dev": "npx --yes serve src/frontend",
-    "build": "node build.mjs"
+    "verify": "node --check src/frontend/script.js && node --check src/frontend/admin.js && node --check \"functions/api/[[path]].js\" && node --check lib/season-sync.js && node --check workers/season-sync.js",
+    "dev": "wrangler pages dev",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "deploy": "wrangler pages deploy --project-name=attije-order-sheet --branch=main",
+    "season:dev": "wrangler dev --config wrangler.season.toml --test-scheduled",
+    "season:deploy": "wrangler deploy --config wrangler.season.toml"
   },
   "keywords": [
     "order-sheet",
     "d1",
-    "openai-sites",
+    "cloudflare-pages",
     "cafe",
     "drink"
   ],
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "wrangler": "^4.154.0"
+  }
 }
