@@ -59,6 +59,25 @@ body.admin { min-height: 100dvh; padding-bottom: 5rem; }
 .admin-chips li button:hover { background: #fde8e6; color: var(--danger); }
 .admin-chips .admin-chips__empty { border-style: dashed; color: var(--muted); font-weight: 600; padding: .45rem .9rem; }
 
+/* 주문 현황 · 팀원 표 */
+.admin-panel__actions { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: flex-end; }
+.admin-notice { margin: 0 0 1rem; border-radius: 14px; background: #fff6e0; color: #8a5300; font-size: .92rem; font-weight: 700; line-height: 1.5; padding: .75rem 1rem; }
+.admin-badge { display: inline-block; border-radius: 999px; background: var(--surface-strong); color: var(--muted); font-size: .78rem; font-weight: 800; padding: .15rem .55rem; white-space: nowrap; }
+.admin-badge--ok { background: #e3f5e9; color: #1d7a41; }
+.admin-badge--wait { background: #fde8e6; color: var(--danger); }
+.admin-muted { color: var(--muted); font-size: .85rem; }
+.admin-row-actions { white-space: nowrap; text-align: right; }
+.admin-row-actions > * + * { margin-left: .3rem; }
+.admin-roster td { padding: .55rem .6rem; }
+.admin-roster tr.is-pending td:first-child { box-shadow: inset 3px 0 0 var(--danger); }
+.admin-roster .admin-btn:disabled { opacity: .55; }
+.admin-members td:first-child input { min-width: 7rem; }
+.admin-members td:nth-child(2) input { width: 100%; min-width: 15rem; }
+.admin-confirm-teams { display: grid; gap: .5rem; margin: -.4rem 0 1.1rem; }
+.admin-check { display: flex; gap: .45rem; align-items: center; color: var(--brand-dark); font-weight: 800; }
+.admin-check input { width: 18px; height: 18px; accent-color: var(--brand); }
+.admin-confirm-teams textarea { width: 100%; resize: vertical; border: 1px solid var(--border); border-radius: 10px; background: #fffaf4; padding: .5rem .7rem; }
+
 /* 메뉴 */
 .admin-add--grid { display: grid; grid-template-columns: 1.1fr 2fr 1fr 1fr 1fr auto; align-items: end; border: 1px solid var(--border); border-radius: 16px; background: #fffaf4; padding: .8rem; }
 .admin-add--grid label, .admin-extras-pick label { display: grid; gap: .3rem; color: var(--brand-dark); font-size: .82rem; font-weight: 800; }

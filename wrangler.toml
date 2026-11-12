@@ -17,4 +17,11 @@ binding = "AI"
 # 관리자 아이디·비밀번호는 시크릿으로 관리 (둘 다 있어야 관리자 기능이 열린다):
 #   npx wrangler pages secret put ADMIN_ID --project-name attije-order-sheet
 #   npx wrangler pages secret put ADMIN_PASSWORD --project-name attije-order-sheet
-# 로컬 개발 시에는 .dev.vars 파일에 ADMIN_ID=... 와 ADMIN_PASSWORD=... 를 적는다.
+#
+# 주문 화면의 MS(Entra ID) 로그인도 시크릿으로 넣는다 (넷 다 있어야 로그인 버튼이 켜진다):
+#   ENTRA_TENANT_ID, ENTRA_CLIENT_ID, ENTRA_CLIENT_SECRET, SESSION_SECRET
+# 선택: TEAM_DEPARTMENTS(이름으로 처음 연결할 때 허용할 부서, 쉼표로 구분), APP_URL(팀즈 카드의 주문 링크)
+# 팀즈 알림(Power Automate 워크플로 URL): TEAMS_CHANNEL_WEBHOOK_URL, TEAMS_DM_WEBHOOK_URL
+#
+# 로컬 개발 시에는 .dev.vars 파일에 같은 이름으로 적는다. DEV_LOGIN=1 을 더하면 localhost에서
+# MS 로그인 없이 팀원을 골라 들어갈 수 있다. (운영 시크릿에는 절대 넣지 않는다)

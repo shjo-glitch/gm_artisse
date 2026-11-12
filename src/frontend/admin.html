@@ -23,11 +23,11 @@
     <div class="admin-status admin-unlocked-only" role="group" aria-label="주문 상태">
       <div class="admin-status__info">
         <span id="status-badge" class="admin-status__badge">확인 중</span>
-        <span>주문 <strong id="status-count">0</strong>건 · <strong id="status-total">0</strong>원</span>
+        <span>주문 <strong id="status-count">0</strong>건 · <strong id="status-total">0</strong>원 · 미주문 <strong id="status-pending">0</strong>명</span>
       </div>
       <div class="admin-status__actions">
         <button id="toggle-close" class="admin-btn admin-btn--danger" type="button">주문 마감</button>
-        <button id="reset-orders" class="admin-btn admin-btn--ghost" type="button">전체 초기화</button>
+        <button id="start-round" class="admin-btn admin-btn--ghost" type="button">새 주문 시작</button>
       </div>
     </div>
     <nav class="admin-bar__actions" aria-label="페이지 이동">
@@ -49,6 +49,7 @@
   </section>
 
   <nav class="admin-tabs" role="tablist" aria-label="관리 메뉴">
+    <a href="#status" class="admin-tab" role="tab" data-tab="status">📋 주문 현황</a>
     <a href="#team" class="admin-tab" role="tab" data-tab="team">👥 팀원</a>
     <a href="#requests" class="admin-tab" role="tab" data-tab="requests">💬 요청사항</a>
     <a href="#menu" class="admin-tab" role="tab" data-tab="menu">☕ 메뉴</a>
@@ -57,19 +58,44 @@
   </nav>
 
   <main class="admin-main">
+    <section id="panel-status" class="admin-panel" role="tabpanel" aria-labelledby="round-title" data-panel="status">
+      <header class="admin-panel__head">
+        <div>
+          <h2 id="round-title">이번 주문 현황 <span id="round-count" class="admin-count"></span></h2>
+          <p id="round-info" class="admin-hint"></p>
+        </div>
+        <div class="admin-panel__actions">
+          <button id="post-status" class="admin-btn admin-btn--ghost" type="button">팀즈 채널에 현황 보내기</button>
+          <button id="nudge-all" class="admin-btn" type="button">미주문자 모두 독촉</button>
+        </div>
+      </header>
+      <p id="teams-setup" class="admin-notice is-hidden"></p>
+      <div class="admin-table-wrap">
+        <table class="admin-table admin-roster">
+          <thead><tr><th>이름</th><th>이번 주문</th><th>MS 계정</th><th>마지막 독촉</th><th><span class="sr-only">독촉</span></th></tr></thead>
+          <tbody id="roster-body"></tbody>
+        </table>
+      </div>
+    </section>
+
     <section id="panel-team" class="admin-panel" role="tabpanel" aria-labelledby="team-title" data-panel="team">
       <header class="admin-panel__head">
         <div>
           <h2 id="team-title">팀원 명단 <span id="team-count" class="admin-count"></span></h2>
-          <p class="admin-hint">주문 화면의 주문자 목록입니다. 쉼표(,)나 줄바꿈으로 여러 명을 한 번에 넣을 수 있고(Enter = 추가, Shift+Enter = 줄바꿈), 추가·삭제하면 바로 저장되고 가나다순으로 정렬됩니다.</p>
+          <p class="admin-hint">주문할 수 있는 사람의 명단입니다. 처음 MS 계정으로 로그인할 때 회사 이메일로, 이메일이 비어 있으면 이름으로 명단과 계정을 연결합니다. 이메일을 미리 넣어 두면 동명이인과 헷갈리지 않고, 로그인한 적 없는 사람에게도 팀즈 독촉을 보낼 수 있습니다.</p>
         </div>
       </header>
       <form id="team-add" class="admin-add">
-        <textarea id="team-input" rows="1" spellcheck="false" placeholder="이름 입력 (쉼표·줄바꿈으로 여러 명)" aria-label="추가할 팀원 이름"></textarea>
+        <textarea id="team-input" rows="1" spellcheck="false" placeholder="한 줄에 한 명: 이름 또는 '이름 이메일' (예: 홍길동 gd.hong@altimedia.com)" aria-label="추가할 팀원"></textarea>
         <button class="admin-btn" type="submit">추가</button>
       </form>
-      <input id="team-filter" class="admin-search" type="search" placeholder="이름 검색" aria-label="팀원 검색">
-      <ul id="team-list" class="admin-chips" aria-label="팀원 목록"></ul>
+      <input id="team-filter" class="admin-search" type="search" placeholder="이름·이메일 검색" aria-label="팀원 검색">
+      <div class="admin-table-wrap">
+        <table class="admin-table admin-members">
+          <thead><tr><th>이름</th><th>회사 이메일</th><th>MS 계정</th><th><span class="sr-only">관리</span></th></tr></thead>
+          <tbody id="team-body"></tbody>
+        </table>
+      </div>
     </section>
 
     <section id="panel-requests" class="admin-panel" role="tabpanel" aria-labelledby="requests-title" data-panel="requests">
@@ -151,6 +177,10 @@
   <dialog id="confirm-sheet" class="kiosk-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-message">
     <h2 id="confirm-title"></h2>
     <p id="confirm-message"></p>
+    <div id="confirm-teams" class="admin-confirm-teams is-hidden">
+      <label class="admin-check"><input id="confirm-notify" type="checkbox"> <span id="confirm-notify-label">팀즈 채널에 알림 보내기</span></label>
+      <textarea id="confirm-note" rows="2" maxlength="300" placeholder="알림에 덧붙일 말 (선택)" aria-label="알림에 덧붙일 말"></textarea>
+    </div>
     <div class="kiosk-confirm__actions">
       <button type="button" class="kiosk-confirm__cancel" data-close autofocus>취소</button>
       <button id="confirm-ok" type="button" class="kiosk-confirm__ok" data-confirm-ok>확인</button>
