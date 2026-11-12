@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/kiosk.css">
 </head>
-<body class="kiosk">
+<body class="kiosk is-locked">
   <header class="kiosk-bar">
     <div class="kiosk-bar__title">
       <img src="/favicon.svg" alt="" width="40" height="40">
@@ -20,12 +20,33 @@
       </div>
     </div>
     <div class="kiosk-bar__actions">
+      <button id="open-me" class="kiosk-me" type="button" aria-haspopup="dialog">
+        <span id="me-name" class="kiosk-me__name">내 주문</span>
+        <small id="me-status" class="kiosk-me__status">주문 전</small>
+      </button>
       <button id="open-orders" class="kiosk-cart" type="button" aria-haspopup="dialog">
         <span class="kiosk-cart__label">주문 현황</span>
         <strong class="kiosk-cart__sum"><span id="order-count" class="kiosk-cart__num">0</span><small>잔</small><i aria-hidden="true">·</i><span id="order-total" class="kiosk-cart__num">0</span><small>원</small></strong>
       </button>
     </div>
   </header>
+
+  <section id="login-cover" class="kiosk-login is-hidden" aria-labelledby="login-title">
+    <div class="kiosk-login__box">
+      <img src="/favicon.svg" alt="" width="64" height="64">
+      <h2 id="login-title">로그인하고 주문하세요</h2>
+      <p>회사 Microsoft 계정으로 로그인하면 내 이름으로 바로 주문됩니다.</p>
+      <a id="login-ms" class="kiosk-ms-btn" href="/api/auth/login">
+        <svg width="20" height="20" viewBox="0 0 21 21" aria-hidden="true"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+        Microsoft 계정으로 로그인
+      </a>
+      <p id="login-error" class="kiosk-login__error is-hidden" role="alert"></p>
+      <div id="dev-login" class="kiosk-login__dev is-hidden">
+        <p>로컬 개발용 로그인 (DEV_LOGIN)</p>
+        <div id="dev-members" class="kiosk-chips"></div>
+      </div>
+    </div>
+  </section>
 
   <div id="closed-banner" class="kiosk-closed is-hidden" role="status" aria-live="polite">🔒 주문이 마감되었습니다. 관리자가 재개하면 다시 주문할 수 있습니다.</div>
 
@@ -48,6 +69,8 @@
       </header>
 
       <div class="kiosk-sheet__body">
+        <p id="sheet-replace" class="kiosk-note is-hidden"></p>
+
         <div id="custom-fields" class="kiosk-section is-hidden">
           <label class="kiosk-label" for="custom-name">메뉴 이름</label>
           <input id="custom-name" class="kiosk-input" type="text" autocomplete="off" placeholder="예: 시즌 한정 라떼">
@@ -72,11 +95,6 @@
           <div id="request-choices" class="kiosk-chips"></div>
           <input id="order-note" class="kiosk-input" type="text" maxlength="80" placeholder="그 밖의 요청 (선택)">
         </fieldset>
-
-        <fieldset class="kiosk-section">
-          <legend class="kiosk-label">주문자</legend>
-          <div id="requester-choices" class="kiosk-chips kiosk-chips--names"></div>
-        </fieldset>
       </div>
 
       <footer class="kiosk-sheet__foot">
@@ -87,6 +105,27 @@
         </button>
       </footer>
     </form>
+  </dialog>
+
+  <dialog id="me-sheet" class="kiosk-sheet kiosk-sheet--side kiosk-sheet--me" aria-labelledby="me-title">
+    <header class="kiosk-sheet__head">
+      <div>
+        <p class="eyebrow">My Order</p>
+        <h2 id="me-title" tabindex="-1" autofocus>내 주문</h2>
+        <p id="me-account" class="kiosk-sheet__base"></p>
+      </div>
+      <button class="kiosk-icon-button" type="button" data-close aria-label="닫기">&times;</button>
+    </header>
+    <div class="kiosk-sheet__body">
+      <h3 class="kiosk-label">이번 주문</h3>
+      <div id="me-current" class="kiosk-mine"></div>
+      <h3 class="kiosk-label">지난 주문</h3>
+      <ul id="me-history" class="kiosk-history"></ul>
+      <p id="me-history-empty" class="kiosk-status is-hidden">지난 주문이 없습니다.</p>
+    </div>
+    <footer class="kiosk-sheet__foot kiosk-me__foot">
+      <button id="logout" type="button" class="kiosk-text-btn">로그아웃</button>
+    </footer>
   </dialog>
 
   <dialog id="orders-sheet" class="kiosk-sheet kiosk-sheet--side" aria-labelledby="orders-title">
@@ -102,17 +141,19 @@
       <h3 class="kiosk-label">주문 목록</h3>
       <ul id="order-list" class="kiosk-orders"></ul>
       <p id="orders-empty" class="kiosk-status">아직 주문이 없습니다.</p>
+      <h3 class="kiosk-label">아직 주문하지 않은 사람 <span id="pending-count" class="kiosk-hint"></span></h3>
+      <ul id="pending-list" class="kiosk-pending"></ul>
       <h3 class="kiosk-label">주문 명세서</h3>
       <ul id="statement-list" class="kiosk-statement"></ul>
     </div>
   </dialog>
 
   <dialog id="confirm-sheet" class="kiosk-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-message">
-    <h2 id="confirm-title">주문 삭제</h2>
+    <h2 id="confirm-title">주문 취소</h2>
     <p id="confirm-message"></p>
     <div class="kiosk-confirm__actions">
-      <button type="button" class="kiosk-confirm__cancel" data-close autofocus>취소</button>
-      <button id="confirm-ok" type="button" class="kiosk-confirm__ok" data-confirm-ok>삭제</button>
+      <button type="button" class="kiosk-confirm__cancel" data-close autofocus>닫기</button>
+      <button id="confirm-ok" type="button" class="kiosk-confirm__ok" data-confirm-ok>취소하기</button>
     </div>
   </dialog>
 

@@ -1,4 +1,4 @@
-// 아띠제 음료 주문 v2 (키오스크 화면). 주문·메뉴·설정 데이터는 기존 주문표와 같은 /api/* 를 쓴다.
+// 아띠제 음료 주문 (키오스크 화면). 회사 Microsoft 계정으로 로그인한 본인 이름으로 주문한다.
 const CATEGORIES = [
   { key: "season", label: "시즌", icon: "✨" },
   { key: "coffee", label: "에스프레소", icon: "☕" },
@@ -14,20 +14,32 @@ const SIZES = ["Tall", "Grande"];
 // 저장 값은 Tall/Grande 그대로 두고 화면에는 아띠제 표기(Petit/Grande)로 보여준다.
 const SIZE_LABELS = { Tall: "Petit", Grande: "Grande" };
 const CUSTOM = "__custom__";
+const LOGIN_ERRORS = {
+  not_member: (account) => `로그인한 계정${account ? `(${account})` : ""}이 팀원 명단에 없습니다. 다른 계정으로 로그인하거나 관리자에게 명단 추가를 요청하세요.`,
+  taken: (account) => `${account || "이 계정"}으로 등록된 팀원이 이미 다른 Microsoft 계정과 연결되어 있습니다. 관리자에게 연결 해제를 요청하세요.`,
+  expired: () => "로그인 시간이 지났습니다. 다시 로그인해 주세요.",
+  denied: () => "Microsoft 로그인이 취소되었습니다.",
+  config: () => "Microsoft 로그인이 아직 설정되지 않았습니다. 관리자에게 문의하세요.",
+  failed: () => "로그인하지 못했습니다. 잠시 뒤 다시 시도해 주세요.",
+};
 const formatter = new Intl.NumberFormat("ko-KR");
 
 const state = {
-  users: [],
+  me: null,
+  members: [],
   requests: [],
   drinks: [],
   orders: [],
   closed: false,
+  roundStartedAt: null,
+  history: null,
   category: "season",
 };
 // 5초 동기화에서 내용이 그대로면 화면을 다시 그리지 않는다.
 const signatures = { config: "", orders: "" };
-// 옵션 창에서 고르고 있는 값
-const draft = { drink: null, editingId: "", temp: "ICE", size: "Tall", extras: {}, requests: new Set(), requester: "" };
+// 옵션 창에서 고르고 있는 값. editingId가 있으면 그 주문(=내 주문)을 고친다.
+const draft = { drink: null, editingId: "", replacing: false, temp: "ICE", size: "Tall", extras: {}, requests: new Set() };
+let syncTimer = null;
 
 const $ = (sel) => document.querySelector(sel);
 const tabs = $("#category-tabs");
@@ -37,6 +49,7 @@ const closedBanner = $("#closed-banner");
 const sheet = $("#drink-sheet");
 const sheetForm = $("#sheet-form");
 const ordersSheet = $("#orders-sheet");
+const meSheet = $("#me-sheet");
 const confirmSheet = $("#confirm-sheet");
 
 // ── 유틸리티 ─────────────────────────────────────────────
@@ -46,7 +59,16 @@ function escapeHtml(value) {
 }
 function won(value) { return formatter.format(Math.max(0, Math.round(Number(value) || 0))); }
 function sizeLabel(size) { return SIZE_LABELS[size] || size; }
-function sortUsers(users) { return [...users].sort((a, b) => a.localeCompare(b, "ko-KR")); }
+function roundDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso.includes("T") ? iso : `${iso.replace(" ", "T")}Z`);
+  return Number.isNaN(d.getTime()) ? "" : d.toLocaleString("ko-KR", { timeZone: "Asia/Seoul", month: "long", day: "numeric", weekday: "short" });
+}
+function roundTime(iso) {
+  if (!iso) return "";
+  const d = new Date(iso.includes("T") ? iso : `${iso.replace(" ", "T")}Z`);
+  return Number.isNaN(d.getTime()) ? "" : d.toLocaleString("ko-KR", { timeZone: "Asia/Seoul", month: "long", day: "numeric", weekday: "short", hour: "2-digit", minute: "2-digit" });
+}
 function showToast(message, type = "info", duration = 3500) {
   const icons = { info: "ℹ️", success: "✅", warning: "⚠️" };
   const el = document.createElement("div");
@@ -64,6 +86,10 @@ async function apiRequest(path, { method = "GET", body } = {}) {
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const data = await response.json().catch(() => ({}));
+  if (response.status === 401) {
+    showLogin();
+    throw new Error(data.error || "로그인이 필요합니다.");
+  }
   if (!response.ok) throw new Error(data.error || `요청 실패 (${response.status})`);
   return data;
 }
@@ -82,17 +108,24 @@ function rowToDrink(row) {
 }
 function rowToOrder(row) {
   return {
-    id: row.id, menuName: row.menu_name, category: row.category, requester: row.requester,
+    id: row.id, menuName: row.menu_name, category: row.category, requester: row.requester, memberId: row.member_id ?? null,
     size: row.size, temp: row.temp || "ICE", options: Array.isArray(row.options) ? row.options : [],
     note: row.note || "", unitPrice: Number(row.unit_price) || 0,
+    roundStartedAt: row.round_started_at || null, updatedAt: row.updated_at || null,
   };
 }
-function applyConfig(config) {
-  state.users = sortUsers(config.users || []);
+function applyConfig(config, members) {
   state.requests = config.options || [];
   state.closed = Boolean(config.orders_closed);
+  state.roundStartedAt = config.round_started_at || null;
+  state.members = members || [];
 }
 function findDrink(name) { return state.drinks.find((d) => d.name === name); }
+function myOrder() { return state.me ? state.orders.find((o) => o.memberId === state.me.id) || null : null; }
+function pendingMembers() {
+  const ordered = new Set(state.orders.map((o) => o.memberId));
+  return state.members.filter((m) => !ordered.has(m.id));
+}
 function soldSizes(drink) {
   // 가격이 0인 사이즈는 팔지 않는 사이즈로 본다. ("주문 안함"처럼 모두 0이면 Petit만 둔다)
   const sold = SIZES.filter((s) => drink.prices[s] > 0);
@@ -130,6 +163,9 @@ function extrasPrice(drink, picks) {
   drink.extras.forEach((group, gi) => group.choices.forEach((choice, ci) => { sum += (picks[`${gi}:${ci}`] || 0) * (Number(choice.price) || 0); }));
   return sum;
 }
+function orderDetail(o) {
+  return [o.temp, o.size === "Grande" ? "G" : "P", ...o.options, o.note].filter(Boolean).join(" · ");
+}
 
 // ── 메뉴 화면 ─────────────────────────────────────────────
 
@@ -148,9 +184,10 @@ function priceText(drink) {
 function renderGrid() {
   const cat = CATEGORIES.find((c) => c.key === state.category) || CATEGORIES[0];
   const drinks = state.drinks.filter((d) => d.category === cat.key);
+  const mine = myOrder();
   const tiles = drinks.map((d) => {
-    const badges = [d.iceOnly ? "ICE 전용" : "", d.hotOnly ? "HOT 전용" : "", d.extras.length ? "추가 옵션" : ""].filter(Boolean);
-    return `<button type="button" class="kiosk-tile" data-drink="${escapeHtml(d.name)}" ${state.closed ? "disabled" : ""}>
+    const badges = [mine?.menuName === d.name ? "내 주문" : "", d.iceOnly ? "ICE 전용" : "", d.hotOnly ? "HOT 전용" : "", d.extras.length ? "추가 옵션" : ""].filter(Boolean);
+    return `<button type="button" class="kiosk-tile${mine?.menuName === d.name ? " is-mine" : ""}" data-drink="${escapeHtml(d.name)}" ${state.closed ? "disabled" : ""}>
       <span class="kiosk-tile__icon" aria-hidden="true">${cat.icon}</span>
       <span class="kiosk-tile__name">${escapeHtml(d.name)}</span>
       <span class="kiosk-tile__price">${priceText(d)}</span>
@@ -179,13 +216,15 @@ function renderSummary() {
   $("#orders-count").textContent = won(state.orders.length);
   $("#orders-total").textContent = won(total);
 }
+function renderMeButton() {
+  const mine = myOrder();
+  $("#me-name").textContent = state.me ? `${state.me.name}님` : "내 주문";
+  $("#me-status").textContent = mine ? `✓ ${mine.menuName}` : state.closed ? "주문 마감" : "아직 주문 전";
+  $("#open-me").classList.toggle("is-done", Boolean(mine));
+}
 
 // ── 옵션 선택 창 ──────────────────────────────────────────
 
-function availableRequesters() {
-  const taken = new Set(state.orders.filter((o) => o.id !== draft.editingId).map((o) => o.requester));
-  return state.users.filter((u) => !taken.has(u));
-}
 function draftDrink() {
   if (draft.drink !== CUSTOM) return findDrink(draft.drink);
   return { category: "others", name: "", prices: { Tall: Number($("#custom-price").value) || 0, Grande: 0 }, iceOnly: false, hotOnly: false, extras: [] };
@@ -237,39 +276,38 @@ function renderSheet() {
   const requests = state.requests.filter((r) => !paid.has(r.replace(/\s+/g, "")));
   [...draft.requests].forEach((r) => { if (paid.has(r.replace(/\s+/g, ""))) draft.requests.delete(r); });
   $("#request-choices").innerHTML = requests.map((r) => `<button type="button" class="kiosk-chip${draft.requests.has(r) ? " is-active" : ""}" data-request="${escapeHtml(r)}" aria-pressed="${draft.requests.has(r)}">${escapeHtml(r)}</button>`).join("");
-  renderRequesters();
   renderTotal();
-}
-function renderRequesters() {
-  const names = availableRequesters();
-  if (draft.requester && !names.includes(draft.requester)) draft.requester = "";
-  $("#requester-choices").innerHTML = names.length
-    ? names.map((n) => `<button type="button" class="kiosk-chip${n === draft.requester ? " is-active" : ""}" data-requester="${escapeHtml(n)}" aria-pressed="${n === draft.requester}">${escapeHtml(n)}</button>`).join("")
-    : `<p class="kiosk-hint">모든 팀원이 주문했습니다.</p>`;
 }
 function renderTotal() {
   $("#sheet-total").textContent = won(draftTotal());
-  $("#sheet-submit-label").textContent = draft.editingId ? "주문 수정" : "주문 담기";
+  $("#sheet-submit-label").textContent = !draft.editingId ? "주문 담기" : draft.replacing ? "이 메뉴로 바꾸기" : "주문 수정";
   $("#sheet-submit").disabled = state.closed;
 }
-function openSheet(drinkName, order = null) {
+// prefill: 고칠 주문(내 주문)이나 다시 주문할 지난 주문. 이미 주문했으면 새 메뉴를 골라도 내 주문을 바꾼다(1인 1주문).
+function openSheet(drinkName, prefill = null) {
   if (state.closed) return showToast("주문이 마감되었습니다.", "warning");
+  const mine = myOrder();
   draft.drink = drinkName;
-  draft.editingId = order?.id || "";
-  draft.temp = order?.temp || "ICE";
-  draft.size = order?.size || "Tall";
-  draft.requester = order?.requester || "";
+  draft.editingId = mine?.id || "";
+  draft.replacing = Boolean(mine) && prefill?.id !== mine.id;
+  draft.temp = prefill?.temp || "ICE";
+  draft.size = prefill?.size || "Tall";
   const drink = draftDrink();
-  const { picks, rest } = decodeExtras(drink || { extras: [] }, order?.options || []);
+  const { picks, rest } = decodeExtras(drink || { extras: [] }, prefill?.options || []);
   draft.extras = picks;
   draft.requests = new Set(rest);
-  $("#order-note").value = order?.note || "";
-  $("#custom-name").value = drinkName === CUSTOM ? order?.menuName || "" : "";
-  $("#custom-price").value = drinkName === CUSTOM && order ? order.unitPrice : "";
+  $("#order-note").value = prefill?.note || "";
+  $("#custom-name").value = drinkName === CUSTOM ? prefill?.menuName || "" : "";
+  $("#custom-price").value = drinkName === CUSTOM && prefill ? prefill.unitPrice : "";
+  $("#sheet-replace").textContent = draft.replacing ? `이미 주문한 "${mine.menuName}"을(를) 이 메뉴로 바꿉니다.` : "";
+  $("#sheet-replace").classList.toggle("is-hidden", !draft.replacing);
   $("#sheet-error").textContent = "";
   renderSheet();
   sheet.showModal();
   sheet.querySelector(".kiosk-sheet__body").scrollTop = 0;
+}
+function openForOrder(order) {
+  openSheet(findDrink(order.menuName) ? order.menuName : CUSTOM, order);
 }
 async function submitSheet() {
   const drink = draftDrink();
@@ -278,11 +316,9 @@ async function submitSheet() {
   const error = (msg) => { $("#sheet-error").textContent = msg; };
   if (custom && !menuName) return error("메뉴 이름을 입력하세요.");
   if (custom && !(Number($("#custom-price").value) > 0)) return error("가격을 입력하세요.");
-  if (!draft.requester) return error("주문자를 선택하세요.");
   const body = {
     menu_name: menuName,
     category: drink.category,
-    requester: draft.requester,
     size: draft.size,
     temp: draft.temp,
     options: [...encodeExtras(drink, draft.extras), ...draft.requests],
@@ -294,7 +330,7 @@ async function submitSheet() {
     if (draft.editingId) await apiRequest(`/api/orders/${encodeURIComponent(draft.editingId)}`, { method: "PUT", body });
     else await apiRequest("/api/orders", { method: "POST", body });
     sheet.close();
-    showToast(`${draft.requester}님 ${menuName} 주문을 ${draft.editingId ? "수정" : "담았"}습니다.`, "success");
+    showToast(`${menuName} 주문을 ${!draft.editingId ? "담았" : draft.replacing ? "바꿨" : "수정했"}습니다.`, "success");
     await reloadOrders(true);
   } catch (e) {
     error(e.message);
@@ -320,23 +356,82 @@ function statementGroups() {
 function renderOrders() {
   $("#statement-list").innerHTML = statementGroups().map((g) => `<li><span>${escapeHtml(g.menuName)} ${g.temp} ${g.size === "Grande" ? "G" : "P"}${g.options.length ? ` (${g.options.map(escapeHtml).join(", ")})` : ""} x${g.quantity}</span><strong>${won(g.total)}원</strong></li>`).join("");
   $("#order-list").innerHTML = state.orders.map((o) => {
-    const detail = [o.temp, o.size === "Grande" ? "G" : "P", `${won(o.unitPrice)}원`, ...o.options, o.note].filter(Boolean).map(escapeHtml).join(" · ");
-    return `<li class="kiosk-order">
+    const mine = state.me && o.memberId === state.me.id;
+    const detail = escapeHtml([o.temp, o.size === "Grande" ? "G" : "P", `${won(o.unitPrice)}원`, ...o.options, o.note].filter(Boolean).join(" · "));
+    return `<li class="kiosk-order${mine ? " is-mine" : ""}">
       <div class="kiosk-order__head">
-        <strong>${escapeHtml(o.requester)}</strong>
-        <span class="kiosk-order__actions">
-          <button type="button" class="kiosk-order__btn kiosk-order__btn--edit" data-edit="${escapeHtml(o.id)}" title="수정" aria-label="${escapeHtml(o.requester)} 주문 수정" ${state.closed ? "disabled" : ""}>✏️</button>
-          <button type="button" class="kiosk-order__btn kiosk-order__btn--delete" data-delete="${escapeHtml(o.id)}" title="삭제" aria-label="${escapeHtml(o.requester)} 주문 삭제" ${state.closed ? "disabled" : ""}>✕</button>
-        </span>
+        <strong>${escapeHtml(o.requester)}${mine ? ` <span class="kiosk-order__me">나</span>` : ""}</strong>
+        ${mine ? `<span class="kiosk-order__actions">
+          <button type="button" class="kiosk-order__btn kiosk-order__btn--edit" data-edit="${escapeHtml(o.id)}" title="수정" aria-label="내 주문 수정" ${state.closed ? "disabled" : ""}>✏️</button>
+          <button type="button" class="kiosk-order__btn kiosk-order__btn--delete" data-delete="${escapeHtml(o.id)}" title="취소" aria-label="내 주문 취소" ${state.closed ? "disabled" : ""}>✕</button>
+        </span>` : ""}
       </div>
       <p class="kiosk-order__menu" title="${escapeHtml(o.menuName)}">${escapeHtml(o.menuName)}</p>
       <p class="kiosk-order__detail" title="${detail}">${detail}</p>
     </li>`;
   }).join("");
   $("#orders-empty").classList.toggle("is-hidden", state.orders.length > 0);
+  const pending = pendingMembers();
+  $("#pending-count").textContent = `${pending.length}명`;
+  $("#pending-list").innerHTML = pending.length
+    ? pending.map((m) => `<li${state.me?.id === m.id ? ` class="is-me"` : ""}>${escapeHtml(m.name)}</li>`).join("")
+    : `<li class="is-done">모두 주문했습니다 🎉</li>`;
   renderSummary();
+  renderMeButton();
+  if (meSheet.open) renderMeCurrent();
 }
-// 주문 삭제처럼 되돌리기 어려운 동작은 확인 창에서 한 번 더 묻는다.
+
+// ── 내 주문 ───────────────────────────────────────────────
+
+function renderMeCurrent() {
+  const mine = myOrder();
+  const status = state.closed
+    ? `<p class="kiosk-mine__status is-closed">🔒 주문 마감${state.roundStartedAt ? ` · ${escapeHtml(roundTime(state.roundStartedAt))} 시작` : ""}</p>`
+    : `<p class="kiosk-mine__status">🟢 주문 받는 중${state.roundStartedAt ? ` · ${escapeHtml(roundTime(state.roundStartedAt))} 시작` : ""}</p>`;
+  $("#me-current").innerHTML = status + (mine
+    ? `<article class="kiosk-mine__card">
+        <p class="kiosk-mine__menu">${escapeHtml(mine.menuName)}</p>
+        <p class="kiosk-mine__detail">${escapeHtml(orderDetail(mine))}</p>
+        <p class="kiosk-mine__price">${won(mine.unitPrice)}원</p>
+        <div class="kiosk-mine__actions">
+          <button type="button" class="kiosk-btn" data-me-edit ${state.closed ? "disabled" : ""}>주문 수정</button>
+          <button type="button" class="kiosk-btn kiosk-btn--ghost" data-me-delete ${state.closed ? "disabled" : ""}>주문 취소</button>
+        </div>
+        ${state.closed ? "" : `<p class="kiosk-hint">메뉴에서 다른 음료를 고르면 이 주문이 그 음료로 바뀝니다.</p>`}
+      </article>`
+    : `<div class="kiosk-mine__empty">${state.closed
+      ? "이번 주문에는 참여하지 않았습니다."
+      : "아직 주문하지 않았어요. 메뉴에서 음료를 고르거나 아래 지난 주문에서 다시 주문하세요. 마시지 않을 거라면 기타 &gt; \"주문 안함\"을 골라 주세요."}</div>`);
+}
+function renderHistory() {
+  const list = state.history || [];
+  $("#me-history-empty").classList.toggle("is-hidden", state.history === null || list.length > 0);
+  if (state.history === null) { $("#me-history").innerHTML = `<li class="kiosk-status">불러오는 중입니다.</li>`; return; }
+  $("#me-history").innerHTML = list.map((o, i) => `<li class="kiosk-history__item">
+    <div>
+      <p class="kiosk-history__date">${escapeHtml(roundDate(o.roundStartedAt))}</p>
+      <p class="kiosk-history__menu">${escapeHtml(o.menuName)}</p>
+      <p class="kiosk-history__detail">${escapeHtml(orderDetail(o))} · ${won(o.unitPrice)}원</p>
+    </div>
+    <button type="button" class="kiosk-btn kiosk-btn--ghost kiosk-btn--small" data-reorder="${i}" ${state.closed ? "disabled" : ""}>이 메뉴로 주문</button>
+  </li>`).join("");
+}
+async function openMeSheet() {
+  $("#me-account").textContent = state.me ? `${state.me.name}${state.me.email ? ` · ${state.me.email}` : ""}` : "";
+  renderMeCurrent();
+  renderHistory();
+  meSheet.showModal();
+  try {
+    const { history } = await apiRequest("/api/me/history");
+    state.history = history.map(rowToOrder);
+  } catch (e) {
+    state.history = [];
+    showToast(`지난 주문을 불러오지 못했습니다: ${e.message}`, "warning");
+  }
+  renderHistory();
+}
+
+// 주문 취소처럼 되돌리기 어려운 동작은 확인 창에서 한 번 더 묻는다.
 let pendingConfirm = null;
 function askConfirm({ title, message, ok, onOk }) {
   $("#confirm-title").textContent = title;
@@ -348,34 +443,65 @@ function askConfirm({ title, message, ok, onOk }) {
 function askDelete(id) {
   const order = state.orders.find((o) => o.id === id);
   if (!order) return;
-  askConfirm({ title: "주문 삭제", message: `${order.requester}님의 ${order.menuName} 주문을 삭제할까요?`, ok: "삭제", onOk: () => deleteOrder(id) });
+  askConfirm({ title: "주문 취소", message: `내 ${order.menuName} 주문을 취소할까요?`, ok: "주문 취소", onOk: () => deleteOrder(id) });
 }
 async function deleteOrder(id) {
   const order = state.orders.find((o) => o.id === id);
   if (!order) return;
   try {
     await apiRequest(`/api/orders/${encodeURIComponent(id)}`, { method: "DELETE" });
-    showToast(`${order.requester}님 주문을 삭제했습니다.`, "success");
+    showToast(`${order.menuName} 주문을 취소했습니다.`, "success");
     await reloadOrders(true);
   } catch (e) {
     showToast(e.message, "warning");
   }
 }
 
+// ── 로그인 ────────────────────────────────────────────────
+
+async function showLogin(errorCode = "", account = "") {
+  stopSync();
+  state.me = null;
+  [sheet, ordersSheet, meSheet, confirmSheet].forEach((d) => { if (d.open) d.close(); });
+  document.body.classList.add("is-locked");
+  $("#login-cover").classList.remove("is-hidden");
+  const message = LOGIN_ERRORS[errorCode]?.(account) || "";
+  $("#login-error").textContent = message;
+  $("#login-error").classList.toggle("is-hidden", !message);
+  $("#login-ms").href = `/api/auth/login?return=${encodeURIComponent(location.pathname)}`;
+  try {
+    const { entra, dev } = await fetch("/api/auth/config").then((r) => r.json());
+    $("#login-ms").classList.toggle("is-disabled", !entra);
+    if (!entra && !message) {
+      $("#login-error").textContent = LOGIN_ERRORS.config();
+      $("#login-error").classList.remove("is-hidden");
+    }
+    $("#dev-login").classList.toggle("is-hidden", !dev);
+    if (dev) $("#dev-members").innerHTML = dev.map((m) => `<a class="kiosk-chip" href="/api/auth/dev?member=${m.id}&return=${encodeURIComponent(location.pathname)}">${escapeHtml(m.name)}</a>`).join("");
+  } catch {
+    // 설정을 못 읽어도 로그인 버튼은 그대로 둔다.
+  }
+}
+async function logout() {
+  await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+  location.reload();
+}
+
 // ── 데이터 로드와 동기화 ──────────────────────────────────
 
 async function loadState() {
-  try {
-    const { config, drinks, orders } = await apiRequest("/api/state");
-    applyConfig(config);
-    state.drinks = drinks.map(rowToDrink);
-    state.orders = orders.map(rowToOrder);
-    signatures.config = JSON.stringify({ config, drinks });
-    signatures.orders = JSON.stringify(orders);
-    renderTabs(); renderGrid(); renderClosed(); renderOrders();
-  } catch (e) {
-    kioskStatus.textContent = `메뉴를 불러오지 못했습니다: ${e.message}`;
-  }
+  const { config, drinks, orders, members, me } = await apiRequest("/api/state");
+  if (!me) return showLogin();
+  state.me = me;
+  applyConfig(config, members);
+  state.drinks = drinks.map(rowToDrink);
+  state.orders = orders.map(rowToOrder);
+  signatures.config = JSON.stringify({ config, drinks, members });
+  signatures.orders = JSON.stringify(orders);
+  document.body.classList.remove("is-locked");
+  $("#login-cover").classList.add("is-hidden");
+  renderTabs(); renderGrid(); renderClosed(); renderOrders();
+  startSync();
 }
 async function reloadOrders(force = false) {
   const { orders } = await apiRequest("/api/orders");
@@ -384,27 +510,35 @@ async function reloadOrders(force = false) {
   signatures.orders = signature;
   state.orders = orders.map(rowToOrder);
   renderOrders();
-  if (sheet.open) renderRequesters();
+  renderGrid();
 }
 async function reloadConfig() {
-  const { config, drinks } = await apiRequest("/api/config");
-  const signature = JSON.stringify({ config, drinks });
+  const { config, drinks, members } = await apiRequest("/api/config");
+  const signature = JSON.stringify({ config, drinks, members });
   if (signature === signatures.config) return;
   const wasClosed = state.closed;
+  const previousRound = state.roundStartedAt;
   signatures.config = signature;
-  applyConfig(config);
+  applyConfig(config, members);
   state.drinks = drinks.map(rowToDrink);
+  if (previousRound !== state.roundStartedAt) state.history = null;
   renderTabs(); renderGrid(); renderClosed(); renderOrders();
-  if (wasClosed !== state.closed) showToast(state.closed ? "주문이 마감되었습니다." : "주문이 재개되었습니다.", state.closed ? "warning" : "success");
+  if (previousRound && previousRound !== state.roundStartedAt) showToast("새 주문이 시작되었습니다.", "info");
+  else if (wasClosed !== state.closed) showToast(state.closed ? "주문이 마감되었습니다." : "주문이 재개되었습니다.", state.closed ? "warning" : "success");
   if (sheet.open) {
     if (state.closed || (draft.drink !== CUSTOM && !findDrink(draft.drink))) sheet.close();
     else renderSheet();
   }
 }
-function connectSync() {
-  setInterval(async () => {
+function startSync() {
+  stopSync();
+  syncTimer = setInterval(async () => {
     try { await Promise.all([reloadOrders(), reloadConfig()]); } catch (e) { console.error("[sync]", e); }
   }, 5000);
+}
+function stopSync() {
+  if (syncTimer) clearInterval(syncTimer);
+  syncTimer = null;
 }
 
 // ── 이벤트 ────────────────────────────────────────────────
@@ -417,7 +551,11 @@ tabs.addEventListener("click", (e) => {
 });
 grid.addEventListener("click", (e) => {
   const tile = e.target.closest("[data-drink]");
-  if (tile) openSheet(tile.dataset.drink);
+  if (!tile) return;
+  const mine = myOrder();
+  // 내 주문과 같은 메뉴를 누르면 그 주문을 고친다.
+  if (mine && tile.dataset.drink === mine.menuName) openSheet(tile.dataset.drink, mine);
+  else openSheet(tile.dataset.drink);
 });
 sheet.addEventListener("click", (e) => {
   const t = e.target.closest("button");
@@ -435,11 +573,12 @@ sheet.addEventListener("click", (e) => {
     const r = t.dataset.request;
     if (draft.requests.has(r)) draft.requests.delete(r); else draft.requests.add(r);
     renderSheet();
-  } else if (t.dataset.requester) { draft.requester = t.dataset.requester; renderRequesters(); }
+  }
 });
 $("#custom-price").addEventListener("input", renderTotal);
 sheetForm.addEventListener("submit", (e) => { e.preventDefault(); submitSheet(); });
 $("#open-orders").addEventListener("click", () => { renderOrders(); ordersSheet.showModal(); });
+$("#open-me").addEventListener("click", openMeSheet);
 ordersSheet.addEventListener("click", (e) => {
   const t = e.target.closest("button");
   if (e.target === ordersSheet || (t && t.hasAttribute("data-close"))) return ordersSheet.close();
@@ -449,9 +588,24 @@ ordersSheet.addEventListener("click", (e) => {
     const order = state.orders.find((o) => o.id === t.dataset.edit);
     if (!order) return;
     ordersSheet.close();
-    openSheet(findDrink(order.menuName) ? order.menuName : CUSTOM, order);
+    openForOrder(order);
   }
 });
+meSheet.addEventListener("click", (e) => {
+  const t = e.target.closest("button");
+  if (e.target === meSheet || (t && t.hasAttribute("data-close"))) return meSheet.close();
+  if (!t) return;
+  const mine = myOrder();
+  if (t.hasAttribute("data-me-edit") && mine) { meSheet.close(); openForOrder(mine); }
+  if (t.hasAttribute("data-me-delete") && mine) askDelete(mine.id);
+  if (t.dataset.reorder !== undefined) {
+    const past = state.history?.[Number(t.dataset.reorder)];
+    if (!past) return;
+    meSheet.close();
+    openForOrder({ ...past, id: "" });
+  }
+});
+$("#logout").addEventListener("click", logout);
 
 confirmSheet.addEventListener("click", (e) => {
   const t = e.target.closest("button");
@@ -466,5 +620,21 @@ confirmSheet.addEventListener("click", (e) => {
 
 // ── 초기화 ────────────────────────────────────────────────
 
-loadState();
-connectSync();
+(async () => {
+  const params = new URLSearchParams(location.search);
+  const loginError = params.get("login_error");
+  if (loginError) {
+    // 오류 안내는 한 번만 보여 주고 주소창은 깨끗하게 돌려 둔다.
+    history.replaceState(null, "", location.pathname);
+    return showLogin(loginError, params.get("account") || "");
+  }
+  try {
+    await loadState();
+  } catch (e) {
+    // 로그인이 필요해서 실패한 경우는 showLogin()이 이미 로그인 화면을 띄웠다.
+    if ($("#login-cover").classList.contains("is-hidden")) {
+      document.body.classList.remove("is-locked");
+      kioskStatus.textContent = `메뉴를 불러오지 못했습니다: ${e.message}`;
+    }
+  }
+})();

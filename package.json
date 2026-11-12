@@ -1,11 +1,11 @@
 {
   "name": "attije-order-sheet",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
-  "description": "회사 내부 음료 주문표 (Cloudflare Pages + D1)",
+  "description": "회사 내부 음료 주문표 (Cloudflare Pages + D1, Microsoft Entra ID 로그인)",
   "type": "module",
   "scripts": {
-    "verify": "node --check src/frontend/script.js && node --check src/frontend/admin.js && node --check \"functions/api/[[path]].js\" && node --check lib/season-sync.js && node --check workers/season-sync.js",
+    "verify": "node --check src/frontend/kiosk.js && node --check src/frontend/admin.js && node --check \"functions/api/[[path]].js\" && node --check lib/auth.js && node --check lib/teams.js && node --check lib/season-sync.js && node --check workers/season-sync.js",
     "dev": "wrangler pages dev",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote",

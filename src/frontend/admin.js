@@ -1,4 +1,4 @@
-// 아띠제 관리자 화면: 팀원·요청사항(바로 저장), 메뉴·유료 옵션(저장 바에서 한 번에 저장), 새메뉴 자동 반영
+// 아띠제 관리자 화면: 주문 현황(마감·새 주문·팀즈 알림·독촉), 팀원·요청사항(바로 저장), 메뉴·유료 옵션(저장 바에서 한 번에 저장), 새메뉴 자동 반영
 const CATEGORIES = [
   { key: "season", label: "시즌" },
   { key: "coffee", label: "에스프레소" },
@@ -21,7 +21,9 @@ const EXTRA_PRESETS = {
 const $ = (sel) => document.querySelector(sel);
 const formatter = new Intl.NumberFormat("ko-KR");
 const state = {
-  users: [],
+  members: [],
+  membersSignature: "",
+  teams: { channel: false, dm: false },
   requests: [],
   drinks: [],
   savedDrinks: "[]",
@@ -38,7 +40,6 @@ function price(v) { const p = Number(v); return Number.isFinite(p) && p >= 0 ? M
 // 줄바꿈, 쉼표(전각 포함), "|" 어느 것으로 나눠도 받는다.
 function splitNames(text) { return String(text || "").split(/[\n,，、|]+/).map((v) => v.trim()).filter(Boolean); }
 function unique(values) { return [...new Set(values)]; }
-function sortKo(values) { return [...values].sort((a, b) => a.localeCompare(b, "ko-KR")); }
 function categoryLabel(key) { return (CATEGORIES.find((c) => c.key === key) || { label: key }).label; }
 function clone(v) { return JSON.parse(JSON.stringify(v)); }
 function showToast(message, type = "success", duration = 3000) {
@@ -63,12 +64,32 @@ async function apiRequest(path, { method = "GET", body } = {}) {
   return data;
 }
 
+function ago(iso) {
+  if (!iso) return "";
+  const minutes = Math.floor((Date.now() - Date.parse(iso)) / 60000);
+  if (!(minutes >= 0)) return "";
+  if (minutes < 1) return "방금";
+  if (minutes < 60) return `${minutes}분 전`;
+  if (minutes < 24 * 60) return `${Math.floor(minutes / 60)}시간 전`;
+  return new Date(iso).toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul", month: "short", day: "numeric" });
+}
+function kstTime(iso) {
+  return iso ? new Date(iso.includes("T") ? iso : `${iso.replace(" ", "T")}Z`).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", month: "long", day: "numeric", weekday: "short", hour: "2-digit", minute: "2-digit" }) : "";
+}
+
 // 되돌리기 어려운 동작은 확인 창에서 한 번 더 묻는다.
+// teams: true면 "팀즈 채널에 알림" 체크와 덧붙일 말을 함께 받아 onOk({ notify, note })로 넘긴다.
 let pendingConfirm = null;
-function askConfirm({ title, message, ok = "확인", onOk }) {
+function askConfirm({ title, message, ok = "확인", onOk, teams = false, notePlaceholder = "알림에 덧붙일 말 (선택)" }) {
+  $("#confirm-note").placeholder = notePlaceholder;
   $("#confirm-title").textContent = title;
   $("#confirm-message").textContent = message;
   $("#confirm-ok").textContent = ok;
+  $("#confirm-teams").classList.toggle("is-hidden", !teams);
+  $("#confirm-notify").checked = teams && state.teams.channel;
+  $("#confirm-notify").disabled = !state.teams.channel;
+  $("#confirm-notify-label").textContent = state.teams.channel ? "팀즈 채널에 알림 보내기" : "팀즈 채널에 알림 보내기 (채널 알림 주소 미설정)";
+  $("#confirm-note").value = "";
   pendingConfirm = onOk;
   $("#confirm-sheet").showModal();
 }
@@ -96,7 +117,6 @@ function isDirty() { return JSON.stringify(state.drinks) !== state.savedDrinks; 
 async function loadAll() {
   try {
     const { config, drinks } = await apiRequest("/api/config");
-    state.users = sortKo(config.users || []);
     state.requests = config.options || [];
     state.drinks = drinks.map(rowToDrink);
     state.savedDrinks = JSON.stringify(state.drinks);
@@ -107,12 +127,82 @@ async function loadAll() {
   }
 }
 
-// ── 팀원 · 요청사항 (바로 저장) ────────────────────────────
+// ── 팀원 (MS 계정과 연결되는 명단, 바로 저장) ────────────────
+
+// 한 줄에 한 명: "이름" 또는 "이름 이메일"(엔트라에서 복사한 "이름, 이메일"도 받는다).
+// 이메일이 없는 줄은 예전처럼 쉼표·| 로 여러 이름을 나눈다.
+function parseMemberLines(text) {
+  const emailRe = /[^\s<>(),;|]+@[^\s<>(),;|]+/g;
+  return String(text || "").split(/\n+/).flatMap((line) => {
+    const emails = line.match(emailRe) || [];
+    if (!emails.length) return splitNames(line).map((name) => ({ name, email: "" }));
+    const parts = emails.length === 1 ? [line] : line.split(/[,;|]+/);
+    return parts.map((part) => {
+      const email = (part.match(emailRe) || [""])[0];
+      return { name: part.replace(email, "").replace(/[<>()"',;|\t]/g, " ").trim().replace(/\s+/g, " "), email };
+    });
+  }).filter((e) => e.name);
+}
+function membersSignature(members) {
+  return JSON.stringify(members.map((m) => [m.id, m.name, m.email, m.linked, m.last_login_at]));
+}
+function renderTeam(force = false) {
+  // 10초마다 다시 읽을 때 입력 중인 칸을 덮어쓰지 않는다.
+  const signature = membersSignature(state.members);
+  if (!force && (signature === state.membersSignature || $("#team-body").contains(document.activeElement))) return;
+  state.membersSignature = signature;
+  const filter = $("#team-filter").value.trim().toLowerCase();
+  const shown = state.members.filter((m) => !filter || m.name.toLowerCase().includes(filter) || (m.email || "").includes(filter));
+  $("#team-count").textContent = `${state.members.length}명`;
+  $("#team-body").innerHTML = shown.map((m) => `<tr data-member="${m.id}">
+      <td><input data-member-field="name" value="${escapeHtml(m.name)}" aria-label="이름"></td>
+      <td><input data-member-field="email" type="email" value="${escapeHtml(m.email || "")}" placeholder="회사 이메일" aria-label="${escapeHtml(m.name)} 이메일"></td>
+      <td>${m.linked ? `<span class="admin-badge admin-badge--ok">연결됨</span> <small class="admin-muted">${escapeHtml(ago(m.last_login_at))}</small>` : `<span class="admin-badge">로그인 전</span>`}</td>
+      <td class="admin-row-actions">
+        ${m.linked ? `<button type="button" class="admin-btn admin-btn--ghost admin-btn--small" data-unlink="${m.id}">연결 해제</button>` : ""}
+        <button type="button" class="admin-icon-btn admin-icon-btn--danger" data-remove-member="${m.id}" aria-label="${escapeHtml(m.name)} 삭제">✕</button>
+      </td>
+    </tr>`).join("")
+    || `<tr><td colspan="4" class="admin-muted">${filter ? "검색 결과가 없습니다." : "등록된 팀원이 없습니다."}</td></tr>`;
+}
+async function addMembers(e) {
+  e.preventDefault();
+  const entries = parseMemberLines($("#team-input").value);
+  if (!entries.length) return;
+  try {
+    const { added, updated, skipped } = await apiRequest("/api/admin/members", { method: "POST", body: { entries } });
+    $("#team-input").value = "";
+    autoGrow($("#team-input"));
+    const parts = [added.length ? `${added.length}명 추가` : "", updated.length ? `${updated.length}명 이메일 저장` : "", skipped.length ? `${skipped.length}명 건너뜀(${skipped.map((s) => `${s.name}: ${s.reason}`).join(", ")})` : ""].filter(Boolean);
+    showToast(parts.join(" · ") || "바뀐 내용이 없습니다.", added.length || updated.length ? "success" : "info", 5000);
+  } catch (err) {
+    showToast(`추가 실패: ${err.message}`, "warning");
+  }
+  await loadRound();
+  renderTeam(true);
+}
+async function updateMember(input) {
+  const id = Number(input.closest("[data-member]").dataset.member);
+  const member = state.members.find((m) => m.id === id);
+  const field = input.dataset.memberField;
+  const value = input.value.trim();
+  if (!member || value === (member[field] || "")) return;
+  if (field === "name" && !value) { input.value = member.name; return showToast("이름은 비울 수 없습니다.", "warning"); }
+  try {
+    await apiRequest(`/api/admin/members/${id}`, { method: "PATCH", body: { [field]: value } });
+    showToast(field === "email" && member.linked ? `${member.name}님 이메일을 바꿔서 MS 계정 연결을 풀었습니다. 다음 로그인 때 다시 연결됩니다.` : `${value || member.name}님 정보를 저장했습니다.`, "success", 4500);
+  } catch (err) {
+    showToast(`저장 실패: ${err.message}`, "warning");
+  }
+  await loadRound();
+  renderTeam(true);
+}
+
+// ── 요청사항 (바로 저장) ──────────────────────────────────
 
 async function saveConfig(patch, message) {
   try {
     const { config } = await apiRequest("/api/config", { method: "PATCH", body: patch });
-    state.users = sortKo(config.users || []);
     state.requests = config.options || [];
     renderChips();
     showToast(message);
@@ -122,24 +212,9 @@ async function saveConfig(patch, message) {
   }
 }
 function renderChips() {
-  const filter = $("#team-filter").value.trim();
-  const shown = state.users.filter((u) => !filter || u.includes(filter));
-  $("#team-count").textContent = `${state.users.length}명`;
-  $("#team-list").innerHTML = shown.map((u) => `<li><span>${escapeHtml(u)}</span><button type="button" data-remove-user="${escapeHtml(u)}" aria-label="${escapeHtml(u)} 삭제">✕</button></li>`).join("")
-    || `<li class="admin-chips__empty">${filter ? "검색 결과가 없습니다." : "등록된 팀원이 없습니다."}</li>`;
   $("#requests-count").textContent = `${state.requests.length}개`;
   $("#requests-list").innerHTML = state.requests.map((r) => `<li><span>${escapeHtml(r)}</span><button type="button" data-remove-request="${escapeHtml(r)}" aria-label="${escapeHtml(r)} 삭제">✕</button></li>`).join("")
     || `<li class="admin-chips__empty">등록된 요청사항이 없습니다.</li>`;
-}
-function addUsers(e) {
-  e.preventDefault();
-  const names = splitNames($("#team-input").value);
-  const added = names.filter((n) => !state.users.includes(n));
-  if (!names.length) return;
-  $("#team-input").value = "";
-  autoGrow($("#team-input"));
-  if (!added.length) return showToast("이미 명단에 있는 이름입니다.", "info");
-  saveConfig({ users: sortKo(unique([...state.users, ...added])) }, `팀원 ${added.length}명을 추가했습니다.`);
 }
 function addRequests(e) {
   e.preventDefault();
@@ -329,16 +404,23 @@ function applyToCategory() {
   });
 }
 
-// ── 주문 상태 · 마감 · 초기화 ──────────────────────────────
+// ── 주문 현황 · 마감 · 새 주문 · 팀즈 ─────────────────────────
 
-const orderStatus = { count: 0, total: 0, closed: false };
-async function loadOrderStatus() {
+const NUDGE_COOLDOWN_MS = 10 * 60 * 1000;
+const orderStatus = { count: 0, total: 0, closed: false, startedAt: null };
+function pendingMembers() { return state.members.filter((m) => !m.order); }
+async function loadRound() {
   try {
-    const [{ orders }, { config }] = await Promise.all([apiRequest("/api/orders"), apiRequest("/api/config")]);
+    const [{ orders }, { members, config, teams }] = await Promise.all([apiRequest("/api/orders"), apiRequest("/api/admin/members")]);
     orderStatus.count = orders.length;
     orderStatus.total = orders.reduce((s, o) => s + (Number(o.unit_price) || 0), 0);
     orderStatus.closed = Boolean(config.orders_closed);
+    orderStatus.startedAt = config.round_started_at;
+    state.members = members;
+    state.teams = teams;
     renderOrderStatus();
+    renderRoster();
+    renderTeam();
   } catch (e) {
     $("#status-badge").textContent = "확인 실패";
   }
@@ -349,43 +431,117 @@ function renderOrderStatus() {
   badge.classList.toggle("is-closed", orderStatus.closed);
   $("#status-count").textContent = formatter.format(orderStatus.count);
   $("#status-total").textContent = formatter.format(orderStatus.total);
+  $("#status-pending").textContent = formatter.format(pendingMembers().length);
   $("#toggle-close").textContent = orderStatus.closed ? "주문 재개" : "주문 마감";
   $("#toggle-close").classList.toggle("admin-btn--danger", !orderStatus.closed);
-  // 마감 중에는 서버가 초기화를 막으므로 버튼도 잠근다.
-  $("#reset-orders").disabled = orderStatus.closed || orderStatus.count === 0;
-  $("#reset-orders").title = orderStatus.closed ? "마감 중에는 초기화할 수 없습니다. 먼저 주문을 재개하세요." : "";
+}
+function nudgeBlocker(m) {
+  if (!state.teams.dm) return "개인 알림 주소 미설정";
+  if (orderStatus.closed) return "주문 마감 중";
+  if (!m.email) return "이메일 없음";
+  if (m.last_nudged_at && Date.now() - Date.parse(m.last_nudged_at) < NUDGE_COOLDOWN_MS) return "10분 뒤 다시";
+  return "";
+}
+function renderRoster() {
+  const pending = pendingMembers();
+  const done = state.members.length - pending.length;
+  $("#round-count").textContent = `${done} / ${state.members.length}명 주문`;
+  $("#round-info").textContent = orderStatus.startedAt ? `${kstTime(orderStatus.startedAt)}에 시작한 주문입니다. ${orderStatus.closed ? "지금은 마감 상태입니다." : "주문 받는 중입니다."}` : "";
+  const sendable = pending.filter((m) => !nudgeBlocker(m));
+  $("#nudge-all").textContent = `미주문자 모두 독촉 (${sendable.length}명)`;
+  $("#nudge-all").disabled = !sendable.length;
+  $("#post-status").disabled = !state.teams.channel;
+  const missing = [!state.teams.channel ? "TEAMS_CHANNEL_WEBHOOK_URL(채널 알림)" : "", !state.teams.dm ? "TEAMS_DM_WEBHOOK_URL(개인 독촉)" : ""].filter(Boolean);
+  $("#teams-setup").textContent = missing.length ? `팀즈 알림을 쓰려면 Pages 시크릿에 ${missing.join("과 ")}을 넣어 주세요. 설정 방법은 README의 "팀즈 알림"에 있습니다.` : "";
+  $("#teams-setup").classList.toggle("is-hidden", !missing.length);
+  // 아직 주문하지 않은 사람을 위로 올린다.
+  const rows = [...pending, ...state.members.filter((m) => m.order)];
+  $("#roster-body").innerHTML = rows.map((m) => {
+    const o = m.order;
+    const blocker = o ? "" : nudgeBlocker(m);
+    return `<tr class="${o ? "" : "is-pending"}">
+      <td><strong>${escapeHtml(m.name)}</strong></td>
+      <td>${o ? `${escapeHtml(o.menu_name)} <small class="admin-muted">${escapeHtml([o.temp, o.size === "Grande" ? "G" : "P", ...(o.options || [])].join(" · "))} · ${won(o.unit_price)}</small>` : `<span class="admin-badge admin-badge--wait">미주문</span>`}</td>
+      <td>${m.linked ? `<span class="admin-badge admin-badge--ok">연결됨</span>` : m.email ? `<span class="admin-badge">로그인 전</span>` : `<span class="admin-badge">이메일 없음</span>`}</td>
+      <td class="admin-muted">${escapeHtml(ago(m.last_nudged_at)) || "-"}</td>
+      <td class="admin-row-actions">${o ? "" : `<button type="button" class="admin-btn admin-btn--ghost admin-btn--small" data-nudge="${m.id}" ${blocker ? `disabled title="${escapeHtml(blocker)}"` : ""}>${blocker === "10분 뒤 다시" ? escapeHtml(blocker) : "독촉"}</button>`}</td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="5" class="admin-muted">팀원 명단이 비어 있습니다. 팀원 탭에서 추가하세요.</td></tr>`;
+}
+function teamsResultToast(teams) {
+  if (!teams) return;
+  if (teams.sent) showToast("팀즈 채널에 알렸습니다.", "success");
+  else showToast(`팀즈 알림 실패: ${teams.error}`, "warning", 6000);
+}
+async function changeRound(action, { notify, note }, message) {
+  try {
+    const { teams } = await apiRequest("/api/admin/round", { method: "POST", body: { action, notify, note } });
+    showToast(message, action === "close" ? "warning" : "success");
+    teamsResultToast(teams);
+  } catch (e) {
+    showToast(e.message, "warning");
+  }
+  loadRound();
 }
 function toggleClosed() {
   const next = !orderStatus.closed;
+  const pending = pendingMembers().length;
   askConfirm({
     title: next ? "주문 마감" : "주문 재개",
-    message: next ? `주문을 마감할까요? (지금 ${orderStatus.count}건) 마감하면 주문 추가·수정·삭제가 막힙니다.` : "주문을 다시 받을까요?",
+    message: next
+      ? `주문을 마감할까요? (지금 ${orderStatus.count}건${pending ? `, 미주문 ${pending}명` : ""}) 마감하면 주문 추가·수정·취소가 막히고, 알림에는 최종 명세가 올라갑니다.`
+      : "마감한 주문을 다시 받을까요? 지금까지 들어온 주문은 그대로 둡니다.",
     ok: next ? "마감" : "재개",
-    onOk: async () => {
-      try {
-        await apiRequest("/api/config", { method: "PATCH", body: { orders_closed: next } });
-        showToast(next ? "주문을 마감했습니다." : "주문을 재개했습니다.", next ? "warning" : "success");
-      } catch (e) {
-        showToast(e.message, "warning");
-      }
-      loadOrderStatus();
-    },
+    teams: true,
+    notePlaceholder: next ? "알림에 덧붙일 말 (선택) 예: 12시 30분에 찾으러 갑니다" : "알림에 덧붙일 말 (선택) 예: 3시까지 더 받습니다",
+    onOk: (opts) => changeRound(next ? "close" : "reopen", opts, next ? "주문을 마감했습니다." : "주문을 재개했습니다."),
   });
 }
-function resetOrders() {
+function startRound() {
   askConfirm({
-    title: "전체 초기화",
-    message: `주문 ${orderStatus.count}건을 모두 삭제할까요? 되돌릴 수 없습니다.`,
-    ok: "모두 삭제",
-    onOk: async () => {
-      try {
-        await apiRequest("/api/orders", { method: "DELETE" });
-        showToast("주문을 모두 삭제했습니다.");
-      } catch (e) {
-        showToast(e.message, "warning");
-      }
-      loadOrderStatus();
-    },
+    title: "새 주문 시작",
+    message: orderStatus.count
+      ? `지금 주문 ${orderStatus.count}건을 각자의 "지난 주문"으로 옮기고 새로 주문을 받습니다.`
+      : "새로 주문을 받습니다.",
+    ok: "시작",
+    teams: true,
+    notePlaceholder: "알림에 덧붙일 말 (선택) 예: 오후 2시에 마감합니다",
+    onOk: (opts) => changeRound("start", opts, "새 주문을 시작했습니다."),
+  });
+}
+async function postStatus() {
+  $("#post-status").disabled = true;
+  try {
+    await apiRequest("/api/admin/teams/status", { method: "POST", body: {} });
+    showToast("팀즈 채널에 현황을 보냈습니다.", "success");
+  } catch (e) {
+    showToast(e.message, "warning", 6000);
+  } finally {
+    $("#post-status").disabled = !state.teams.channel;
+  }
+}
+async function nudge(ids) {
+  try {
+    const { sent, skipped, failed } = await apiRequest("/api/admin/nudge", { method: "POST", body: { member_ids: ids } });
+    const parts = [
+      sent.length ? `${sent.join(", ")}님에게 보냈습니다` : "",
+      skipped.length ? `건너뜀: ${skipped.map((s) => `${s.name}(${s.reason})`).join(", ")}` : "",
+      failed.length ? `실패: ${failed.map((f) => `${f.name}(${f.error})`).join(", ")}` : "",
+    ].filter(Boolean);
+    showToast(parts.join(" · ") || "보낼 사람이 없습니다.", failed.length ? "warning" : sent.length ? "success" : "info", 6000);
+  } catch (e) {
+    showToast(e.message, "warning", 6000);
+  }
+  loadRound();
+}
+function nudgeAll() {
+  const targets = pendingMembers().filter((m) => !nudgeBlocker(m));
+  if (!targets.length) return;
+  askConfirm({
+    title: "미주문자 독촉",
+    message: `아직 주문하지 않은 ${targets.length}명(${targets.map((m) => m.name).join(", ")})에게 팀즈 개인 메시지를 보낼까요?`,
+    ok: "보내기",
+    onOk: () => nudge(targets.map((m) => m.id)),
   });
 }
 
@@ -437,7 +593,7 @@ async function runSeasonSync() {
 
 function currentTab() {
   const tab = location.hash.slice(1);
-  return ["team", "requests", "menu", "extras", "season"].includes(tab) ? tab : "team";
+  return ["status", "team", "requests", "menu", "extras", "season"].includes(tab) ? tab : "status";
 }
 function renderTabs() {
   const tab = currentTab();
@@ -449,7 +605,7 @@ function renderTabs() {
 }
 function renderAll() {
   $("#new-drink-category").innerHTML = categoryOptions($("#new-drink-category").value || "season");
-  renderChips(); renderMenu(); renderExtras(); renderSaveBar(); renderTabs();
+  renderChips(); renderTeam(true); renderMenu(); renderExtras(); renderSaveBar(); renderTabs();
 }
 
 // ── 인증 ──────────────────────────────────────────────────
@@ -486,7 +642,7 @@ async function login(e) {
     $("#auth-password").value = "";
     unlock();
     loadAll();
-    loadOrderStatus();
+    loadRound();
     loadSeasonSync();
   } catch {
     $("#auth-error").classList.remove("is-hidden");
@@ -503,14 +659,34 @@ window.addEventListener("hashchange", renderTabs);
 window.addEventListener("beforeunload", (e) => { if (isDirty()) e.preventDefault(); });
 bindAddInput($("#team-input"), $("#team-add"));
 bindAddInput($("#requests-input"), $("#requests-add"));
-$("#team-add").addEventListener("submit", addUsers);
+$("#team-add").addEventListener("submit", addMembers);
 $("#requests-add").addEventListener("submit", addRequests);
-$("#team-filter").addEventListener("input", renderChips);
-$("#team-list").addEventListener("click", (e) => {
-  const name = e.target.closest("[data-remove-user]")?.dataset.removeUser;
-  if (!name) return;
-  askConfirm({ title: "팀원 삭제", message: `${name}님을 팀원 명단에서 뺄까요? 이미 들어간 주문은 그대로 남습니다.`, ok: "삭제", onOk: () => saveConfig({ users: state.users.filter((u) => u !== name) }, `${name}님을 명단에서 뺐습니다.`) });
+$("#team-filter").addEventListener("input", () => renderTeam(true));
+$("#team-body").addEventListener("change", (e) => { if (e.target.dataset.memberField) updateMember(e.target); });
+$("#team-body").addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.dataset.memberField && !e.isComposing) e.target.blur(); });
+$("#team-body").addEventListener("click", (e) => {
+  const t = e.target.closest("button");
+  if (!t) return;
+  const member = state.members.find((m) => m.id === Number(t.dataset.unlink || t.dataset.removeMember));
+  if (!member) return;
+  if (t.dataset.unlink) {
+    askConfirm({ title: "MS 계정 연결 해제", message: `${member.name}님과 MS 계정의 연결을 풀까요? 그 계정은 바로 로그아웃되고, 다음 로그인 때 이메일로 다시 연결됩니다.`, ok: "연결 해제", onOk: async () => {
+      try { await apiRequest(`/api/admin/members/${member.id}`, { method: "PATCH", body: { unlink: true } }); showToast(`${member.name}님 연결을 풀었습니다.`); } catch (err) { showToast(err.message, "warning"); }
+      await loadRound(); renderTeam(true);
+    } });
+  } else {
+    askConfirm({ title: "팀원 삭제", message: `${member.name}님을 명단에서 뺄까요? 바로 로그아웃되고 더는 주문할 수 없습니다. 이미 들어간 주문은 그대로 남습니다.`, ok: "삭제", onOk: async () => {
+      try { await apiRequest(`/api/admin/members/${member.id}`, { method: "DELETE" }); showToast(`${member.name}님을 명단에서 뺐습니다.`); } catch (err) { showToast(err.message, "warning"); }
+      await loadRound(); renderTeam(true);
+    } });
+  }
 });
+$("#roster-body").addEventListener("click", (e) => {
+  const id = e.target.closest("[data-nudge]")?.dataset.nudge;
+  if (id) nudge([Number(id)]);
+});
+$("#post-status").addEventListener("click", postStatus);
+$("#nudge-all").addEventListener("click", nudgeAll);
 $("#requests-list").addEventListener("click", (e) => {
   const item = e.target.closest("[data-remove-request]")?.dataset.removeRequest;
   if (!item) return;
@@ -542,7 +718,7 @@ $("#save-drinks").addEventListener("click", saveDrinks);
 $("#discard-drinks").addEventListener("click", () => askConfirm({ title: "변경 되돌리기", message: "저장하지 않은 메뉴·유료 옵션 변경을 모두 버릴까요?", ok: "되돌리기", onOk: () => { state.drinks = JSON.parse(state.savedDrinks); renderAll(); } }));
 $("#run-season-sync").addEventListener("click", runSeasonSync);
 $("#toggle-close").addEventListener("click", toggleClosed);
-$("#reset-orders").addEventListener("click", resetOrders);
+$("#start-round").addEventListener("click", startRound);
 $("#logout").addEventListener("click", () => {
   if (isDirty()) return askConfirm({ title: "로그아웃", message: "저장하지 않은 변경이 있습니다. 버리고 로그아웃할까요?", ok: "로그아웃", onOk: logout });
   logout();
@@ -556,7 +732,7 @@ $("#confirm-sheet").addEventListener("click", (e) => {
     dialog.close();
     const run = pendingConfirm;
     pendingConfirm = null;
-    if (run) run();
+    if (run) run({ notify: $("#confirm-notify").checked, note: $("#confirm-note").value.trim() });
   }
 });
 
@@ -567,10 +743,10 @@ $("#auth-id").value = sessionStorage.getItem("admin_id") || "";
 if (checkAuth()) {
   unlock();
   loadAll();
-  loadOrderStatus();
+  loadRound();
   loadSeasonSync();
 } else {
   lock();
 }
 // 주문 화면에서 들어오는 주문이 보이도록 상태 줄은 10초마다 다시 읽는다.
-setInterval(() => { if (!document.body.classList.contains("is-locked")) loadOrderStatus(); }, 10000);
+setInterval(() => { if (!document.body.classList.contains("is-locked")) loadRound(); }, 10000);
