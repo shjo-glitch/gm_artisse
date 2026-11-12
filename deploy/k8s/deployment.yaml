@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: attije-order
+spec:
+  # SQLite 파일 하나(퍼시스턴트 볼륨)를 쓰므로 파드는 하나만 띄우고, 바꿀 때도 옛 파드를 먼저 내린다.
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      # 사내 레지스트리에 로그인이 필요하면 풀 시크릿 이름을 적는다.
+      # imagePullSecrets:
+      #   - name: registry-pull-secret
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 20
+      containers:
+        - name: app
+          image: attije-order
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: attije-order-config
+            - secretRef:
+                name: attije-order-secrets
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 96Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: attije-order-data

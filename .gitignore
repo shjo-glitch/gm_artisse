@@ -4,3 +4,4 @@ dist/
 .wrangler/
 .dev.vars
 __pycache__/
+deploy/k8s/secret.env

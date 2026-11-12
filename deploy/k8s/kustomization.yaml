@@ -1,0 +1,36 @@
+# 아띠제 음료 주문 · 사내 쿠버네티스 배포 (kubectl apply -k deploy/k8s)
+# 바꿀 곳: namespace, images, config.env, ingress.yaml(host·TLS·class), pvc.yaml(storageClassName)
+# secret.env 는 secret.env.example 을 복사해서 만들고 git에 올리지 않는다.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 회사에서 할당받은 네임스페이스로 바꾼다.
+namespace: attije-order
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: attije-order
+    includeSelectors: true
+
+resources:
+  - pvc.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+
+images:
+  - name: attije-order
+    # 사내 레지스트리 주소와 태그로 바꾼다.
+    newName: registry.example.com/team/attije-order
+    newTag: "0.4.0"
+
+configMapGenerator:
+  - name: attije-order-config
+    envs:
+      - config.env
+
+# 값이 바뀌면 이름 뒤 해시가 바뀌어 파드가 새 값으로 다시 뜬다.
+secretGenerator:
+  - name: attije-order-secrets
+    envs:
+      - secret.env

@@ -1,6 +1,6 @@
 # 아띠제 음료 주문표
 
-사내 구성원의 음료 주문을 수집하고 함께 확인하는 웹 앱입니다. 팀원은 회사 Microsoft 계정(Entra ID)으로 로그인해서 자기 이름으로 주문하고, 관리자는 주문을 열고 닫으면서 팀즈 채널에 알리거나 아직 주문하지 않은 사람에게 팀즈 개인 메시지를 보냅니다. 화면과 API는 Cloudflare Pages에서 호스팅하며 주문·메뉴·설정 데이터는 Cloudflare D1 데이터베이스에 저장합니다.
+사내 구성원의 음료 주문을 수집하고 함께 확인하는 웹 앱입니다. 팀원은 회사 Microsoft 계정(Entra ID)으로 로그인해서 자기 이름으로 주문하고, 관리자는 주문을 열고 닫으면서 팀즈 채널에 알리거나 아직 주문하지 않은 사람에게 팀즈 개인 메시지를 보냅니다. 화면과 API는 Cloudflare Pages에서 호스팅하며 주문·메뉴·설정 데이터는 Cloudflare D1 데이터베이스에 저장합니다. 같은 코드를 도커 이미지로 만들어 사내 쿠버네티스에서도 돌릴 수 있습니다(아래 "사내 쿠버네티스 배포").
 
 ## 아키텍처
 
@@ -192,6 +192,80 @@ npx wrangler pages secret put TEAMS_DM_WEBHOOK_URL --project-name attije-order-s
 
 이전 주문표(`/v1/`)는 주문자를 이름으로 골라서 로그인 구조와 맞지 않아 없앴고, 그 주소는 `/`로 보냅니다.
 
+## 사내 쿠버네티스 배포 (도커)
+
+같은 코드를 Node 서버 하나로 돌립니다. `functions/`와 `lib/`는 고치지 않고, Cloudflare가 하던 일만 `server/`가 대신합니다.
+
+| Cloudflare | 쿠버네티스 |
+| --- | --- |
+| Pages 정적 파일·`_redirects` | `server/server.mjs`가 `src/frontend`를 같은 규칙으로 제공 (`/admin` → `admin.html`) |
+| Pages Functions | 같은 `onRequest`를 Node `http` 서버에서 호출 |
+| D1 | 퍼시스턴트 볼륨의 SQLite 파일 `/data/attije.db` (`server/d1.mjs`, Node 내장 `node:sqlite`) |
+| `wrangler d1 migrations apply` | 서버가 시작할 때 `migrations/`에서 남은 것만 적용 (기록은 D1과 같은 `d1_migrations` 테이블) |
+| Cron Worker (매달 1일 09:00) | 서버 안에서 10분마다 확인해 1일 09:00(KST) 이후 한 번 실행 |
+| Workers AI 바인딩 | `CF_ACCOUNT_ID`·`CF_API_TOKEN`(Workers AI REST API) 또는 `AI_BASE_URL`(OpenAI 호환 사내 LLM). 없으면 새메뉴 자동 반영만 꺼집니다 |
+| Pages 시크릿 | 쿠버네티스 Secret (`deploy/k8s/secret.env`) |
+
+SQLite 파일 하나를 쓰므로 파드는 하나만 띄웁니다(`replicas: 1`, `Recreate`). 팀 하나가 쓰기에는 충분합니다. 동시에 20명이 주문하는 상황을 로컬에서 시험했습니다.
+
+### Cloudflare 운영과 같이 돌릴 때
+
+Cloudflare 배포(`npm run deploy`)는 `server/`, `Dockerfile`, `deploy/`를 쓰지 않으므로 두 곳에 같은 코드를 올릴 수 있습니다. 다만 **DB가 따로**입니다. 두 주소를 동시에 열어 두면 주문이 나뉘므로 팀에는 한 주소만 안내하고, 옮길 때 아래 "데이터 옮기기"로 한 번에 넘깁니다. 로그인 세션은 주소마다 따로라서 새 주소에서는 한 번 다시 로그인하지만, 팀원과 MS 계정의 연결은 DB에 있으므로 그대로 이어집니다.
+
+### 회사에서 받아야 할 것
+
+- 네임스페이스, 이미지를 올릴 사내 레지스트리 주소(로그인이 필요하면 풀 시크릿)
+- 접속 주소(인그레스 호스트)와 TLS 인증서. MS 로그인은 localhost가 아니면 https 주소로만 돌아올 수 있습니다.
+- 1Gi 정도의 퍼시스턴트 볼륨(ReadWriteOnce)과 스토리지 클래스
+- 클러스터 밖으로 나가는 접속 허용 또는 프록시: `login.microsoftonline.com`, `graph.microsoft.com`(로그인), Power Automate 워크플로 주소의 호스트(팀즈 알림, 워크플로를 만들면 나오는 주소), `cafeartisee.apis.flyground.co.kr`, `artisee-app.s3.ap-northeast-2.amazonaws.com`(새메뉴 API와 포스터), `api.cloudflare.com`(Workers AI를 쓸 때)
+
+사내 프록시가 TLS를 풀어 보는 방식이면 회사 루트 인증서를 파드에 넣고 `NODE_EXTRA_CA_CERTS`로 알려 줘야 합니다.
+
+### 로컬에서 도커로 돌려 보기
+
+```bash
+npm run docker:build
+docker run --rm -p 8788:8080 -v attije-data:/data --env-file .dev.vars attije-order
+```
+
+`.dev.vars`를 그대로 쓰므로 Entra 앱에 등록한 `http://localhost:8788`에서 실제 MS 로그인까지 됩니다. 도커 없이 `npm start`(포트 8080, 데이터는 `./data`)로도 돌릴 수 있습니다.
+
+### 배포
+
+1. Entra 앱의 리디렉션 URI에 `https://<접속 주소>/api/auth/callback`을 더합니다.
+2. 이미지를 만들어 사내 레지스트리에 올립니다. 클러스터 노드가 x86이면 `--platform linux/amd64`로 만듭니다.
+   ```bash
+   docker buildx build --platform linux/amd64 -t <레지스트리>/attije-order:0.4.0 --push .
+   ```
+3. `deploy/k8s/`의 바꿀 곳을 채웁니다: `kustomization.yaml`(네임스페이스, 이미지 주소·태그), `config.env`(`PUBLIC_URL` 등), `ingress.yaml`(호스트, TLS 시크릿, 인그레스 클래스), `pvc.yaml`(스토리지 클래스).
+4. `cp deploy/k8s/secret.env.example deploy/k8s/secret.env` 후 값을 채웁니다. 이 파일은 git에 올라가지 않습니다. `SESSION_SECRET`은 새로 만든 임의 값을 씁니다.
+5. 적용하고 확인합니다.
+   ```bash
+   kubectl apply -k deploy/k8s
+   kubectl -n <네임스페이스> rollout status deployment/attije-order
+   kubectl -n <네임스페이스> logs deployment/attije-order   # "MS 로그인 켜짐 · 팀즈 …" 줄 확인
+   ```
+
+비어 있는 볼륨에 처음 뜨면 `migrations/`의 초기 데이터로 시작합니다. 운영 데이터를 가져오려면 이어서 "데이터 옮기기"를 합니다.
+
+### 데이터 옮기기 (Cloudflare D1 → 쿠버네티스)
+
+서버는 시작할 때 `/data/import.sql`이 있으면 지금 DB를 `attije.db.bak-<시각>`으로 치우고 그 파일을 넣은 뒤, 남은 마이그레이션을 적용합니다. 넣지 못하면 원래 DB로 되돌리고 파일 이름을 `import.sql.failed-<시각>`으로 바꿉니다.
+
+1. Cloudflare 쪽 관리자 화면에서 주문을 마감합니다. 그 뒤로는 주문이 들어오지 않습니다.
+2. 운영 DB를 내보냅니다: `npx wrangler d1 export DB --remote --output prod.sql`
+3. 파드에 넣고 다시 띄웁니다.
+   ```bash
+   POD=$(kubectl -n <네임스페이스> get pod -l app.kubernetes.io/name=attije-order -o name | head -1)
+   kubectl -n <네임스페이스> cp prod.sql ${POD#pod/}:/data/import.sql
+   kubectl -n <네임스페이스> rollout restart deployment/attije-order
+   kubectl -n <네임스페이스> logs deployment/attije-order | grep import
+   ```
+4. 쿠버네티스 쪽 관리자 화면에서 주문 건수와 팀원 명단을 확인하고, 팀즈로 새 주소를 알린 뒤 주문을 재개합니다.
+5. 옮긴 뒤 Cloudflare 쪽 Cron Worker(`attije-season-sync`)가 계속 돌면 매달 Workers AI를 한 번 더 부르므로 필요 없으면 지웁니다.
+
+`server/import-d1.mjs`는 같은 일을 명령으로 합니다: `node server/import-d1.mjs prod.sql data/attije.db` (비어 있는 DB에만 넣습니다).
+
 ## 구조
 
 ```text
@@ -209,5 +283,8 @@ npx wrangler pages secret put TEAMS_DM_WEBHOOK_URL --project-name attije-order-s
 ├── scripts/build-menu-seed.mjs  # 수집 메뉴 → SQL 변환
 ├── wrangler.toml              # Pages 프로젝트, D1·Workers AI 바인딩
 ├── wrangler.season.toml       # Cron Worker 설정
+├── server/                    # 사내 쿠버네티스용 Node 서버 (정적 파일·API·SQLite 어댑터·마이그레이션·월간 새메뉴 확인·D1 데이터 가져오기)
+├── Dockerfile                 # server/ 이미지 (node:24-slim, 런타임 의존 패키지 없음)
+├── deploy/k8s/                # kustomize 매니페스트 (Deployment·Service·Ingress·PVC, 설정·시크릿 생성)
 └── package.json
 ```

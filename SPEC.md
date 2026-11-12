@@ -101,3 +101,13 @@
 - 음료 메뉴는 `seeds/app-menu-*.sql`로 아티제 앱 수집본을 넣는다.
 - Cron Worker는 `wrangler.season.toml`로 따로 배포한다.
 - D1 마이그레이션은 `wrangler d1 migrations apply`로 별도 적용하고, 화면과 API는 `wrangler pages deploy`로 배포한다.
+
+## 사내 쿠버네티스 배포
+
+- `server/server.mjs`가 Pages 역할을 한다. `/api/*`는 `functions/api/[[path]].js`의 `onRequest`를 그대로 부르고, 나머지는 `src/frontend`를 Pages와 같은 규칙(`/admin` → `admin.html`, `.html` 주소는 확장자 없는 주소로 이동, `_redirects`)으로 제공한다. `/healthz`는 상태 확인용이다.
+- `env.DB`는 `/data/attije.db`(SQLite)를 D1과 같은 메서드로 감싼 어댑터다. `batch`는 한 트랜잭션으로 중간에 다른 요청이 끼어들지 않게 동기로 실행한다. 파드는 하나만 띄운다.
+- 시작할 때 `migrations/`에서 `d1_migrations`에 없는 파일만 적용한다. `/data/import.sql`이 있으면 먼저 그 D1 export를 빈 DB에 넣고(기존 DB는 `.bak-<시각>`), 실패하면 원래 DB로 되돌린다.
+- `env.AI`는 Workers AI REST API(`CF_ACCOUNT_ID`, `CF_API_TOKEN`) 또는 OpenAI 호환 API(`AI_BASE_URL`, `AI_MODEL`, `AI_API_KEY`)로 만든다. 둘 다 없으면 새메뉴 자동 반영을 하지 않는다.
+- 새메뉴 자동 반영은 10분마다 확인해 한국 시간 1일 09시 이후, 그달 자동 실행 기록이 없을 때 한 번 돌린다.
+- 요청 주소는 `PUBLIC_URL`을 기준으로 만든다(MS 로그인 리디렉션, Secure 쿠키, 팀즈 링크). `PUBLIC_URL`이 localhost가 아니면 `DEV_LOGIN`을 끈다. 요청 본문은 1MB까지 받는다.
+- 이미지는 `node:24-slim`에 소스만 복사하고 uid 1000으로 실행한다. 매니페스트(`deploy/k8s/`)는 읽기 전용 루트 파일시스템, 모든 권한 제거, `Recreate` 전략을 쓴다.
